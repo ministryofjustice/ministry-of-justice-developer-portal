@@ -12,8 +12,8 @@
     "spellcheck": "cspell '**/*' --no-progress --show-suggestions"
   },
   "devDependencies": {
-    "markdownlint-cli": "^0.43.0",
-    "cspell": "^8.16.1"
+    "cspell": "^8.16.1",
+    "markdownlint-cli": "^0.48.0"
   },
   "engines": {
     "node": ">=18.0.0"
