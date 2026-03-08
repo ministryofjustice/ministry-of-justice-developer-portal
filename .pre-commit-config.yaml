@@ -13,8 +13,6 @@ repos:
         language: system
         pass_filenames: false
 
-  - repo: local
-    hooks:
       - id: spellcheck
         name: Spell check
         entry: npm run spellcheck
