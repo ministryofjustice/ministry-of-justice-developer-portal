@@ -1,5 +1,5 @@
 {
-  "ignorePaths": ["dist/", "**/node_modules/**", "**/*.drawio", "**/*.svg", "**/package*.json"],
+  "ignorePaths": ["dist/", "**/node_modules/**", "**/*.drawio", "**/*.svg", "**/package*.json", "**/*.xml"],
   "language": "en",
   "noConfigSearch": true,
   "allowCompoundWords": true,
