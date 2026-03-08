@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/ministryofjustice/devsecops-hooks
-    rev: 3c4b8f1f6f9d2b5f4a2c3d6e7f8a9b0c1d2e3f4
+    rev: v1.5.0
     hooks:
       - id: baseline
         name: Ministry of Justice - Security scan
