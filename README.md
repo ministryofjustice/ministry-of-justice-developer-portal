@@ -68,3 +68,4 @@ Adapt the dependabot.yml file to match your project's [dependency manager](https
 ### Dependency Review
 
 If your repository is private with no GitHub Advanced Security license, remove the `.github/workflows/dependency-review.yml` file.
+# Testing branch protection
