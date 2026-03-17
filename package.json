@@ -13,7 +13,7 @@
     "ingest:build": "node scripts/ingest.mjs && next build && npx pagefind --site out",
     "validate:all": "npm run validate:md && npm run validate:yml && npm run validate:ts",
     "validate:md": "markdownlint '**/*.md' --ignore node_modules --ignore dist --ignore out --config .markdownlint.json --ignore .markdownlintignore",
-    "validate:yml": "yamllint -c .yamllint.yml '**/*.{yml,yaml}' || echo 'yamllint not configured yet'",
+    "validate:yml": "if command -v yamllint >/dev/null 2>&1 && [ -f .yamllint.yml ]; then yamllint -c .yamllint.yml '**/*.{yml,yaml}'; else echo 'yamllint not installed or .yamllint.yml missing; skipping YAML validation'; fi",
     "validate:ts": "tsc --noEmit",
     "spellcheck": "cspell '**/*' --no-progress --show-suggestions"
   },

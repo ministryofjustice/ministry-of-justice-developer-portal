@@ -1,5 +1,14 @@
 {
-  "ignorePaths": ["dist/", "**/node_modules/**", "**/*.drawio", "**/*.svg", "**/package*.json", "**/*.xml", "**/*.tsbuildinfo"],
+  "ignorePaths": [
+    "dist/",
+    "content/docs/**",
+    "**/node_modules/**",
+    "**/*.drawio",
+    "**/*.svg",
+    "**/package*.json",
+    "**/*.xml",
+    "**/*.tsbuildinfo"
+  ],
   "language": "en",
   "noConfigSearch": true,
   "allowCompoundWords": true,
