@@ -24,6 +24,6 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.PORTAL_DISPATCH_TOKEN }}
-          repository: ministryofjustice/ministry-of-justice-developer-experience
+          repository: ministryofjustice/ministry-of-justice-developer-portal
           event-type: docs-update
           client-payload: '{"source_id": "${{ github.event.repository.name }}"}'
