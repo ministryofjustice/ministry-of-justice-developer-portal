@@ -1,0 +1,22 @@
+name: Add Issue to Project
+
+on:
+  issues:
+    types:
+      - opened
+
+permissions: {}
+
+jobs:
+  add-to-project:
+    name: Add issue to project
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+    steps:
+      - name: Add issue to project
+        uses: actions/add-to-project@244f685bbc3b7adfa8466e08b698b5577571133e # v1.0.2
+        with:
+          project-url: https://github.com/orgs/ministryofjustice/projects/152
+          github-token: ${{ secrets.GITHUB_TOKEN }}
