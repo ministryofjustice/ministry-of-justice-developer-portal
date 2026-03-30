@@ -19,15 +19,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ministryofjustice/ministry-of-justice-developer-experience.git"
+    "url": "git+https://github.com/ministryofjustice/ministry-of-justice-developer-portal.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ministryofjustice/ministry-of-justice-developer-experience/issues"
+    "url": "https://github.com/ministryofjustice/ministry-of-justice-developer-portal/issues"
   },
-  "homepage": "https://github.com/ministryofjustice/ministry-of-justice-developer-experience#readme",
+  "homepage": "https://github.com/ministryofjustice/ministry-of-justice-developer-portal#readme",
   "dependencies": {
     "govuk-frontend": "^6.0.0",
     "gray-matter": "^4.0.3",
