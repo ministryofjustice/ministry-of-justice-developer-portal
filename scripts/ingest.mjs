@@ -369,8 +369,10 @@ function buildFrontmatter(obj) {
     if (value === null || value === undefined) continue;
     if (typeof value === 'string') {
       // Quote strings that contain special chars
-      if (value.includes(':') || value.includes('#') || value.includes('"')) {
-        result += `${key}: "${value.replace(/"/g, '\\"')}"\n`;
+      if (value.includes(':') || value.includes('#') || value.includes('"') || value.includes('\\')) {
+        // Escape backslashes first, then double quotes to prevent incomplete escaping
+        const escaped = value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        result += `${key}: "${escaped}"\n`;
       } else {
         result += `${key}: ${value}\n`;
       }
