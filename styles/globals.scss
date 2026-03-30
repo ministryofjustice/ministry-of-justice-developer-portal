@@ -7,6 +7,11 @@
 
 // Portal-specific overrides
 
+// Ensure GDS Transport is inherited everywhere, not just body
+html {
+  font-family: "GDS Transport", arial, sans-serif;
+}
+
 // Remove default main wrapper padding for full-width hero
 .govuk-main-wrapper {
   padding-top: 0;
