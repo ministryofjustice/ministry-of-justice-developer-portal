@@ -40,7 +40,7 @@
     "sass": "^1.97.3"
   },
   "devDependencies": {
-    "@types/node": "^25.3.2",
+    "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "cspell": "^8.19.4",
     "markdownlint-cli": "^0.48.0",
