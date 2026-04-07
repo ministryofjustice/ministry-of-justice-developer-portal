@@ -22,6 +22,18 @@ const statusLabels: Record<string, { label: string; className: string }> = {
   alpha: { label: 'Alpha', className: 'govuk-tag govuk-tag--yellow' },
 };
 
+function formatEventDate(value: string) {
+  return new Date(value).toLocaleString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
+    timeZoneName: 'short',
+  });
+}
+
 export function generateStaticParams() {
   return community.items.map((item) => ({ slug: item.slug }));
 }
@@ -65,6 +77,30 @@ export default async function CommunityDetailPage({ params }: { params: Promise<
                 <th className="govuk-table__header" scope="row">Owner</th>
                 <td className="govuk-table__cell">{item.owner}</td>
               </tr>
+              {'eventDate' in item && item.eventDate && (
+                <tr className="govuk-table__row">
+                  <th className="govuk-table__header" scope="row">Starts</th>
+                  <td className="govuk-table__cell">{formatEventDate(item.eventDate)}</td>
+                </tr>
+              )}
+              {'endDate' in item && item.endDate && (
+                <tr className="govuk-table__row">
+                  <th className="govuk-table__header" scope="row">Ends</th>
+                  <td className="govuk-table__cell">{formatEventDate(item.endDate)}</td>
+                </tr>
+              )}
+              {'location' in item && item.location && (
+                <tr className="govuk-table__row">
+                  <th className="govuk-table__header" scope="row">Location</th>
+                  <td className="govuk-table__cell">{item.location}</td>
+                </tr>
+              )}
+              {'isRecurring' in item && item.isRecurring && (
+                <tr className="govuk-table__row">
+                  <th className="govuk-table__header" scope="row">Schedule</th>
+                  <td className="govuk-table__cell">Recurring series</td>
+                </tr>
+              )}
               <tr className="govuk-table__row">
                 <th className="govuk-table__header" scope="row">Tags</th>
                 <td className="govuk-table__cell">

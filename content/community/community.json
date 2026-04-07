@@ -100,8 +100,18 @@
       "description": "Regular tech talks, show-and-tells, and cross-government meetups for sharing practice.",
       "owner": "Developer Experience",
       "status": "live",
+      "eventDate": "2026-05-14T13:00:00Z",
+      "endDate": "2026-05-14T15:00:00Z",
+      "location": "102 Petty France, London and online",
+      "isRecurring": true,
       "tags": ["events", "community", "learning"],
-      "primaryLinks": [],
+      "primaryLinks": [
+        {
+          "label": "Register interest",
+          "href": "https://github.com/ministryofjustice/ministry-of-justice-developer-portal/issues",
+          "external": true
+        }
+      ],
       "sections": [
         {
           "heading": "What to expect",
@@ -114,6 +124,14 @@
         {
           "heading": "Why it matters",
           "body": "Events help teams compare approaches, reduce duplicate effort, and build stronger cross-team relationships."
+        },
+        {
+          "heading": "Attendance",
+          "bullets": [
+            "Open to engineering, design, delivery, and platform teams",
+            "Join in person or remotely where available",
+            "Share talk ideas and topics with Developer Experience"
+          ]
         }
       ]
     }

@@ -10,6 +10,18 @@ const categoryLabels: Record<string, string> = {
   events: 'Events',
 };
 
+function formatEventDate(value: string) {
+  return new Date(value).toLocaleString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
+    timeZoneName: 'short',
+  });
+}
+
 export default function CommunityPage() {
   return (
     <div className="govuk-width-container">
@@ -28,6 +40,11 @@ export default function CommunityPage() {
               </Link>
             </h2>
             <p className="govuk-body app-card__description">{item.description}</p>
+            {'eventDate' in item && item.eventDate && (
+              <p className="govuk-body-s govuk-!-margin-bottom-0">
+                <strong>Next event:</strong> {formatEventDate(item.eventDate)}
+              </p>
+            )}
           </div>
         ))}
       </div>
