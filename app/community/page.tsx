@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { ChatBot } from '@/components/ChatBot';
+import { Callout } from '@/components/templateRender/Callout';
 import { PageIntro } from '@/components/templateRender/PageIntro';
+import { Section } from '@/components/templateRender/Section';
 import community from '@/content/community/community.json';
 
 const categoryLabels: Record<string, string> = {
@@ -50,8 +52,7 @@ export default function CommunityPage() {
       </div>
 
       {community.supportingSections.map((section) => (
-        <div key={section.title}>
-          <h2 className="govuk-heading-l govuk-!-margin-top-6">{section.title}</h2>
+        <Section key={section.title} heading={section.title} className="govuk-!-margin-top-6 govuk-!-margin-bottom-0" contentClassName="">
           <ul className="govuk-list govuk-list--bullet">
             {section.links.map((link) => (
               <li key={link.href}>
@@ -61,17 +62,18 @@ export default function CommunityPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </Section>
       ))}
 
-      <div className="govuk-inset-text govuk-!-margin-top-6">
-        <h2 className="govuk-heading-m">{community.contribution.title}</h2>
+      <div className="govuk-!-margin-top-6">
+        <Callout title={community.contribution.title}>
         <p className="govuk-body">{community.contribution.summary}</p>
         <ul className="govuk-list govuk-list--bullet">
           {community.contribution.actions.map((action) => (
             <li key={action}>{action}</li>
           ))}
         </ul>
+        </Callout>
       </div>
 
       <ChatBot />

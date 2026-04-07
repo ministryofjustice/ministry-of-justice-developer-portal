@@ -2,7 +2,9 @@ import { notFound } from 'next/navigation';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
+import { MetaBar } from '@/components/templateRender/MetaBar';
 import { PageIntro } from '@/components/templateRender/PageIntro';
+import { ReviewBadge, type ReviewStatus } from '@/components/templateRender/ReviewBadge';
 import { TagRow } from '@/components/templateRender/TagRow';
 import guidelines from '@/content/guidelines/guidelines.json';
 
@@ -193,22 +195,20 @@ If you have questions, reach out to the ${guideline.owner} team.
 
           <div className="app-prose-scope" dangerouslySetInnerHTML={{ __html: simpleMarkdown(content) }} />
 
-          <div className="app-doc-meta">
-            <span>
-              Last reviewed:{' '}
-              {new Date(guideline.lastReviewedOn).toLocaleDateString('en-GB', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-              })}
-            </span>
-            <span>
-              <span className={`app-review-badge app-review-badge--${reviewStatus}`}>
-                {reviewStatus === 'ok' ? '✓ Up to date' : reviewStatus === 'warning' ? '⚠ Review soon' : '✗ Review overdue'}
-              </span>
-            </span>
-            <span>Owner: {guideline.owner}</span>
-          </div>
+          <MetaBar
+            items={[
+              {
+                label: 'Last reviewed',
+                value: new Date(guideline.lastReviewedOn).toLocaleDateString('en-GB', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                }),
+              },
+              { label: 'Review status', value: <ReviewBadge status={reviewStatus as ReviewStatus} /> },
+              { label: 'Owner', value: guideline.owner },
+            ]}
+          />
 
           <FeedbackWidget />
         </div>

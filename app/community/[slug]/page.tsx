@@ -3,9 +3,13 @@ import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
+import { ActionLinks } from '@/components/templateRender/ActionLinks';
+import { MetaBar } from '@/components/templateRender/MetaBar';
 import { PageIntro } from '@/components/templateRender/PageIntro';
+import { Section } from '@/components/templateRender/Section';
 import { StatusTag, type StatusTagValue } from '@/components/templateRender/StatusTag';
 import { TagRow } from '@/components/templateRender/TagRow';
+import { TagList } from '@/components/templateRender/TagList';
 import community from '@/content/community/community.json';
 
 type CommunityParams = { slug: string };
@@ -103,51 +107,34 @@ export default async function CommunityDetailPage({ params }: { params: Promise<
               )}
               <tr className="govuk-table__row">
                 <th className="govuk-table__header" scope="row">Tags</th>
-                <td className="govuk-table__cell">
-                  {item.tags.map((tag) => (
-                    <strong key={tag} className="govuk-tag govuk-tag--grey govuk-!-margin-right-1">
-                      {tag}
-                    </strong>
-                  ))}
-                </td>
+                <td className="govuk-table__cell"><TagList tags={item.tags} /></td>
               </tr>
             </tbody>
           </table>
 
-          {item.primaryLinks.length > 0 && (
-            <div className="govuk-button-group">
-              {item.primaryLinks.map((link, index) => {
-                const className = index === 0 ? 'govuk-button' : 'govuk-button govuk-button--secondary';
+          <ActionLinks links={item.primaryLinks} />
 
-                if (link.external) {
-                  return (
-                    <a key={link.href} href={link.href} className={className} rel="noopener noreferrer">
-                      {link.label}
-                    </a>
-                  );
-                }
-
-                return (
-                  <Link key={link.href} href={link.href} className={className}>
-                    {link.label}
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+          <MetaBar
+            items={[
+              { label: 'Owner', value: item.owner },
+              { label: 'Status', value: <StatusTag status={status} /> },
+              { label: 'Schedule', value: 'isRecurring' in item && item.isRecurring ? 'Recurring series' : null },
+            ]}
+          />
 
           {item.sections.map((section) => (
-            <section key={section.heading} className="govuk-!-margin-top-6">
-              <h2 className="govuk-heading-m">{section.heading}</h2>
-              {section.body && <p className="govuk-body">{section.body}</p>}
-              {section.bullets && section.bullets.length > 0 && (
-                <ul className="govuk-list govuk-list--bullet">
-                  {section.bullets.map((bullet) => (
-                    <li key={bullet}>{bullet}</li>
-                  ))}
-                </ul>
-              )}
-            </section>
+            <Section key={section.heading} heading={section.heading} className="govuk-!-margin-top-6" contentClassName="">
+              <>
+                {section.body && <p className="govuk-body">{section.body}</p>}
+                {section.bullets && section.bullets.length > 0 && (
+                  <ul className="govuk-list govuk-list--bullet">
+                    {section.bullets.map((bullet) => (
+                      <li key={bullet}>{bullet}</li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            </Section>
           ))}
 
           <FeedbackWidget />

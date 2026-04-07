@@ -6,6 +6,8 @@ import { markdownToHtml } from '@/lib/markdown';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
+import { MetaBar } from '@/components/templateRender/MetaBar';
+import { ReviewBadge, type ReviewStatus } from '@/components/templateRender/ReviewBadge';
 
 export function generateStaticParams() {
   const slugs = getAllDocSlugs();
@@ -99,37 +101,34 @@ export default async function DocPage({ params }: { params: Promise<Params> }) {
 
           <div className="app-prose-scope" dangerouslySetInnerHTML={{ __html: htmlContent }} />
 
-          <div className="app-doc-meta">
-            {page.meta.lastReviewedOn && (
-              <span>
-                Last reviewed:{' '}
-                {new Date(page.meta.lastReviewedOn).toLocaleDateString('en-GB', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric',
-                })}
-              </span>
-            )}
-            {reviewStatus && (
-              <span>
-                <span className={`app-review-badge app-review-badge--${reviewStatus}`}>
-                  {reviewStatus === 'ok' ? '✓ Up to date' : reviewStatus === 'warning' ? '⚠ Review soon' : '✗ Review overdue'}
-                </span>
-              </span>
-            )}
-            {page.meta.ownerSlack && <span>Owner: {page.meta.ownerSlack}</span>}
-            {page.meta.sourceRepo && (
-              <span>
-                <a
-                  className="govuk-link"
-                  href={`https://github.com/${page.meta.sourceRepo}/blob/main/${page.meta.sourcePath || ''}`}
-                  rel="noopener noreferrer"
-                >
-                  View source on GitHub
-                </a>
-              </span>
-            )}
-          </div>
+          <MetaBar
+            items={[
+              {
+                label: 'Last reviewed',
+                value: page.meta.lastReviewedOn
+                  ? new Date(page.meta.lastReviewedOn).toLocaleDateString('en-GB', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                    })
+                  : null,
+              },
+              { label: 'Review status', value: reviewStatus ? <ReviewBadge status={reviewStatus as ReviewStatus} /> : null },
+              { label: 'Owner', value: page.meta.ownerSlack || null },
+              {
+                label: 'Source',
+                value: page.meta.sourceRepo ? (
+                  <a
+                    className="govuk-link"
+                    href={`https://github.com/${page.meta.sourceRepo}/blob/main/${page.meta.sourcePath || ''}`}
+                    rel="noopener noreferrer"
+                  >
+                    View source on GitHub
+                  </a>
+                ) : null,
+              },
+            ]}
+          />
 
           <FeedbackWidget />
         </div>
