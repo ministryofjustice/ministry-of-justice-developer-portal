@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react';
+import { PageIntro } from '@/components/templateRender/PageIntro';
+import { TagRow } from '@/components/templateRender/TagRow';
+import type { StatusTagValue } from '@/components/templateRender/StatusTag';
 
-export type HeaderStatus = 'live' | 'beta' | 'alpha' | 'deprecated';
+export type HeaderStatus = StatusTagValue;
 
 export interface HeaderProps {
   title: string;
@@ -12,13 +15,6 @@ export interface HeaderProps {
   actions?: ReactNode;
 }
 
-const statusConfig: Record<HeaderStatus, { label: string; className: string }> = {
-  live: { label: 'Live', className: 'govuk-tag govuk-tag--green' },
-  beta: { label: 'Beta', className: 'govuk-tag govuk-tag--blue' },
-  alpha: { label: 'Alpha', className: 'govuk-tag govuk-tag--yellow' },
-  deprecated: { label: 'Deprecated', className: 'govuk-tag govuk-tag--red' },
-};
-
 export function Header({
   title,
   categoryTag,
@@ -28,21 +24,10 @@ export function Header({
   kicker,
   actions,
 }: HeaderProps) {
-  const statusMeta = status ? statusConfig[status] : null;
-
   return (
     <header aria-labelledby="template-header-title" className="govuk-!-margin-bottom-6">
-      <div className="govuk-!-margin-bottom-3" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-        {kicker && <span className="govuk-caption-l">{kicker}</span>}
-        {categoryTag && <span className="app-card__tag">{categoryTag}</span>}
-        {statusMeta && <strong className={statusMeta.className}>{statusMeta.label}</strong>}
-      </div>
-
-      <h1 id="template-header-title" className="govuk-heading-xl govuk-!-margin-bottom-2">
-        {title}
-      </h1>
-
-      {summary && <p className="govuk-body-l govuk-!-margin-bottom-3">{summary}</p>}
+      <TagRow kicker={kicker} categoryTag={categoryTag} status={status} />
+      <PageIntro title={title} summary={summary} titleId="template-header-title" />
 
       {(owner || actions) && (
         <div

@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
+import { PageIntro } from '@/components/templateRender/PageIntro';
+import { TagRow } from '@/components/templateRender/TagRow';
 import guidelines from '@/content/guidelines/guidelines.json';
 
 // Sample content for each guideline — in production these would be MDX files
@@ -183,8 +185,11 @@ If you have questions, reach out to the ${guideline.owner} team.
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
-          <span className="app-card__tag">{phaseLabels[guideline.phase]}</span>
-          <h1 className="govuk-heading-xl govuk-!-margin-top-2">{guideline.title}</h1>
+          <TagRow categoryTag={phaseLabels[guideline.phase]} />
+          <PageIntro
+            title={guideline.title}
+            titleClassName="govuk-heading-xl govuk-!-margin-top-2 govuk-!-margin-bottom-2"
+          />
 
           <div className="app-prose-scope" dangerouslySetInnerHTML={{ __html: simpleMarkdown(content) }} />
 

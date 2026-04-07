@@ -3,6 +3,9 @@ import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
+import { PageIntro } from '@/components/templateRender/PageIntro';
+import { StatusTag, type StatusTagValue } from '@/components/templateRender/StatusTag';
+import { TagRow } from '@/components/templateRender/TagRow';
 import products from '@/content/products/products.json';
 import sources from '@/sources.json';
 
@@ -15,7 +18,7 @@ interface Product {
   slackChannel?: string;
   docsUrl?: string;
   externalUrl?: string;
-  status: string;
+  status: StatusTagValue;
   tags: string[];
 }
 
@@ -54,30 +57,24 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
   );
   const hasInternalServiceLink = Boolean(product.externalUrl?.startsWith('/'));
 
-  const statusTag =
-    product.status === 'live' ? (
-      <strong className="govuk-tag govuk-tag--green">Live</strong>
-    ) : product.status === 'beta' ? (
-      <strong className="govuk-tag govuk-tag--blue">Beta</strong>
-    ) : (
-      <strong className="govuk-tag govuk-tag--yellow">Alpha</strong>
-    );
-
   return (
     <div className="govuk-width-container">
       <Breadcrumbs items={[{ label: 'Products', href: '/products' }, { label: product.name }]} />
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
-          <span className="app-card__tag">{product.category}</span>
-          <h1 className="govuk-heading-xl govuk-!-margin-top-2">{product.name}</h1>
-          <p className="govuk-body-l">{product.description}</p>
+          <TagRow categoryTag={product.category} />
+          <PageIntro
+            title={product.name}
+            summary={product.description}
+            titleClassName="govuk-heading-xl govuk-!-margin-top-2 govuk-!-margin-bottom-2"
+          />
 
           <table className="govuk-table">
             <tbody className="govuk-table__body">
               <tr className="govuk-table__row">
                 <th className="govuk-table__header" scope="row">Status</th>
-                <td className="govuk-table__cell">{statusTag}</td>
+                <td className="govuk-table__cell"><StatusTag status={product.status} /></td>
               </tr>
               <tr className="govuk-table__row">
                 <th className="govuk-table__header" scope="row">Owner</th>

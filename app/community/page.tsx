@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { ChatBot } from '@/components/ChatBot';
+import { PageIntro } from '@/components/templateRender/PageIntro';
 import community from '@/content/community/community.json';
 
 const categoryLabels: Record<string, string> = {
@@ -27,8 +28,7 @@ export default function CommunityPage() {
     <div className="govuk-width-container">
       <Breadcrumbs items={[{ label: 'Community' }]} />
 
-      <h1 className="govuk-heading-xl">{community.title}</h1>
-      <p className="govuk-body-l">{community.summary}</p>
+      <PageIntro title={community.title} summary={community.summary} summaryClassName="govuk-body-l" />
 
       <div className="app-cards">
         {community.items.map((item) => (

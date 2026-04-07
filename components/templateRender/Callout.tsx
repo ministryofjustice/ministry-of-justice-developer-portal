@@ -24,5 +24,10 @@ export function Callout({ tone = 'info', title, children }: CalloutProps) {
     );
   }
 
-  return <div className="govuk-inset-text">{children}</div>;
+  return (
+    <div className="govuk-inset-text">
+      {title && <h2 className="govuk-heading-m">{title}</h2>}
+      {children}
+    </div>
+  );
 }

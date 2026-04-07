@@ -3,6 +3,9 @@ import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
+import { PageIntro } from '@/components/templateRender/PageIntro';
+import { StatusTag, type StatusTagValue } from '@/components/templateRender/StatusTag';
+import { TagRow } from '@/components/templateRender/TagRow';
 import community from '@/content/community/community.json';
 
 type CommunityParams = { slug: string };
@@ -14,12 +17,6 @@ const categoryLabels: Record<string, string> = {
   code: 'Code',
   learn: 'Learn',
   events: 'Events',
-};
-
-const statusLabels: Record<string, { label: string; className: string }> = {
-  live: { label: 'Live', className: 'govuk-tag govuk-tag--green' },
-  beta: { label: 'Beta', className: 'govuk-tag govuk-tag--blue' },
-  alpha: { label: 'Alpha', className: 'govuk-tag govuk-tag--yellow' },
 };
 
 function formatEventDate(value: string) {
@@ -53,7 +50,7 @@ export default async function CommunityDetailPage({ params }: { params: Promise<
     notFound();
   }
 
-  const statusTag = statusLabels[item.status] || statusLabels.live;
+  const status = item.status as StatusTagValue;
 
   return (
     <div className="govuk-width-container">
@@ -61,16 +58,19 @@ export default async function CommunityDetailPage({ params }: { params: Promise<
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
-          <span className="app-card__tag">{categoryLabels[item.category] || item.category}</span>
-          <h1 className="govuk-heading-xl govuk-!-margin-top-2">{item.title}</h1>
-          <p className="govuk-body-l">{item.description}</p>
+          <TagRow categoryTag={categoryLabels[item.category] || item.category} />
+          <PageIntro
+            title={item.title}
+            summary={item.description}
+            titleClassName="govuk-heading-xl govuk-!-margin-top-2 govuk-!-margin-bottom-2"
+          />
 
           <table className="govuk-table">
             <tbody className="govuk-table__body">
               <tr className="govuk-table__row">
                 <th className="govuk-table__header" scope="row">Status</th>
                 <td className="govuk-table__cell">
-                  <strong className={statusTag.className}>{statusTag.label}</strong>
+                  <StatusTag status={status} />
                 </td>
               </tr>
               <tr className="govuk-table__row">
