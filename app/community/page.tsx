@@ -1,29 +1,12 @@
 import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { ChatBot } from '@/components/ChatBot';
+import { getCommunityCategoryLabel } from '@/lib/categoryLabels';
+import { formatEventDateTime } from '@/lib/date';
 import { Callout } from '@/components/templateRender/Callout';
 import { PageIntro } from '@/components/templateRender/PageIntro';
 import { Section } from '@/components/templateRender/Section';
 import community from '@/content/community/community.json';
-
-const categoryLabels: Record<string, string> = {
-  chat: 'Chat',
-  code: 'Code',
-  learn: 'Learn',
-  events: 'Events',
-};
-
-function formatEventDate(value: string) {
-  return new Date(value).toLocaleString('en-GB', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'UTC',
-    timeZoneName: 'short',
-  });
-}
 
 export default function CommunityPage() {
   return (
@@ -35,7 +18,7 @@ export default function CommunityPage() {
       <div className="app-cards">
         {community.items.map((item) => (
           <div key={item.slug} className="app-card">
-            <span className="app-card__tag">{categoryLabels[item.category] || item.category}</span>
+            <span className="app-card__tag">{getCommunityCategoryLabel(item.category)}</span>
             <h2 className="govuk-heading-m app-card__title">
               <Link href={`/community/${item.slug}`} className="govuk-link app-card__title-link">
                 {item.title}
@@ -44,7 +27,7 @@ export default function CommunityPage() {
             <p className="govuk-body app-card__description">{item.description}</p>
             {'eventDate' in item && item.eventDate && (
               <p className="govuk-body-s govuk-!-margin-bottom-0">
-                <strong>Next event:</strong> {formatEventDate(item.eventDate)}
+                <strong>Next event:</strong> {formatEventDateTime(item.eventDate)}
               </p>
             )}
           </div>

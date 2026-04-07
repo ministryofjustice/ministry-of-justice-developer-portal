@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
+import { getProductCategoryLabel } from '@/lib/categoryLabels';
 import { ActionLinks, type ActionLink } from '@/components/templateRender/ActionLinks';
 import { MetaBar } from '@/components/templateRender/MetaBar';
 import { PageIntro } from '@/components/templateRender/PageIntro';
@@ -74,7 +75,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
-          <TagRow categoryTag={product.category} />
+          <TagRow categoryTag={getProductCategoryLabel(product.category)} />
           <PageIntro
             title={product.name}
             summary={product.description}

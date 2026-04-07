@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
+import { getCommunityCategoryLabel } from '@/lib/categoryLabels';
+import { formatEventDateTime } from '@/lib/date';
 import { ActionLinks } from '@/components/templateRender/ActionLinks';
 import { MetaBar } from '@/components/templateRender/MetaBar';
 import { PageIntro } from '@/components/templateRender/PageIntro';
@@ -15,25 +17,6 @@ import community from '@/content/community/community.json';
 type CommunityParams = { slug: string };
 
 type CommunityItem = (typeof community.items)[number];
-
-const categoryLabels: Record<string, string> = {
-  chat: 'Chat',
-  code: 'Code',
-  learn: 'Learn',
-  events: 'Events',
-};
-
-function formatEventDate(value: string) {
-  return new Date(value).toLocaleString('en-GB', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'UTC',
-    timeZoneName: 'short',
-  });
-}
 
 export function generateStaticParams() {
   return community.items.map((item) => ({ slug: item.slug }));
@@ -62,7 +45,7 @@ export default async function CommunityDetailPage({ params }: { params: Promise<
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
-          <TagRow categoryTag={categoryLabels[item.category] || item.category} />
+          <TagRow categoryTag={getCommunityCategoryLabel(item.category)} />
           <PageIntro
             title={item.title}
             summary={item.description}
@@ -84,13 +67,13 @@ export default async function CommunityDetailPage({ params }: { params: Promise<
               {'eventDate' in item && item.eventDate && (
                 <tr className="govuk-table__row">
                   <th className="govuk-table__header" scope="row">Starts</th>
-                  <td className="govuk-table__cell">{formatEventDate(item.eventDate)}</td>
+                  <td className="govuk-table__cell">{formatEventDateTime(item.eventDate)}</td>
                 </tr>
               )}
               {'endDate' in item && item.endDate && (
                 <tr className="govuk-table__row">
                   <th className="govuk-table__header" scope="row">Ends</th>
-                  <td className="govuk-table__cell">{formatEventDate(item.endDate)}</td>
+                  <td className="govuk-table__cell">{formatEventDateTime(item.endDate)}</td>
                 </tr>
               )}
               {'location' in item && item.location && (

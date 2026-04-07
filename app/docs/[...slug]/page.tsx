@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { getDocPage, getDocSources, getAllDocSlugs } from '@/lib/docs';
 import type { NavItem } from '@/lib/docs';
 import { markdownToHtml } from '@/lib/markdown';
+import { formatLongDate } from '@/lib/date';
+import { getReviewStatus } from '@/lib/review';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
@@ -21,21 +23,6 @@ export async function generateMetadata({ params }: { params: Promise<Params> }) 
   const page = getDocPage(slug);
   if (!page) return {};
   return { title: page.meta.title };
-}
-
-function getReviewStatus(lastReviewedOn?: string, reviewIn?: string): 'ok' | 'warning' | 'overdue' | null {
-  if (!lastReviewedOn || !reviewIn) return null;
-  const lastReviewed = new Date(lastReviewedOn);
-  const months = parseInt(reviewIn) || 6;
-  const dueDate = new Date(lastReviewed);
-  dueDate.setMonth(dueDate.getMonth() + months);
-  const now = new Date();
-  const warningDate = new Date(dueDate);
-  warningDate.setMonth(warningDate.getMonth() - 1);
-
-  if (now > dueDate) return 'overdue';
-  if (now > warningDate) return 'warning';
-  return 'ok';
 }
 
 function SidebarNav({ items, currentSlug }: { items: NavItem[]; currentSlug: string[] }) {
@@ -105,13 +92,7 @@ export default async function DocPage({ params }: { params: Promise<Params> }) {
             items={[
               {
                 label: 'Last reviewed',
-                value: page.meta.lastReviewedOn
-                  ? new Date(page.meta.lastReviewedOn).toLocaleDateString('en-GB', {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric',
-                    })
-                  : null,
+                value: page.meta.lastReviewedOn ? formatLongDate(page.meta.lastReviewedOn) : null,
               },
               { label: 'Review status', value: reviewStatus ? <ReviewBadge status={reviewStatus as ReviewStatus} /> : null },
               { label: 'Owner', value: page.meta.ownerSlack || null },

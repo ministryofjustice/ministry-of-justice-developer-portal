@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
+import { formatLongDate } from '@/lib/date';
+import { getReviewStatus } from '@/lib/review';
 import { MetaBar } from '@/components/templateRender/MetaBar';
 import { PageIntro } from '@/components/templateRender/PageIntro';
 import { ReviewBadge, type ReviewStatus } from '@/components/templateRender/ReviewBadge';
@@ -127,20 +129,6 @@ const phaseLabels: Record<string, string> = {
   measuring: 'Measuring Success',
 };
 
-function getReviewStatus(lastReviewedOn: string, reviewIn: string): 'ok' | 'warning' | 'overdue' {
-  const lastReviewed = new Date(lastReviewedOn);
-  const months = parseInt(reviewIn) || 6;
-  const dueDate = new Date(lastReviewed);
-  dueDate.setMonth(dueDate.getMonth() + months);
-  const now = new Date();
-  const warningDate = new Date(dueDate);
-  warningDate.setMonth(warningDate.getMonth() - 1);
-
-  if (now > dueDate) return 'overdue';
-  if (now > warningDate) return 'warning';
-  return 'ok';
-}
-
 type Params = { slug: string };
 
 export function generateStaticParams() {
@@ -199,11 +187,7 @@ If you have questions, reach out to the ${guideline.owner} team.
             items={[
               {
                 label: 'Last reviewed',
-                value: new Date(guideline.lastReviewedOn).toLocaleDateString('en-GB', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric',
-                }),
+                value: formatLongDate(guideline.lastReviewedOn),
               },
               { label: 'Review status', value: <ReviewBadge status={reviewStatus as ReviewStatus} /> },
               { label: 'Owner', value: guideline.owner },
