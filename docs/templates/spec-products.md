@@ -7,6 +7,7 @@ Applies to: Product and service detail pages shown in the Products section.
 ## Purpose and user need
 
 Product pages help developers quickly answer:
+
 - What is this product/service?
 - Is it live and safe to use?
 - Who owns it?
@@ -17,26 +18,30 @@ This template standardises structure so contributors can publish consistent prod
 ## Required sections
 
 1. Header
-- Product title
-- Category tag
-- Status tag
-- Owner
-- Summary description
+
+   - Product title
+   - Category tag
+   - Status tag
+   - Owner
+   - Summary description
 
 2. Core details
-- What the product does (short value statement)
-- Who should use it
-- Scope/coverage (what it does and does not include)
+
+   - What the product does (short value statement)
+   - Who should use it
+   - Scope/coverage (what it does and does not include)
 
 3. Access and links
-- At least one primary action link (documentation or service)
-- Any prerequisites or access constraints
+
+   - At least one primary action link (documentation or service)
+   - Any prerequisites or access constraints
 
 4. Metadata bar
-- Owner
-- Status
-- Last reviewed date
-- Review cadence
+
+   - Owner
+   - Status
+   - Last reviewed date
+   - Review cadence
 
 ## Optional sections
 
@@ -62,6 +67,7 @@ Optional sections are encouraged where information exists. Missing optional sect
 - `primaryLinks` (array, minimum one item)
 
 Recommended metadata fields:
+
 - `lastReviewedOn` (ISO date string)
 - `reviewIn` (human-readable cadence, for example `6 months`)
 - `tags` (string array)
@@ -71,6 +77,7 @@ Recommended metadata fields:
 ## Content guidance
 
 Do:
+
 - Use a clear service name and plain language summary.
 - Include one obvious next action.
 - Make ownership explicit and current.
@@ -78,6 +85,7 @@ Do:
 - Add review metadata so stale pages are visible.
 
 Do not:
+
 - Duplicate long docs content on the product page.
 - Use marketing language without concrete capability detail.
 - Publish without at least one actionable link.
@@ -86,6 +94,7 @@ Do not:
 ## Minimum viable product page (MVP)
 
 A contributor can publish with only:
+
 - Header with title/category/status/owner/summary
 - One short core details section
 - One primary link (docs or service)
