@@ -20,7 +20,13 @@ export function ActionLinks({ links }: ActionLinksProps) {
 
         if (link.external) {
           return (
-            <a key={`${link.label}-${link.href}`} href={link.href} className={buttonClass} rel="noopener noreferrer">
+            <a
+              key={`${link.label}-${link.href}`}
+              href={link.href}
+              className={buttonClass}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               {link.label}
             </a>
           );

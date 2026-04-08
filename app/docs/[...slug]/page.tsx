@@ -103,6 +103,7 @@ export default async function DocPage({ params }: { params: Promise<Params> }) {
                     className="govuk-link"
                     href={`https://github.com/${page.meta.sourceRepo}/blob/main/${page.meta.sourcePath || ''}`}
                     rel="noopener noreferrer"
+                    target="_blank"
                   >
                     View source on GitHub
                   </a>

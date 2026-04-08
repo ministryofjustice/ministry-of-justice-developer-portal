@@ -39,7 +39,7 @@ export default function CommunityPage() {
           <ul className="govuk-list govuk-list--bullet">
             {section.links.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="govuk-link" rel="noopener noreferrer">
+                <a href={link.href} className="govuk-link" rel="noopener noreferrer" target="_blank">
                   {link.label}
                 </a>
               </li>
