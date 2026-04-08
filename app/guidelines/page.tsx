@@ -65,7 +65,12 @@ export default function GuidelinesPage() {
                 {phaseGuidelines.map((g) => (
                   <li key={g.slug}>
                     {'externalUrl' in g && g.externalUrl ? (
-                      <a href={g.externalUrl} className="govuk-link" rel="noopener noreferrer">
+                      <a
+                        href={g.externalUrl}
+                        className="govuk-link"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
                         {g.title}
                       </a>
                     ) : (

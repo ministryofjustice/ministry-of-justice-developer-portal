@@ -94,6 +94,33 @@
       ]
     },
     {
+      "slug": "technology-radar",
+      "title": "Technology Radar",
+      "category": "learn",
+      "description": "The Ministry of Justice Technology Radar is a guide to the technologies, tools, techniques, platforms, and frameworks that we recommend for building digital services at MoJ.",
+      "owner": "Developer Experience",
+      "status": "live",
+      "tags": ["community"],
+      "primaryLinks": [
+        {
+          "label": "View radar",
+          "href": "https://tech-radar.justice.gov.uk/",
+          "external": true
+        }
+      ],
+      "sections": [
+        {
+          "heading": "Typical content",
+          "bullets": [
+            "Languages & Frameworks",
+            "Techniques",
+            "Platforms & Operations",
+            "Tools"
+          ]
+        }
+      ]
+    },
+    {
       "slug": "events-and-meetups",
       "title": "Events and Meetups",
       "category": "events",

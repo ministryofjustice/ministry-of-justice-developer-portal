@@ -20,7 +20,10 @@ export default function CommunityPage() {
           <div key={item.slug} className="app-card">
             <span className="app-card__tag">{getCommunityCategoryLabel(item.category)}</span>
             <h2 className="govuk-heading-m app-card__title">
-              <Link href={`/community/${item.slug}`} className="govuk-link app-card__title-link">
+              <Link
+                href={`/community/${item.slug}`}
+                className="govuk-link govuk-link--no-visited-state app-card__title-link"
+              >
                 {item.title}
               </Link>
             </h2>
@@ -39,7 +42,7 @@ export default function CommunityPage() {
           <ul className="govuk-list govuk-list--bullet">
             {section.links.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="govuk-link" rel="noopener noreferrer">
+                <a href={link.href} className="govuk-link" rel="noopener noreferrer" target="_blank">
                   {link.label}
                 </a>
               </li>

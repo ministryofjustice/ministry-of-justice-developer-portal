@@ -24,7 +24,7 @@ export default function DocsIndex() {
               <h2 className="govuk-heading-m app-card__title">
                 <Link
                   href={`/docs/${encodeURIComponent(source.slug)}`}
-                  className="govuk-link app-card__title-link"
+                  className="govuk-link govuk-link--no-visited-state app-card__title-link"
                 >
                   {source.name}
                 </Link>

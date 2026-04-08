@@ -15,7 +15,10 @@ export function ProductCard({ slug, name, category, description, status, tags }:
     <div className="app-card">
       <span className="app-card__tag">{getProductCategoryLabel(category)}</span>
       <h2 className="govuk-heading-m app-card__title">
-        <Link href={`/products/${slug}`} className="govuk-link app-card__title-link">
+        <Link
+          href={`/products/${slug}`}
+          className="govuk-link govuk-link--no-visited-state app-card__title-link"
+        >
           {name}
         </Link>
       </h2>
