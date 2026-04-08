@@ -36,6 +36,7 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "3e9410cef31dd9cec64ad567efc959afd88a591c" // SLSA action checkout (see .gitignore)
   ]
 }
