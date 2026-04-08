@@ -37,7 +37,7 @@ export default function CommunityPage() {
         <div className="app-card">
           <span className="app-card__tag">Learn</span>
           <h2 className="govuk-heading-m app-card__title">
-            <a href="https://github.com/ministryofjustice/ministry-of-justice-developer-experience" className="govuk-link app-card__title-link" rel="noopener noreferrer">
+            <a href="https://github.com/ministryofjustice/ministry-of-justice-developer-portal" className="govuk-link app-card__title-link" rel="noopener noreferrer">
               Blog
             </a>
           </h2>
