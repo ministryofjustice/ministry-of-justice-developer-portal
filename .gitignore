@@ -33,6 +33,11 @@ env/
 # Ingested content (generated at build time)
 content/docs/
 
+# SLSA action temporary checkout (supply chain protection)
+# This directory name is hardcoded by ministryofjustice/devsecops-actions/sca/slsa
+# TODO: Request configurable directory name from devsecops-actions maintainers
+3e9410cef31dd9cec64ad567efc959afd88a591c/
+
 #development
 **/python-replica
 node_modules

@@ -7,7 +7,8 @@
     "**/*.svg",
     "**/package*.json",
     "**/*.xml",
-    "**/*.tsbuildinfo"
+    "**/*.tsbuildinfo",
+    "3e9410cef31dd9cec64ad567efc959afd88a591c/**" // SLSA action checkout (see .gitignore)
   ],
   "language": "en",
   "noConfigSearch": true,
@@ -30,7 +31,8 @@
     "CDDO",
     "WCAG",
     "scrying",
-    "katex"
+    "katex",
+    "SLSA"
   ],
   "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
   "languageSettings": [
