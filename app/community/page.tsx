@@ -20,7 +20,10 @@ export default function CommunityPage() {
           <div key={item.slug} className="app-card">
             <span className="app-card__tag">{getCommunityCategoryLabel(item.category)}</span>
             <h2 className="govuk-heading-m app-card__title">
-              <Link href={`/community/${item.slug}`} className="govuk-link app-card__title-link">
+              <Link
+                href={`/community/${item.slug}`}
+                className="govuk-link govuk-link--no-visited-state app-card__title-link"
+              >
                 {item.title}
               </Link>
             </h2>
