@@ -51,12 +51,12 @@ export default function CommunityPage() {
               <span className="app-card__tag">Learn</span>
               <h2 className="govuk-heading-m app-card__title">
                   <a href="https://tech-radar.justice.gov.uk/" className="govuk-link app-card__title-link" rel="noopener noreferrer">
-                      Tech Radar
+                      Technology Radar
                   </a>
               </h2>
               <p className="govuk-body app-card__description">
-                  Read about what teams are building, technical decisions, and lessons learned
-                  on the Ministry of Justice Digital blog.
+                  The Ministry of Justice Technology Radar is a guide to the technologies, tools, techniques, platforms,
+                  and frameworks that we recommend for building digital services at MoJ.
               </p>
           </div>
 

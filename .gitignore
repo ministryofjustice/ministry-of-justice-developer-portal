@@ -17,6 +17,7 @@ tsconfig.tsbuildinfo
 
 # IDE
 .vscode
+.idea/
 *.code-workspace
 
 # Misc
