@@ -8,6 +8,7 @@ const navItems = [
   { href: '/guidelines', label: 'Guidelines' },
   { href: '/docs', label: 'Documentation' },
   { href: '/community', label: 'Community' },
+  { href: '/contact-us', label: 'Contact us'}
 ];
 
 export function Header() {

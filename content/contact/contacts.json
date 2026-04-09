@@ -1,0 +1,31 @@
+{
+  "title": "Contact Us",
+  "summary": "You can contact the team in the following ways:",
+  "items":
+  [
+    {
+      "slug": "slack",
+      "title": "Slack",
+      "description": "Use Slack for quick questions, informal support, and conversations with the team.",
+      "linkText": "Open Slack channel",
+      "href": "https://moj.enterprise.slack.com/archives/C0AJBK3P5A8",
+      "cssModifier": "blue"
+    },
+    {
+      "slug": "email",
+      "title": "Email",
+      "description": "Send us an email for general enquiries.",
+      "linkText": "email here",
+      "href": "mailto:email",
+      "cssModifier": "green",
+      "isCopyOnly": true
+    },
+    {
+      "slug": "github-discussions",
+      "title": "GitHub discussions",
+      "description": "Use GitHub Discussions for technical questions and feature requests.",
+      "linkText": "Open GitHub Discussions",
+      "href": "https://github.com/ministryofjustice/ministry-of-justice-developer-portal/discussions",
+      "cssModifier": "purple"
+    }
+  ]}
