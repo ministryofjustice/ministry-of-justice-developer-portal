@@ -90,6 +90,13 @@ content/
     └── guidelines.json      # Guidelines data (internal + external links)
 ```
 
+## Template Contracts
+
+- [Product template contract](docs/templates/spec-products.md)
+- [Guideline template contract](docs/templates/spec-guidelines.md)
+- [Documentation template contract](docs/templates/spec-documentation.md)
+- [Community template contract](docs/templates/spec-community.md)
+
 ### Guidelines: internal vs external
 
 Guidelines in `guidelines.json` can be either internal (rendered as portal pages) or external (linked out to the canonical source). An entry with an `externalUrl` field links directly — no internal page is generated.
@@ -108,23 +115,7 @@ Current external links:
 | Standards | [NCSC Cloud Security Guidance](https://www.ncsc.gov.uk/collection/cloud-security) | NCSC |
 | Measuring | [Measuring service performance](https://www.gov.uk/service-manual/measuring-success) | GDS |
 
-## Ingestion pipeline
-
-The ingestion pipeline (`scripts/ingest.mjs`) does the following:
-
-1. Reads [`sources.json`](sources.json) for the list of doc repositories
-2. Shallow-clones each repo (cached in `.ingestion-cache/`)
-3. Discovers doc files (`.html.md.erb` and `.md`) under the configured `docsPath`
-4. Strips ERB tags and converts tech-docs-template patterns
-5. Enriches frontmatter with `source_repo`, `source_path`, and `ingested_at`
-6. Writes converted `.md` files to `content/docs/<source-id>/`
-
-### Adding a new doc source
-
-1. Add an entry to `sources.json`
-2. Run `npm run ingest:dry-run` to verify discovery
-3. Run `npm run ingest` to pull the docs
-4. The site will automatically include the new source on next build
+Detailed documentation source setup and ingestion workflow are described in [docs/templates/spec-documentation.md](docs/templates/spec-documentation.md).
 
 ### Webhook-driven updates
 

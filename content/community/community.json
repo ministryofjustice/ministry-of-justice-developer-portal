@@ -1,0 +1,231 @@
+{
+  "title": "Community",
+  "summary": "Connect with the cross-government developer community through Slack, events, blogs, and open source.",
+  "items": [
+    {
+      "slug": "developer-slack",
+      "title": "Developer Slack",
+      "category": "chat",
+      "description": "Join the Ministry of Justice Digital & Technology Slack workspace and the main developer support channels.",
+      "owner": "Developer Experience",
+      "status": "live",
+      "tags": ["community", "slack", "support"],
+      "primaryLinks": [],
+      "sections": [
+        {
+          "heading": "Key channels",
+          "body": "Use the workspace to ask questions, discover what other teams are building, and find the right platform owners more quickly.",
+          "bullets": [
+            "#developers for general engineering discussion",
+            "#cloud-platform for platform support",
+            "#modernisation-platform for infrastructure questions",
+            "#security for secure delivery guidance"
+          ]
+        },
+        {
+          "heading": "When to use it",
+          "bullets": [
+            "To ask for early delivery advice",
+            "To find service owners and specialist communities",
+            "To share useful patterns and learn from other teams"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "open-source",
+      "title": "Open Source",
+      "category": "code",
+      "description": "Browse Ministry of Justice open source projects and contribute in the open where appropriate.",
+      "owner": "Operations Engineering",
+      "status": "live",
+      "tags": ["github", "open-source", "community"],
+      "primaryLinks": [
+        {
+          "label": "Browse MoJ repositories",
+          "href": "https://github.com/ministryofjustice",
+          "external": true
+        }
+      ],
+      "sections": [
+        {
+          "heading": "What you will find",
+          "body": "The GitHub organisation includes platform tooling, reusable libraries, service code, and examples of working in the open.",
+          "bullets": [
+            "Reference implementations",
+            "Shared engineering tooling",
+            "Contribution histories and issue discussions"
+          ]
+        },
+        {
+          "heading": "How to use it",
+          "bullets": [
+            "Look for existing patterns before building something new",
+            "Open issues or pull requests where contribution is appropriate",
+            "Use repository READMEs to understand ownership and setup"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "engineering-blog",
+      "title": "Engineering Blog",
+      "category": "learn",
+      "description": "Read about what teams are building, technical decisions, and lessons learned across the portal and related work.",
+      "owner": "Developer Experience",
+      "status": "live",
+      "tags": ["learning", "blog", "case-studies"],
+      "primaryLinks": [
+        {
+          "label": "View repository",
+          "href": "https://github.com/ministryofjustice/ministry-of-justice-developer-portal",
+          "external": true
+        }
+      ],
+      "sections": [
+        {
+          "heading": "Typical content",
+          "bullets": [
+            "Technical decisions and trade-offs",
+            "Delivery retrospectives and lessons learned",
+            "Examples of reusable patterns across teams"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "technology-radar",
+      "title": "Technology Radar",
+      "category": "learn",
+      "description": "The Ministry of Justice Technology Radar is a guide to the technologies, tools, techniques, platforms, and frameworks that we recommend for building digital services at MoJ.",
+      "owner": "Developer Experience",
+      "status": "live",
+      "tags": ["community"],
+      "primaryLinks": [
+        {
+          "label": "View radar",
+          "href": "https://tech-radar.justice.gov.uk/",
+          "external": true
+        }
+      ],
+      "sections": [
+        {
+          "heading": "Typical content",
+          "bullets": [
+            "Languages & Frameworks",
+            "Techniques",
+            "Platforms & Operations",
+            "Tools"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "events-and-meetups",
+      "title": "Events and Meetups",
+      "category": "events",
+      "description": "Regular tech talks, show-and-tells, and cross-government meetups for sharing practice.",
+      "owner": "Developer Experience",
+      "status": "live",
+      "eventDate": "2026-05-14T13:00:00Z",
+      "endDate": "2026-05-14T15:00:00Z",
+      "location": "102 Petty France, London and online",
+      "isRecurring": true,
+      "tags": ["events", "community", "learning"],
+      "primaryLinks": [
+        {
+          "label": "Register interest",
+          "href": "https://github.com/ministryofjustice/ministry-of-justice-developer-portal/issues",
+          "external": true
+        }
+      ],
+      "sections": [
+        {
+          "heading": "What to expect",
+          "bullets": [
+            "Engineering show-and-tells",
+            "Platform and architecture talks",
+            "Cross-government meetups and networking"
+          ]
+        },
+        {
+          "heading": "Why it matters",
+          "body": "Events help teams compare approaches, reduce duplicate effort, and build stronger cross-team relationships."
+        },
+        {
+          "heading": "Attendance",
+          "bullets": [
+            "Open to engineering, design, delivery, and platform teams",
+            "Join in person or remotely where available",
+            "Share talk ideas and topics with Developer Experience"
+          ]
+        }
+      ]
+    }
+  ],
+  "supportingSections": [
+    {
+      "title": "Real resources",
+      "links": [
+        {
+          "label": "MoJ AI Governance Framework",
+          "href": "https://technical-guidance.service.justice.gov.uk/documentation/governance/ai-governance-framework.html#introduction"
+        },
+        {
+          "label": "GOV.UK Service Manual",
+          "href": "https://www.gov.uk/service-manual"
+        },
+        {
+          "label": "GOV.UK Service Standard",
+          "href": "https://www.gov.uk/service-manual/service-standard"
+        },
+        {
+          "label": "GOV.UK Design System",
+          "href": "https://design-system.service.gov.uk/"
+        },
+        {
+          "label": "Technology Code of Practice",
+          "href": "https://www.gov.uk/guidance/the-technology-code-of-practice"
+        },
+        {
+          "label": "GDS API technical and data standards",
+          "href": "https://www.gov.uk/guidance/gds-api-technical-and-data-standards"
+        }
+      ]
+    },
+    {
+      "title": "Tools used across government",
+      "links": [
+        {
+          "label": "GOV.UK Frontend",
+          "href": "https://frontend.design-system.service.gov.uk/"
+        },
+        {
+          "label": "GOV.UK Prototype Kit",
+          "href": "https://prototype-kit.service.gov.uk/docs/"
+        },
+        {
+          "label": "GOV.UK Pay",
+          "href": "https://www.payments.service.gov.uk/"
+        },
+        {
+          "label": "GOV.UK Notify",
+          "href": "https://www.notifications.service.gov.uk/"
+        },
+        {
+          "label": "GOV.UK Forms",
+          "href": "https://www.forms.service.gov.uk/"
+        }
+      ]
+    }
+  ],
+  "contribution": {
+    "title": "Contributing to the Developer Portal",
+    "summary": "This portal is open source and accepts contributions. You can:",
+    "actions": [
+      "Add your team's documentation by creating a portal.yaml in your repo",
+      "Suggest new products or guidelines via pull request",
+      "Report issues or request features on GitHub"
+    ]
+  }
+}
