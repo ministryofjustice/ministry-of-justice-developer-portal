@@ -3,6 +3,13 @@ import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
+import { getProductCategoryLabel } from '@/lib/categoryLabels';
+import { ActionLinks, type ActionLink } from '@/components/templateRender/ActionLinks';
+import { MetaBar } from '@/components/templateRender/MetaBar';
+import { PageIntro } from '@/components/templateRender/PageIntro';
+import { StatusTag, type StatusTagValue } from '@/components/templateRender/StatusTag';
+import { TagRow } from '@/components/templateRender/TagRow';
+import { TagList } from '@/components/templateRender/TagList';
 import products from '@/content/products/products.json';
 import sources from '@/sources.json';
 
@@ -15,7 +22,7 @@ interface Product {
   slackChannel?: string;
   docsUrl?: string;
   externalUrl?: string;
-  status: string;
+  status: StatusTagValue;
   tags: string[];
 }
 
@@ -53,15 +60,14 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
     product.docsUrl && (!isDocsSourceLink || (docsSourceId && sourceIds.has(docsSourceId)))
   );
   const hasInternalServiceLink = Boolean(product.externalUrl?.startsWith('/'));
-
-  const statusTag =
-    product.status === 'live' ? (
-      <strong className="govuk-tag govuk-tag--green">Live</strong>
-    ) : product.status === 'beta' ? (
-      <strong className="govuk-tag govuk-tag--blue">Beta</strong>
-    ) : (
-      <strong className="govuk-tag govuk-tag--yellow">Alpha</strong>
-    );
+  const actionLinks: ActionLink[] = [
+    ...(product.docsUrl && hasValidDocsLink
+      ? [{ label: 'View documentation', href: product.docsUrl, external: false }]
+      : []),
+    ...(product.externalUrl
+      ? [{ label: 'Visit service', href: product.externalUrl, external: !hasInternalServiceLink }]
+      : []),
+  ];
 
   return (
     <div className="govuk-width-container">
@@ -69,15 +75,18 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
-          <span className="app-card__tag">{product.category}</span>
-          <h1 className="govuk-heading-xl govuk-!-margin-top-2">{product.name}</h1>
-          <p className="govuk-body-l">{product.description}</p>
+          <TagRow categoryTag={getProductCategoryLabel(product.category)} />
+          <PageIntro
+            title={product.name}
+            summary={product.description}
+            titleClassName="govuk-heading-xl govuk-!-margin-top-2 govuk-!-margin-bottom-2"
+          />
 
           <table className="govuk-table">
             <tbody className="govuk-table__body">
               <tr className="govuk-table__row">
                 <th className="govuk-table__header" scope="row">Status</th>
-                <td className="govuk-table__cell">{statusTag}</td>
+                <td className="govuk-table__cell"><StatusTag status={product.status} /></td>
               </tr>
               <tr className="govuk-table__row">
                 <th className="govuk-table__header" scope="row">Owner</th>
@@ -91,34 +100,20 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
               )}
               <tr className="govuk-table__row">
                 <th className="govuk-table__header" scope="row">Tags</th>
-                <td className="govuk-table__cell">
-                  {product.tags.map((tag) => (
-                    <strong key={tag} className="govuk-tag govuk-tag--grey govuk-!-margin-right-1">
-                      {tag}
-                    </strong>
-                  ))}
-                </td>
+                <td className="govuk-table__cell"><TagList tags={product.tags} /></td>
               </tr>
             </tbody>
           </table>
 
-          <div className="govuk-button-group">
-            {product.docsUrl && hasValidDocsLink && (
-              <Link href={product.docsUrl} className="govuk-button">
-                View documentation
-              </Link>
-            )}
-            {product.externalUrl && !hasInternalServiceLink && (
-              <a href={product.externalUrl} className="govuk-button govuk-button--secondary" rel="noopener noreferrer">
-                Visit service
-              </a>
-            )}
-            {product.externalUrl && hasInternalServiceLink && (
-              <Link href={product.externalUrl} className="govuk-button govuk-button--secondary">
-                Visit service
-              </Link>
-            )}
-          </div>
+          <ActionLinks links={actionLinks} />
+
+          <MetaBar
+            items={[
+              { label: 'Owner', value: product.owner },
+              { label: 'Status', value: <StatusTag status={product.status} /> },
+              { label: 'Slack', value: product.slackChannel || null },
+            ]}
+          />
 
           <FeedbackWidget />
         </div>
