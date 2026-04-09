@@ -2,6 +2,12 @@ import { notFound } from 'next/navigation';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
+import { formatLongDate } from '@/lib/date';
+import { getReviewStatus } from '@/lib/review';
+import { MetaBar } from '@/components/templateRender/MetaBar';
+import { PageIntro } from '@/components/templateRender/PageIntro';
+import { ReviewBadge, type ReviewStatus } from '@/components/templateRender/ReviewBadge';
+import { TagRow } from '@/components/templateRender/TagRow';
 import guidelines from '@/content/guidelines/guidelines.json';
 
 // Sample content for each guideline — in production these would be MDX files
@@ -123,20 +129,6 @@ const phaseLabels: Record<string, string> = {
   measuring: 'Measuring Success',
 };
 
-function getReviewStatus(lastReviewedOn: string, reviewIn: string): 'ok' | 'warning' | 'overdue' {
-  const lastReviewed = new Date(lastReviewedOn);
-  const months = parseInt(reviewIn) || 6;
-  const dueDate = new Date(lastReviewed);
-  dueDate.setMonth(dueDate.getMonth() + months);
-  const now = new Date();
-  const warningDate = new Date(dueDate);
-  warningDate.setMonth(warningDate.getMonth() - 1);
-
-  if (now > dueDate) return 'overdue';
-  if (now > warningDate) return 'warning';
-  return 'ok';
-}
-
 type Params = { slug: string };
 
 export function generateStaticParams() {
@@ -183,27 +175,24 @@ If you have questions, reach out to the ${guideline.owner} team.
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
-          <span className="app-card__tag">{phaseLabels[guideline.phase]}</span>
-          <h1 className="govuk-heading-xl govuk-!-margin-top-2">{guideline.title}</h1>
+          <TagRow categoryTag={phaseLabels[guideline.phase]} />
+          <PageIntro
+            title={guideline.title}
+            titleClassName="govuk-heading-xl govuk-!-margin-top-2 govuk-!-margin-bottom-2"
+          />
 
           <div className="app-prose-scope" dangerouslySetInnerHTML={{ __html: simpleMarkdown(content) }} />
 
-          <div className="app-doc-meta">
-            <span>
-              Last reviewed:{' '}
-              {new Date(guideline.lastReviewedOn).toLocaleDateString('en-GB', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-              })}
-            </span>
-            <span>
-              <span className={`app-review-badge app-review-badge--${reviewStatus}`}>
-                {reviewStatus === 'ok' ? '✓ Up to date' : reviewStatus === 'warning' ? '⚠ Review soon' : '✗ Review overdue'}
-              </span>
-            </span>
-            <span>Owner: {guideline.owner}</span>
-          </div>
+          <MetaBar
+            items={[
+              {
+                label: 'Last reviewed',
+                value: formatLongDate(guideline.lastReviewedOn),
+              },
+              { label: 'Review status', value: <ReviewBadge status={reviewStatus as ReviewStatus} /> },
+              { label: 'Owner', value: guideline.owner },
+            ]}
+          />
 
           <FeedbackWidget />
         </div>

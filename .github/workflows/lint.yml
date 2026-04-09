@@ -84,7 +84,7 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: SLSA supply chain protection
-        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
+        uses: ministryofjustice/devsecops-actions/sca/slsa@1cee8e5dce2be99328b2ea9074c7e0acdfd69907
 
       - name: Install
         shell: bash

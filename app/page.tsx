@@ -79,7 +79,10 @@ export default function Home() {
               <div key={feature.href} className="app-card">
                 <span className="app-card__tag">{feature.tag}</span>
                 <h2 className="govuk-heading-m app-card__title">
-                  <Link href={feature.href} className="govuk-link app-card__title-link">
+                  <Link
+                    href={feature.href}
+                    className="govuk-link govuk-link--no-visited-state app-card__title-link"
+                  >
                     {feature.title}
                   </Link>
                 </h2>
