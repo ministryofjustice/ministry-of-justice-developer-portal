@@ -15,7 +15,7 @@
       "slug": "email",
       "title": "Email",
       "description": "Send us an email for general enquiries.",
-      "linkText": "email here",
+      "linkText": "DeveloperExperienceTeam@justice.gov.uk",
       "href": "mailto:DeveloperExperienceTeam@justice.gov.uk",
       "cssModifier": "green",
       "isCopyOnly": true
