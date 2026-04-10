@@ -95,14 +95,14 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: SLSA supply chain protection
-        uses: ministryofjustice/devsecops-actions/sca/slsa@1cee8e5dce2be99328b2ea9074c7e0acdfd69907
+        uses: ministryofjustice/devsecops-actions/sca/slsa@d57d5793bf88b779875c8707e9b40a692b551b31
 
       - name: Install
         shell: bash
         run: npm ci --ignore-scripts --omit=dev
 
       - name: ⚡️ SCA
-        uses: ministryofjustice/devsecops-actions/sca@1cee8e5dce2be99328b2ea9074c7e0acdfd69907 # v1.4.0
+        uses: ministryofjustice/devsecops-actions/sca@d57d5793bf88b779875c8707e9b40a692b551b31 # v1.4.0
         with:
           token: "${{ secrets.GITHUB_TOKEN }}" # Mandatory
           dependency-review-config-file: "./.github/dependency-review-config.yml" # Optional
