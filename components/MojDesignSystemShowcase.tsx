@@ -16,7 +16,7 @@ function pickNextIndex(length: number, previous: number): number {
   return next;
 }
 
-export function MomDesignSystemShowcase() {
+export function MojDesignSystemShowcase() {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export function MomDesignSystemShowcase() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const targets = Array.from(
-      document.querySelectorAll<HTMLElement>('[data-mom-fade-target]')
+      document.querySelectorAll<HTMLElement>('[data-moj-fade-target]')
     );
     if (targets.length === 0) return;
 
@@ -34,15 +34,15 @@ export function MomDesignSystemShowcase() {
 
     const pulseTarget = (index: number) => {
       const target = targets[index];
-      target.classList.remove('mom-fade-pulse');
+      target.classList.remove('moj-fade-pulse');
       void target.offsetHeight;
 
       const onAnimationEnd = () => {
-        target.classList.remove('mom-fade-pulse');
+        target.classList.remove('moj-fade-pulse');
       };
 
       target.addEventListener('animationend', onAnimationEnd, { once: true });
-      target.classList.add('mom-fade-pulse');
+      target.classList.add('moj-fade-pulse');
 
       const fallbackId = window.setTimeout(onAnimationEnd, ANIMATION_DURATION_MS + 300);
       timerIds.push(fallbackId);
@@ -77,12 +77,12 @@ export function MomDesignSystemShowcase() {
         to citizen-facing services.
       </div>
 
-      <p className="govuk-body-s" data-mom-fade-target="disclaimer">
+      <p className="govuk-body-s" data-moj-fade-target="disclaimer">
         Decorative motion appears occasionally on this page for demo purposes. It is subtle,
         non-blocking, and disabled when reduced-motion is enabled.
       </p>
 
-      <section className="govuk-!-margin-top-7" data-mom-fade-target="principles">
+      <section className="govuk-!-margin-top-7" data-moj-fade-target="principles">
         <h2 className="govuk-heading-l">Design principles</h2>
         <ul className="govuk-list govuk-list--bullet">
           <li><strong>Make outcomes legible:</strong> users should always know what will happen next.</li>
