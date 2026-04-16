@@ -15,11 +15,7 @@ const categories = [
 ];
 
 const excludedProductSlugs = new Set([
-  'grimoire-vault',
-  'wardwall',
-  'potion-pricing-api',
-  'creature-registry-api',
-  'spellcheck-auth',
+  'service-auth',
 ]);
 
 export default function ProductsPage() {

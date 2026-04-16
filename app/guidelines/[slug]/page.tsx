@@ -51,13 +51,13 @@ All APIs should follow these core principles:
 
 ### Use RESTful conventions
 
-- Use nouns for resource URLs: \`/creatures\`, not \`/getCreatures\`
+- Use nouns for resource URLs: \`/records\`, not \`/getRecords\`
 - Use HTTP methods: GET, POST, PUT, PATCH, DELETE
 - Return appropriate status codes: 200, 201, 400, 401, 403, 404, 500
 
 ### Versioning
 
-- Include the major version in the URL: \`/v1/creatures\`
+- Include the major version in the URL: \`/v1/records\`
 - Use semantic versioning for the API overall
 - Document breaking changes clearly in the changelog
 
@@ -70,7 +70,7 @@ Return consistent error responses:
   "status": 400,
   "errorCode": "VALIDATION_ERROR",
   "userMessage": "The request was invalid",
-  "developerMessage": "Field 'creatureId' is required",
+  "developerMessage": "Field 'recordId' is required",
   "moreInfo": "/docs/errors/VALIDATION_ERROR"
 }
 \`\`\`
@@ -80,7 +80,7 @@ Return consistent error responses:
 Use cursor-based pagination for large datasets:
 
 \`\`\`
-GET /v1/creatures?cursor=abc123&limit=20
+GET /v1/records?cursor=abc123&limit=20
 \`\`\`
 
 ### Authentication

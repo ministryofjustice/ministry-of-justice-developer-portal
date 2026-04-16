@@ -159,6 +159,11 @@ function walkDir(dir: string, currentPath: string[], slugs: string[][]) {
     if (entry.isDirectory()) {
       // Always register directory paths so static export generates them
       slugs.push([...currentPath, entry.name]);
+      // Also register explicit /index paths to support ingested links ending in /index
+      const indexPath = path.join(dir, entry.name, 'index.md');
+      if (fs.existsSync(indexPath)) {
+        slugs.push([...currentPath, entry.name, 'index']);
+      }
       walkDir(path.join(dir, entry.name), [...currentPath, entry.name], slugs);
     } else if (entry.name.endsWith('.md') && entry.name !== 'index.md') {
       const slug = entry.name.replace(/\.md$/, '');

@@ -16,7 +16,7 @@ function pickNextIndex(length: number, previous: number): number {
   return next;
 }
 
-export function MomDesignSystemShowcase() {
+export function MojDesignSystemShowcase() {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export function MomDesignSystemShowcase() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const targets = Array.from(
-      document.querySelectorAll<HTMLElement>('[data-mom-fade-target]')
+      document.querySelectorAll<HTMLElement>('[data-moj-fade-target]')
     );
     if (targets.length === 0) return;
 
@@ -34,15 +34,15 @@ export function MomDesignSystemShowcase() {
 
     const pulseTarget = (index: number) => {
       const target = targets[index];
-      target.classList.remove('mom-fade-pulse');
+      target.classList.remove('moj-fade-pulse');
       void target.offsetHeight;
 
       const onAnimationEnd = () => {
-        target.classList.remove('mom-fade-pulse');
+        target.classList.remove('moj-fade-pulse');
       };
 
       target.addEventListener('animationend', onAnimationEnd, { once: true });
-      target.classList.add('mom-fade-pulse');
+      target.classList.add('moj-fade-pulse');
 
       const fallbackId = window.setTimeout(onAnimationEnd, ANIMATION_DURATION_MS + 300);
       timerIds.push(fallbackId);
@@ -72,17 +72,17 @@ export function MomDesignSystemShowcase() {
   return (
     <div ref={containerRef}>
       <div className="govuk-inset-text">
-        This system is maintained by the Arcane Standards Office. Every pattern, component,
-        and glyph sequence published here has been stress-tested under live enchantment load
-        and cleared for deployment to citizen-facing services across all seven realms.
+        This system is maintained by the Design Standards Office. Every pattern and component
+        published here has been stress-tested under live service load and cleared for deployment
+        to citizen-facing services.
       </div>
 
-      <p className="govuk-body-s" data-mom-fade-target="disclaimer">
+      <p className="govuk-body-s" data-moj-fade-target="disclaimer">
         Decorative motion appears occasionally on this page for demo purposes. It is subtle,
         non-blocking, and disabled when reduced-motion is enabled.
       </p>
 
-      <section className="govuk-!-margin-top-7" data-mom-fade-target="principles">
+      <section className="govuk-!-margin-top-7" data-moj-fade-target="principles">
         <h2 className="govuk-heading-l">Design principles</h2>
         <ul className="govuk-list govuk-list--bullet">
           <li><strong>Make outcomes legible:</strong> users should always know what will happen next.</li>
@@ -104,23 +104,23 @@ export function MomDesignSystemShowcase() {
           </thead>
           <tbody className="govuk-table__body">
             <tr className="govuk-table__row">
-              <td className="govuk-table__cell">Rune typography</td>
-              <td className="govuk-table__cell">Dual-script hierarchy — standard glyphs for body content, verified rune sequences for binding clauses and formal notices</td>
-              <td className="govuk-table__cell">Prevents mis-invocation when citizens scan permit documents under pressure</td>
+              <td className="govuk-table__cell">Typography standards</td>
+              <td className="govuk-table__cell">Clear hierarchy for headings, body content, and legal notices</td>
+              <td className="govuk-table__cell">Prevents misinterpretation when users scan documents under pressure</td>
             </tr>
             <tr className="govuk-table__row">
-              <td className="govuk-table__cell">Ethereal spacing</td>
-              <td className="govuk-table__cell">Consistent spatial rhythm that holds across physical and scrying-mirror viewports</td>
-              <td className="govuk-table__cell">Ensures form layouts remain stable during dimensional-shift rendering</td>
+              <td className="govuk-table__cell">Layout spacing</td>
+              <td className="govuk-table__cell">Consistent spacing that holds across desktop and mobile viewports</td>
+              <td className="govuk-table__cell">Ensures form layouts remain stable during responsive rendering</td>
             </tr>
             <tr className="govuk-table__row">
-              <td className="govuk-table__cell">Enchanted content style</td>
-              <td className="govuk-table__cell">Plain language first, incantation syntax only where legally required</td>
+              <td className="govuk-table__cell">Content style</td>
+              <td className="govuk-table__cell">Plain language first, technical terminology only where legally required</td>
               <td className="govuk-table__cell">Reduces failed submissions — 73% of permit errors trace to unclear phrasing</td>
             </tr>
             <tr className="govuk-table__row">
               <td className="govuk-table__cell">Colour and contrast</td>
-              <td className="govuk-table__cell">Meets WCAG 2.2 AA in daylight, torchlight, and bioluminescent cavern conditions</td>
+              <td className="govuk-table__cell">Meets WCAG 2.2 AA in bright, low-light, and glare-prone conditions</td>
               <td className="govuk-table__cell">Not all Ministry offices have consistent ambient lighting</td>
             </tr>
           </tbody>
@@ -131,41 +131,41 @@ export function MomDesignSystemShowcase() {
         <h2 className="govuk-heading-l">Core components</h2>
         <dl className="govuk-summary-list">
           <div className="govuk-summary-list__row">
-            <dt className="govuk-summary-list__key">Ward activation controls</dt>
+            <dt className="govuk-summary-list__key">Critical action controls</dt>
             <dd className="govuk-summary-list__value">
-              Primary ward actions are singular and irreversible — the interface must make consequences
+              Primary actions are singular and irreversible — the interface must make consequences
               obvious before activation. Secondary actions (modify parameters, request review) are
               available but visually subordinate.
               <div className="govuk-button-group govuk-!-margin-top-2">
-                <button className="govuk-button" type="button">Activate ward</button>
+                <button className="govuk-button" type="button">Activate control</button>
                 <button className="govuk-button govuk-button--secondary" type="button">Review parameters</button>
               </div>
             </dd>
           </div>
           <div className="govuk-summary-list__row">
-            <dt className="govuk-summary-list__key">Containment status tags</dt>
+            <dt className="govuk-summary-list__key">Operational status tags</dt>
             <dd className="govuk-summary-list__value">
-              Every registered entity, permit, and active enchantment carries a visible status tag.
-              Operational teams rely on these for triage during surge events and containment reviews.
+              Every registered service, permit, and active process carries a visible status tag.
+              Operational teams rely on these for triage during surge events and service reviews.
               <p className="govuk-!-margin-top-2 govuk-!-margin-bottom-0">
-                <strong className="govuk-tag govuk-tag--green govuk-!-margin-right-1">Contained</strong>
+                <strong className="govuk-tag govuk-tag--green govuk-!-margin-right-1">Active</strong>
                 <strong className="govuk-tag govuk-tag--blue govuk-!-margin-right-1">Under review</strong>
-                <strong className="govuk-tag govuk-tag--yellow govuk-!-margin-right-1">Provisional</strong>
-                <strong className="govuk-tag govuk-tag--red">Breach detected</strong>
+                <strong className="govuk-tag govuk-tag--yellow govuk-!-margin-right-1">Pending</strong>
+                <strong className="govuk-tag govuk-tag--red">Action required</strong>
               </p>
             </dd>
           </div>
           <div className="govuk-summary-list__row">
-            <dt className="govuk-summary-list__key">Curse-breach warnings</dt>
+            <dt className="govuk-summary-list__key">Incident warnings</dt>
             <dd className="govuk-summary-list__value">
               High-severity alerts use warning text with the exclamation icon. These are reserved
-              for situations where inaction causes measurable harm — containment failures,
-              expired protective wards, and revoked permits with active enchantments.
+              for situations where inaction causes measurable harm — critical failures,
+              expired safeguards, and revoked permits with active incidents.
               <div className="govuk-warning-text govuk-!-margin-top-2 govuk-!-margin-bottom-0">
                 <span className="govuk-warning-text__icon" aria-hidden="true">!</span>
                 <strong className="govuk-warning-text__text">
                   <span className="govuk-warning-text__assistive">Warning</span>
-                  Protective ward expired. Re-activate before resuming fieldwork or citizens may be exposed to residual enchantment.
+                  Protection setting expired. Re-activate before resuming fieldwork or users may be exposed to unmanaged risk.
                 </strong>
               </div>
             </dd>
@@ -182,23 +182,23 @@ export function MomDesignSystemShowcase() {
 
       <section className="govuk-!-margin-top-7">
         <h2 className="govuk-heading-l">Service patterns</h2>
-        <h3 className="govuk-heading-m">Pattern: Apparition licence application</h3>
+        <h3 className="govuk-heading-m">Pattern: Service licence application</h3>
         <ol className="govuk-list govuk-list--number">
-          <li>Confirm eligibility — applicant must hold a current realm-of-origin identity credential and have no outstanding spatial-violation notices.</li>
+          <li>Confirm eligibility — applicant must hold a valid identity credential and have no outstanding compliance notices.</li>
           <li>Capture destination preferences and restricted-zone exclusions through a stepped form with clear progress indication.</li>
-          <li>Present a confirmation page stating the licence reference, effective date, and any conditions imposed by the Spatial Integrity Board.</li>
+          <li>Present a confirmation page stating the licence reference, effective date, and any conditions imposed by the Service Review Board.</li>
         </ol>
 
-        <h3 className="govuk-heading-m">Pattern: Creature registration and welfare check</h3>
+        <h3 className="govuk-heading-m">Pattern: Service registration and welfare check</h3>
         <ol className="govuk-list govuk-list--number">
-          <li>Identify the creature class from a validated taxonomy — free-text descriptions are mapped to the nearest registered classification with a confidence indicator.</li>
-          <li>Collect habitat requirements, dietary restrictions, and containment grade through conditional form sections that adapt based on creature class.</li>
+          <li>Identify the service class from a validated taxonomy — free-text descriptions are mapped to the nearest registered classification with a confidence indicator.</li>
+          <li>Collect operational requirements, access constraints, and assurance grade through conditional form sections that adapt based on service class.</li>
           <li>Schedule an initial welfare inspection and issue a provisional registration with a 90-day review window.</li>
         </ol>
 
-        <h3 className="govuk-heading-m">Pattern: Hex incident response</h3>
+        <h3 className="govuk-heading-m">Pattern: Incident response</h3>
         <p className="govuk-body">
-          During active hex incidents, the interface reduces navigation depth to two levels,
+          During active incidents, the interface reduces navigation depth to two levels,
           promotes the status banner to fixed position, and limits available actions to those
           that directly support containment or citizen safety. Non-critical functions are
           suppressed, not hidden — they show a &quot;temporarily unavailable during active incident&quot;
@@ -207,41 +207,41 @@ export function MomDesignSystemShowcase() {
       </section>
 
       <section className="govuk-!-margin-top-7">
-        <h2 className="govuk-heading-l">Accessibility and multi-realm support</h2>
+        <h2 className="govuk-heading-l">Accessibility and multi-channel support</h2>
         <p className="govuk-body">
-          Ministry services are used by practitioners, citizens, creatures, and automated
-          familiar systems. The design system accounts for this range explicitly:
+          Ministry services are used by practitioners, citizens, staff, and automated
+          assistant systems. The design system accounts for this range explicitly:
         </p>
         <ul className="govuk-list govuk-list--bullet">
-          <li><strong>Wand-free navigation:</strong> every action is reachable by keyboard, voice, and familiar-relay input. No interaction requires gestural casting.</li>
-          <li><strong>Multi-species readability:</strong> content is tested across human-standard, low-light (subterranean), and high-altitude scrying conditions at WCAG 2.2 AA minimum.</li>
+          <li><strong>Hands-free navigation:</strong> every action is reachable by keyboard, voice, and assistive input. No interaction requires complex gestures.</li>
+          <li><strong>Multi-context readability:</strong> content is tested across standard, low-light, and high-glare conditions at WCAG 2.2 AA minimum.</li>
           <li><strong>Temporal consistency:</strong> interfaces must render identically regardless of the user&apos;s local time zone. All timestamps use UTC.</li>
-          <li><strong>Screen reader and rune reader parity:</strong> ARIA labels and rune-sequence descriptions provide equivalent information to users of both technologies.</li>
-          <li><strong>Familiar-agent compatibility:</strong> automated familiars acting on behalf of a user receive the same semantic structure as human users, ensuring no degraded experience for delegated tasks.</li>
+          <li><strong>Assistive technology parity:</strong> ARIA labels and semantic descriptions provide equivalent information to users of different assistive tools.</li>
+          <li><strong>Automation-agent compatibility:</strong> automated agents acting on behalf of a user receive the same semantic structure as human users, ensuring no degraded experience for delegated tasks.</li>
         </ul>
       </section>
 
       <section className="govuk-!-margin-top-7">
         <h2 className="govuk-heading-l">Contribution model</h2>
         <p className="govuk-body">
-          New components and patterns are proposed through a Grimoire Contribution Request (GCR).
-          Each GCR must include:
+          New components and patterns are proposed through a Design Contribution Request (DCR).
+          Each DCR must include:
         </p>
         <ul className="govuk-list govuk-list--bullet">
           <li>A documented user need grounded in an active service or policy requirement</li>
-          <li>Accessibility evidence covering keyboard, screen reader, and familiar-agent testing</li>
-          <li>Containment-grade classification (standard, elevated, or critical) with rationale</li>
-          <li>At least one working prototype deployable to the Arcane Staging Environment</li>
+          <li>Accessibility evidence covering keyboard, screen reader, and automation-agent testing</li>
+          <li>Impact classification (standard, elevated, or critical) with rationale</li>
+          <li>At least one working prototype deployable to the staging environment</li>
         </ul>
         <p className="govuk-body">
-          Accepted GCRs are versioned in the Grimoire Registry and published with migration
-          guidance so service teams can adopt new patterns without disrupting active enchantments.
+          Accepted DCRs are versioned in the pattern registry and published with migration
+          guidance so service teams can adopt new patterns without disrupting active services.
           Breaking changes require a 60-day deprecation notice and a compatibility shim for the
           previous version.
         </p>
         <div className="govuk-inset-text">
-          The Arcane Standards Office reviews GCRs on a fortnightly cadence. Proposals with
-          cross-realm impact are escalated to the Inter-Realm Interface Council for joint review.
+          The Design Standards Office reviews DCRs on a fortnightly cadence. Proposals with
+          cross-service impact are escalated to the Cross-Service Interface Council for joint review.
         </div>
       </section>
     </div>

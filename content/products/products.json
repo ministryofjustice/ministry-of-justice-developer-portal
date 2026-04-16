@@ -25,7 +25,7 @@
     "slug": "analytical-platform",
     "name": "Analytical Platform",
     "category": "platforms",
-    "description": "Data analysis environment providing RStudio, JupyterHub, and Airflow for data scientists and analysts across the Ministry of Magic.",
+    "description": "Data analysis environment providing RStudio, JupyterHub, and Airflow for data scientists and analysts across the Ministry of Justice.",
     "owner": "Analytical Platform team",
     "slackChannel": "#analytical-platform",
     "docsUrl": "/docs/analytical-platform",
@@ -58,8 +58,8 @@
     "slug": "spellcheck-auth",
     "name": "SpellCheck Auth",
     "category": "apis",
-    "description": "OAuth2 authentication and authorisation service for Ministry of Magic digital services. Provides JWT tokens and role-based access control.",
-    "owner": "Magical Security",
+    "description": "OAuth2 authentication and authorisation service for Ministry of Justice digital services. Provides JWT tokens and role-based access control.",
+    "owner": "Security",
     "slackChannel": "#spellcheck-auth",
     "status": "live",
     "tags": ["authentication", "oauth2", "security"]
@@ -68,7 +68,7 @@
     "slug": "template-deploy",
     "name": "Template Deploy",
     "category": "tools",
-    "description": "Standardised deployment templates and GitHub Actions workflows for Ministry of Magic services. CI/CD pipelines as code.",
+    "description": "Standardised deployment templates and GitHub Actions workflows for Ministry of Justice services. CI/CD pipelines as code.",
     "owner": "Operations Engineering",
     "slackChannel": "#operations-engineering",
     "status": "live",
@@ -78,7 +78,7 @@
     "slug": "operations-engineering",
     "name": "Operations Engineering",
     "category": "tools",
-    "description": "Centralised tooling and support for Ministry of Magic development teams. GitHub organisation management, domain management, and certificate services.",
+    "description": "Centralised tooling and support for Ministry of Justice development teams. GitHub organisation management, domain management, and certificate services.",
     "owner": "Operations Engineering",
     "slackChannel": "#operations-engineering",
     "externalUrl": "https://github.com/ministryofjustice",
@@ -86,14 +86,14 @@
     "tags": ["github", "dns", "certificates", "tooling"]
   },
   {
-    "slug": "creature-registry-api",
-    "name": "Creature Registry API",
+    "slug": "service-registry-api",
+    "name": "Service Registry API",
     "category": "apis",
-    "description": "RESTful API providing access to the magical creature registry for Ministry of Magic digital services.",
-    "owner": "Magical Creatures",
-    "slackChannel": "#creature-registry",
+    "description": "RESTful API providing access to the central service registry for Ministry of Justice digital services.",
+    "owner": "Digital Platforms",
+    "slackChannel": "#service-registry",
     "status": "live",
-    "tags": ["api", "creatures", "data"]
+    "tags": ["api", "registry", "data"]
   },
   {
     "slug": "moj-design-system",
@@ -136,16 +136,6 @@
     "tags": ["forms", "no-code", "service-design"]
   },
   {
-    "slug": "potion-pricing-api",
-    "name": "Potion Pricing API",
-    "category": "apis",
-    "description": "API for calculating potion ingredient costs. Used by potion suppliers and internal services.",
-    "owner": "Potions Digital",
-    "slackChannel": "#potion-pricing",
-    "status": "live",
-    "tags": ["api", "potions", "fees"]
-  },
-  {
     "slug": "secure-pipelines",
     "name": "Secure CI/CD Pipelines",
     "category": "security",
@@ -154,25 +144,5 @@
     "slackChannel": "#security-engineering",
     "status": "beta",
     "tags": ["security", "ci-cd", "scanning", "devsecops"]
-  },
-  {
-    "slug": "wardwall",
-    "name": "WardWall",
-    "category": "security",
-    "description": "Perimeter defence layer for Ministry services. Provides automated threat detection, hex-pattern filtering, and real-time containment breach alerts across all registered endpoints.",
-    "owner": "Arcane Security Operations",
-    "slackChannel": "#wardwall",
-    "status": "live",
-    "tags": ["security", "firewall", "threat-detection", "monitoring"]
-  },
-  {
-    "slug": "grimoire-vault",
-    "name": "Grimoire Vault",
-    "category": "security",
-    "description": "Secrets management and credential rotation service. Stores enchantment keys, ward tokens, and API credentials with automatic expiry enforcement and full audit logging.",
-    "owner": "Arcane Security Operations",
-    "slackChannel": "#grimoire-vault",
-    "status": "live",
-    "tags": ["security", "secrets", "credentials", "encryption"]
   }
 ]
