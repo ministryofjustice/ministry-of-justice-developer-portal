@@ -175,7 +175,7 @@ function walkDir(dir: string, currentPath: string[], slugs: string[][]) {
 function buildNavFromDir(dir: string, basePath: string[]): NavItem[] {
   if (!fs.existsSync(dir)) return [];
   const entries = fs.readdirSync(dir, { withFileTypes: true });
-  const items: NavItem[] = [];
+  const itemsBySlug = new Map<string, NavItem>();
 
   for (const entry of entries) {
     if (entry.name.startsWith('_')) continue;
@@ -192,15 +192,32 @@ function buildNavFromDir(dir: string, basePath: string[]): NavItem[] {
         weight = data.weight ?? 100;
       }
 
-      items.push({ title, slug: [...basePath, entry.name], children, weight });
+      const slugPath = [...basePath, entry.name];
+      const key = slugPath.join('/');
+      const existing = itemsBySlug.get(key);
+      if (existing) {
+        existing.children = children;
+        existing.weight = Math.min(existing.weight ?? 100, weight);
+      } else {
+        itemsBySlug.set(key, { title, slug: slugPath, children, weight });
+      }
     } else if (entry.name.endsWith('.md') && entry.name !== 'index.md') {
       const slug = entry.name.replace(/\.md$/, '');
       const { data } = matter(fs.readFileSync(path.join(dir, entry.name), 'utf-8'));
       const title = data.title || slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
       const weight = data.weight ?? 100;
-      items.push({ title, slug: [...basePath, slug], weight });
+      const slugPath = [...basePath, slug];
+      const key = slugPath.join('/');
+      const existing = itemsBySlug.get(key);
+      if (existing) {
+        existing.title = title;
+        existing.weight = Math.min(existing.weight ?? 100, weight);
+      } else {
+        itemsBySlug.set(key, { title, slug: slugPath, weight });
+      }
     }
   }
 
+  const items = Array.from(itemsBySlug.values());
   return items.sort((a, b) => (a.weight ?? 100) - (b.weight ?? 100));
 }
