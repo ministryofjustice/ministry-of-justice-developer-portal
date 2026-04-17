@@ -32,8 +32,8 @@ const DOC_ASSET_EXTENSIONS = new Set([
 ]);
 
 export async function markdownToHtml(markdown: string, docsLinkContext?: DocsLinkContext): Promise<string> {
-  const result = await remark().use(remarkGfm).use(html).process(markdown);
-  const htmlOutput = addHeadingIds(result.toString());
+  const result = await remark().use(remarkGfm).use(remarkHeadingIds).use(html).process(markdown);
+  const htmlOutput = result.toString();
 
   if (!docsLinkContext) {
     return htmlOutput;
@@ -194,15 +194,54 @@ function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function addHeadingIds(htmlContent: string): string {
-  return htmlContent.replace(/<(h[1-6])>([\s\S]*?)<\/\1>/g, (_full, tag: string, inner: string) => {
-    const text = inner.replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').trim();
-    const id = slugify(text);
-    if (!id) {
-      return `<${tag}>${inner}</${tag}>`;
-    }
-    return `<${tag} id="${id}">${inner}</${tag}>`;
-  });
+type MarkdownNode = {
+  type?: string;
+  value?: string;
+  children?: MarkdownNode[];
+  data?: {
+    hProperties?: Record<string, unknown>;
+  };
+};
+
+function remarkHeadingIds() {
+  return (tree: MarkdownNode) => {
+    walkNodes(tree, (node) => {
+      if (node.type !== 'heading') {
+        return;
+      }
+
+      const text = extractText(node).trim();
+      const id = slugify(text);
+      if (!id) {
+        return;
+      }
+
+      node.data = node.data || {};
+      node.data.hProperties = {
+        ...(node.data.hProperties || {}),
+        id,
+      };
+    });
+  };
+}
+
+function walkNodes(node: MarkdownNode, visit: (node: MarkdownNode) => void): void {
+  visit(node);
+  for (const child of node.children || []) {
+    walkNodes(child, visit);
+  }
+}
+
+function extractText(node: MarkdownNode): string {
+  if (typeof node.value === 'string') {
+    return node.value;
+  }
+
+  let output = '';
+  for (const child of node.children || []) {
+    output += extractText(child);
+  }
+  return output;
 }
 
 function slugify(value: string): string {
