@@ -54,6 +54,11 @@ function rewriteDocAnchorLinks(htmlContent: string, docsLinkContext: DocsLinkCon
 }
 
 function rewriteDocHref(href: string, docsLinkContext: DocsLinkContext): string {
+  const rewrittenAbsoluteDocsHref = rewriteAbsoluteGithubPagesDocsHref(href);
+  if (rewrittenAbsoluteDocsHref) {
+    return rewrittenAbsoluteDocsHref;
+  }
+
   if (
     href.startsWith('#') ||
     href.startsWith('mailto:') ||
@@ -65,13 +70,15 @@ function rewriteDocHref(href: string, docsLinkContext: DocsLinkContext): string 
   }
 
   if (href.startsWith('/')) {
-    const hrefWithoutBase = stripBasePath(href);
+    const [hrefPath, suffix] = splitHrefSuffix(href);
+    const hrefWithoutBase = stripBasePath(hrefPath);
 
     if (hrefWithoutBase.startsWith('/docs/')) {
-      return withBasePath(normalizeMalformedDocsHref(hrefWithoutBase));
+      const normalizedDocsPath = ensureDocsTrailingSlash(normalizeMalformedDocsHref(hrefWithoutBase));
+      return `${withBasePath(normalizedDocsPath)}${suffix}`;
     }
     if (hrefWithoutBase.startsWith('/assets/')) {
-      return withBasePath(hrefWithoutBase);
+      return `${withBasePath(hrefWithoutBase)}${suffix}`;
     }
     if (isBasePathPrefixed(href)) {
       return href;
@@ -99,9 +106,9 @@ function rewriteDocHref(href: string, docsLinkContext: DocsLinkContext): string 
   }
 
   const rewrittenPath = normalizedPath
-    ? `/docs/${docsLinkContext.sourceSlug}/${normalizedPath}${suffix}`
-    : `/docs/${docsLinkContext.sourceSlug}${suffix}`;
-  return withBasePath(rewrittenPath);
+    ? `/docs/${docsLinkContext.sourceSlug}/${normalizedPath}`
+    : `/docs/${docsLinkContext.sourceSlug}`;
+  return `${withBasePath(ensureDocsTrailingSlash(rewrittenPath))}${suffix}`;
 }
 
 function rewriteDocAssetSources(htmlContent: string, docsLinkContext: DocsLinkContext): string {
@@ -254,6 +261,55 @@ function normalizeMalformedDocsHref(href: string): string {
     return href;
   }
   return `/docs/${match[1]}/${match[2]}`;
+}
+
+function rewriteAbsoluteGithubPagesDocsHref(href: string): string | null {
+  let parsed: URL;
+
+  try {
+    parsed = new URL(href);
+  } catch {
+    return null;
+  }
+
+  if (parsed.hostname !== 'ministryofjustice.github.io') {
+    return null;
+  }
+
+  let docsPathname = parsed.pathname;
+
+  if (BASE_PATH && docsPathname.startsWith(`${BASE_PATH}/docs/`)) {
+    docsPathname = stripBasePath(docsPathname);
+  } else {
+    const repoScopedDocsMatch = docsPathname.match(/^\/[^/]+\/docs(\/.*)?$/);
+    if (repoScopedDocsMatch) {
+      docsPathname = `/docs${repoScopedDocsMatch[1] || ''}`;
+    }
+  }
+
+  if (!docsPathname.startsWith('/docs/')) {
+    return null;
+  }
+
+  const normalizedDocsPath = ensureDocsTrailingSlash(normalizeMalformedDocsHref(docsPathname));
+  return `${withBasePath(normalizedDocsPath)}${parsed.search}${parsed.hash}`;
+}
+
+function ensureDocsTrailingSlash(path: string): string {
+  if (!path.startsWith('/docs/')) {
+    return path;
+  }
+
+  if (path.endsWith('/')) {
+    return path;
+  }
+
+  const lastSegment = path.split('/').pop() || '';
+  if (lastSegment.includes('.')) {
+    return path;
+  }
+
+  return `${path}/`;
 }
 
 function normalizeMalformedDocsPathsInHtml(htmlContent: string): string {
