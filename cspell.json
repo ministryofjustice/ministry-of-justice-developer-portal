@@ -33,7 +33,9 @@
     "WCAG",
     "scrying",
     "katex",
-    "SLSA"
+    "SLSA",
+    "gomod",
+    "Bsed"
   ],
   "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
   "languageSettings": [
