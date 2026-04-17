@@ -90,7 +90,7 @@ Dependabot handles two distinct types of updates:
 ### Security Updates (Alerts)
 
 - Triggered automatically when a vulnerability is disclosed (via GitHub Advisory Database)
-- **These bypass cooldown settings** — security PRs are always raised immediately
+- **These bypass cooldown settings**, security PRs are always raised immediately
 - Should be triaged and merged promptly
 - Enable **Dependabot security updates** in your repository settings under _Settings → Code security and analysis_
 (TODO: Is this already enabled for MOJ org at org level?)
@@ -118,14 +118,14 @@ which compounds dependency drift and delays awareness of newly available patches
 However, reducing schedule frequency increases the lag between a vulnerability being patched upstream and Dependabot raising a version update PR,
 particularly relevant for dependencies not yet covered by the GitHub Advisory Database.
 
-| Interval  | Guidance                                                                                                                                                                      |
-|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `daily`   | **Required default.** Use for all repositories.                                                                                                                               |
-| `weekly`  | Only acceptable for ecosystems with naturally slow release cadences (e.g. Terraform providers, GitHub Actions, Docker base images) where daily checks add no practical value. |
-| `monthly` | **Strongly discouraged.** A 30-day check window is incompatible with the 48-hour security response target. Do not use for any actively maintained ecosystem.                  |
+| Interval  | Guidance                                                                                                                                                    |
+|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `daily`   | **Required default.** Use for all repositories.                                                                                                             |
+| `weekly`  | For purely development stage repositories only where daily checks add no practical value.                                                                   |
+| `monthly` | **Strongly discouraged.** A 30-day check window is incompatible with the 48-hour security response target. Do not use for any actively maintained ecosystem.|
 
 **The only justification for a non-`daily` schedule on application dependencies** is that the repository is not yet a live product and exists solely
-in a development environment with no external exposure. Even then, `weekly` is the maximum acceptable interval — `monthly` should not be used.
+in a development environment with no external exposure. Even then, `weekly` is the maximum acceptable interval. `monthly` should not be used.
 Once a service moves toward production, the schedule must revert to `daily`.
 
 Team bandwidth and PR noise are **not** valid justifications for longer schedules. Use [cooldown settings](#cooldown-strategy) and
@@ -137,7 +137,7 @@ The cooldown feature prevents Dependabot from immediately raising PRs for every 
 
 | Cooldown Setting       | Days | Rationale                                                                                                   |
 |------------------------|------|-------------------------------------------------------------------------------------------------------------|
-| `default-days`         | 0    | No delay by default — security updates are raised immediately.                                              |
+| `default-days`         | 0    | No delay by default, security updates are raised immediately.                                               |
 | `semver-major-days`    | 14   | Major versions may contain breaking changes; allow time for community feedback and changelogs to stabilise. |
 | `semver-minor-days`    | 7    | Minor versions are generally backwards-compatible but benefit from a short stabilisation period.            |
 | `semver-patch-days`    | 2    | Patches are low-risk but a brief delay helps avoid churn from rapid successive releases.                    |
@@ -145,19 +145,19 @@ The cooldown feature prevents Dependabot from immediately raising PRs for every 
 ### PR Limits
 
 `open-pull-requests-limit` caps the number of concurrent open Dependabot version update PRs. It is a throttle on remediation throughput,
-not on vulnerability discovery — lowering it does not reduce how many outdated or vulnerable dependencies you have,
+not on vulnerability discovery, lowering it does not reduce how many outdated or vulnerable dependencies you have,
 it only delays when PRs are raised for them.
 
 > **Hidden danger**: When the limit is reached, Dependabot stops opening new version update PRs entirely until existing ones are merged or closed.
-Security alerts are subject to a separate internal limit of 10 and are unaffected — but any version update PRs that would have surfaced a
+Security alerts are subject to a separate internal limit of 10 and are unaffected. But any version update PRs that would have surfaced a
 vulnerable dependency before an advisory is published will be silently queued.
 
 #### Risk Trade-off
 
 | Setting      | Risk                                                                                                                          |
 |--------------|-------------------------------------------------------------------------------------------------------------------------------|
-| **Too high** | Reviewer overload — PRs pile up, triage discipline breaks down, and important updates get lost in the backlog                 |
-| **Too low**  | Remediation is silently delayed — new vulnerabilities may go unnoticed longer if the queue is full when Dependabot next checks|
+| **Too high** | Reviewer overload: PRs pile up, triage discipline breaks down, and important updates get lost in the backlog                  |
+| **Too low**  | Remediation is silently delayed: new vulnerabilities may go unnoticed longer if the queue is full when Dependabot next checks |
 
 #### MoJ Recommendations
 
@@ -166,16 +166,16 @@ at the default limit of 10 can have up to 30 open Dependabot PRs at once. Factor
 
 | Ecosystem Type                                                                    | Recommended Limit per Entry                                                            |
 |-----------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
-| Application ecosystems (`npm`, `pip`, `bundler`, etc.)                            | **10** (default) — high release cadence warrants full visibility                       |
-| Infrastructure / low-cadence ecosystems (`docker`, `terraform`, `github-actions`) | **5–10** — fewer releases; lower limit is sufficient without risk of silencing updates |
-| Monorepo with multiple directories per ecosystem                                  | **15–20** — each directory generates its own PRs within the same ecosystem entry       |
+| Application ecosystems (`npm`, `pip`, `bundler`, etc.)                            | **10** (default): high release cadence warrants full visibility                        |
+| Infrastructure / low-cadence ecosystems (`docker`, `terraform`, `github-actions`) | **5–10**: fewer releases; lower limit is sufficient without risk of silencing updates  |
+| Monorepo with multiple directories per ecosystem                                  | **15–20**: each directory generates its own PRs within the same ecosystem entry        |
 
 As a rule of thumb: if your total open PR count across all ecosystems regularly exceeds what your team can triage in a week,
 the solution is [grouping](#grouping-related-updates) and [cooldown settings](#cooldown-strategy), not reducing limits.
 Reducing limits silently queues updates rather than making them visible.
 
 Do not set any ecosystem entry below **5**. If the current limit feels overwhelming, the correct response is to improve triage cadence,
-use [grouping](#grouping-related-updates), or adjust [cooldown settings](#cooldown-strategy), not to reduce the limit further.
+use [grouping](#grouping-related-updates) or adjust [cooldown settings](#cooldown-strategy), not to reduce the limit further.
 
 ---
 
@@ -198,17 +198,17 @@ Configure a separate entry under `updates` for each ecosystem used in your proje
 ### Configuring `directory` Carefully
 
 > **Warning**: `directory` is exclusive, not a starting point. Setting `directory: "/xyz"` means Dependabot **only** scans that path.
-Any dependency manifests outside it receive no version updates and no security update PRs — silently.
+Any dependency manifests outside it receive no version updates and no security update PRs silently.
 
 This is one of the highest-impact, lowest-visibility risks in Dependabot configuration. It is particularly dangerous in:
 
-- **Monorepos** — multiple `package.json`, `requirements.txt`, or `pom.xml` files across services; only the configured path is scanned
-- **Infrastructure directories** — `/.github/workflows`, `/terraform`, `/docker` are frequently omitted and receive no coverage unless explicitly configured
-- **Polyglot repositories** — different ecosystems in different subdirectories each require their own entry
+- **Monorepos**: multiple `package.json`, `requirements.txt`, or `pom.xml` files across services; only the configured path is scanned
+- **Infrastructure directories**: `/.github/workflows`, `/terraform`, `/docker` are frequently omitted and receive no coverage unless explicitly configured
+- **Polyglot repositories**: different ecosystems in different subdirectories each require their own entry
 
 The result is a false sense of security: Dependabot appears enabled, but large portions of the repository are entirely unmonitored.
 
-**For repositories with dependencies in multiple locations, add an entry per directory:**
+**For repositories with dependencies in multiple locations, add an entry per directory:** (TODO: verify monorepo config)
 
 ```yaml
 updates:
@@ -221,7 +221,7 @@ updates:
 ```
 
 Limiting `directory` scope is only justified for gradual rollout on large legacy repositories, experimental sub-projects, or
-vendored third-party code — and in those cases the omission must be documented with a review date, treated the same way as an `ignore` rule.
+vendored third-party code. In those cases the omission must be documented with a review date, treated the same way as an `ignore` rule.
 Treat any repository where the number of configured directories is fewer than the number of directories containing dependency manifests as a security
 finding requiring justification.
 
@@ -231,22 +231,22 @@ finding requiring justification.
 
 ### Triage Process
 
-1. **Review the changelog and diff** — Understand what changed in the dependency
+1. **Review the changelog and diff**: Understand what changed in the dependency
 2. **Check the version type** using [Semantic Versioning](https://semver.org/):
    - **Patch** (e.g. 1.0.0 → 1.0.1): Bug fixes. Generally safe to merge after CI passes.
    - **Minor** (e.g. 1.0.0 → 1.1.0): New features, backwards-compatible. Review changelog, merge after CI passes.
    - **Major** (e.g. 1.0.0 → 2.0.0): Breaking changes possible. Requires careful review, testing, and potentially code changes.
-3. **Ensure CI passes** — All automated tests and checks must be green before merging
-4. **Perform smoke testing** for major updates — Verify core functionality is not broken ([What is smoke testing?](https://testlio.com/blog/smoke-testing-qa/))
+3. **Ensure CI passes**: All automated tests and checks must be green before merging
+4. **Perform smoke testing** for major updates: Verify core functionality is not broken ([What is smoke testing?](https://testlio.com/blog/smoke-testing-qa/))
 
 ### Merging Strategy
 
-| Update Type     | Action                                                                                          |
-|-----------------|-------------------------------------------------------------------------------------------------|
-| Security patch  | Merge as soon as CI passes. Treat as high priority.                                             |
-| Patch           | Merge promptly after CI passes. Low risk.                                                       |
-| Minor           | Review changelog. Merge after CI passes and brief review.                                       |
-| Major           | Review changelog thoroughly. Test in a staging/preview environment. May require code changes.   |
+| Update Type     | Action                                                                                       |
+|-----------------|----------------------------------------------------------------------------------------------|
+| Security patch  | Merge as soon as CI passes. Treat as high priority.                                          |
+| Patch           | Merge promptly after CI passes. Low risk.                                                    |
+| Minor           | Review changelog. Merge after CI passes and brief review.                                    |
+| Major           | Review changelog thoroughly. Test in a staging/preview environment. May require code changes.|
 
 ### Handling Noisy or Unwanted PRs
 
@@ -266,9 +266,9 @@ The vast majority of Dependabot PRs should be reviewed and merged. Ignoring or c
 
 **What must never be ignored:**
 
-- Any update raised as a **security alert** — these bypass cooldown by design and ignoring them creates a blind spot
-- Updates you consider low-risk based on assumption — exploitability assessments change
-- Major version updates purely to avoid review effort — use the cooldown and triage process instead
+- Any update raised as a **security alert**, these bypass cooldown by design and ignoring them creates a blind spot
+- Updates you consider low-risk based on assumption, exploitability assessments change
+- Major version updates purely to avoid review effort, use the cooldown and triage process instead
 
 #### How to Use `ignore` Safely
 
@@ -316,7 +316,7 @@ To reverse a PR comment dismissal, comment on any open or closed Dependabot PR f
 Prefer PR comment dismissals over `dependabot.yml` entries for short-lived or one-off cases, as they are easier to audit and reverse via `unignore`.
 See the [full list of Dependabot PR comment commands](https://docs.github.com/en/enterprise-server@3.19/code-security/reference/supply-chain-security/dependabot-pull-request-comment-commands#commands-for-grouped-version-updates).
 
-#### Avoiding `allow` — and When It May Be Acceptable
+#### Avoiding `allow` and When It May Be Acceptable
 
 > **Warning**: `allow` creates security blind spots by design. Any dependency not matched by an `allow` rule will receive **no** security update PRs.
 Avoid it unless you have a specific, documented reason.
@@ -326,10 +326,10 @@ meaning newly added dependencies are silently excluded from updates until the al
 
 The only scenarios where `allow` may be acceptable at MoJ are:
 
-- **Gradual adoption on a legacy repository** — A repo with a large number of severely outdated dependencies may be impractical to onboard all at
+- **Gradual adoption on a legacy repository**: A repo with a large number of severely outdated dependencies may be impractical to onboard all at
 once. An explicit allowlist of a small, manageable set of packages can help teams build the practice incrementally, provided there is a tracked
 plan to expand coverage and remove the restriction.
-- **Compliance or change-controlled environments** — Where policy requires an auditable, explicit record of which third-party components are
+- **Compliance or change-controlled environments**: Where policy requires an auditable, explicit record of which third-party components are
 actively maintained, `allow` makes that boundary visible in config-as-code. Prefer `dependency-type`-based rules (e.g. `direct`) over named
 allowlists, as named lists require active maintenance whenever new dependencies are added.
 
@@ -342,7 +342,7 @@ updates:
     schedule:
       interval: "daily"
     allow:
-      # REASON: Gradual Dependabot adoption — starting with direct production deps only.
+      # REASON: Gradual Dependabot adoption starting with direct production deps only.
       # Expand to include all dependency types once backlog is cleared.
       # REVIEW BY: 2026-08-01
       - dependency-type: "production"
@@ -354,7 +354,7 @@ Audit `allow` rules at the same time as `ignore` rules. Both represent deliberat
 
 ## Grouping Related Updates
 
-Grouping combines multiple dependency updates into a single PR, reducing review burden. Used well, it improves efficiency. Bsed poorly, it can
+Grouping combines multiple dependency updates into a single PR, reducing review burden. Used well, it improves efficiency. Used poorly, it can
 obscure which dependency fixes a vulnerability and make PRs harder to reason about in terms of responsibility and isolation for tests.
 
 ### Security Impact
@@ -374,7 +374,7 @@ Avoid grouping all dependencies together. It creates large, difficult-to-review 
 risk of a security fix being delayed or missed.
 
 ```yaml
-# ❌ Avoid — obscures changes, hard to revert individual updates
+# ❌ Avoid, this obscures changes, hard to revert individual updates
 groups:
   all-dependencies:
     patterns:
@@ -385,9 +385,9 @@ groups:
 
 Group by **purpose and risk level**, keeping groups small and predictable:
 
-- **By dependency type** — separate production from development dependencies; production changes warrant closer scrutiny
-- **By tooling family** — linting, testing, and build tools change together and are low-risk to group
-- **By semver level** — keep major updates out of groups; they require individual review
+- **By dependency type**: separate production from development dependencies; production changes warrant closer scrutiny
+- **By tooling family**: linting, testing, and build tools change together and are low-risk to group
+- **By semver level**: keep major updates out of groups; they require individual review
 
 ```yaml
 updates:
@@ -422,15 +422,15 @@ updates:
         update-types:
           - "patch"
 
-      # ⚠️ Production dependencies are NOT grouped here — reviewed individually
+      # ⚠️ Production dependencies are NOT grouped here, those need to be reviewed individually
 ```
 
 ### MoJ Grouping Guidance
 
 - **Do not group production dependencies** unless the team has a well-established, fast triage process. The risk of a security fix being
 delayed in a batch PR is too high.
-- **Do not group major version updates** — these require individual changelogs review and may need code changes.
-- **Known-vulnerable dependencies must never be grouped** — if a dependency has an open security alert, its fix PR should be standalone
+- **Do not group major version updates**: these require individual changelogs review and may need code changes.
+- **Known-vulnerable dependencies must never be grouped**: if a dependency has an open security alert, its fix PR should be standalone
 and treated as high priority regardless of any grouping rules.
 - Keep group names descriptive so PR titles are immediately meaningful to reviewers.
 
@@ -462,15 +462,13 @@ This means:
 - The manifest continues to allow the old, potentially vulnerable version range
 - Any developer running a fresh install without a lockfile (e.g. in CI, a new environment, or after a lockfile conflict resolution) may resolve to a
 vulnerable version
-- The security fix is fragile — it exists only in the lockfile and can be silently lost
+- The security fix is fragile and it exists only in the lockfile and can be silently lost
 
 The only scenario where `lockfile-only` is marginally acceptable is a **short-term, explicitly tracked tactical decision** during a complex
-dependency resolution
-problem, with a tracked issue to remove it. It must never be used as a permanent configuration.
+dependency resolution problem, with a tracked issue to remove it. It must never be used as a permanent configuration.
 
-If the concern is avoiding manifest churn, use `increase-if-necessary` instead — it only updates the manifest when the existing constraint
-would not satisfy the
-new version.
+If the concern is avoiding manifest churn, use `increase-if-necessary` instead, it only updates the manifest when the existing constraint
+would not satisfy the new version.
 
 ---
 
@@ -541,13 +539,13 @@ labels:
   - "security-update"
 ```
 
-Labels integrate cleanly with GitHub Actions workflows, project boards, and metrics pipelines — making them the primary mechanism for routing and prioritising
- Dependabot PRs at scale.
+Labels integrate cleanly with GitHub Actions workflows, project boards, and metrics pipelines, making them the primary mechanism for routing and prioritising
+Dependabot PRs at scale.
 
 ### Assignees
 
 Dependabot PRs have no assignees by default. Individual assignees can be added in `dependabot.yml`, but teams cannot be assigned this way. Do **not** rely on
-assignees for ownership at scale — assigning individuals increases PR abandonment risk and does not survive team changes. Use assignees only for documented
+assignees for ownership at scale. Assigning individuals increases PR abandonment risk and does not survive team changes. Use assignees only for documented
 security on-call rotations. Prefer CODEOWNERS for all other ownership.
 
 ### Reviewers: Use CODEOWNERS
