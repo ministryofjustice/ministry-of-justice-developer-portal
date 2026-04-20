@@ -613,3 +613,7 @@ message
 > [!WARNING] this is a warning
 
 message
+
+<span style="color:red">Your Text</span>
+
+$\color{red}{Text}$
