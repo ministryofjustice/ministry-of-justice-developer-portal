@@ -15,7 +15,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -220,19 +220,19 @@ function cloneOrPull(source) {
 
   if (fs.existsSync(path.join(repoDir, '.git'))) {
     console.log(`  Pulling latest from ${source.repo}...`);
-    execSync(`git -C ${JSON.stringify(repoDir)} fetch origin ${branch} --depth=1`, {
+    execFileSync('git', ['fetch', 'origin', branch, '--depth=1'], {
+      cwd: repoDir,
       stdio: 'pipe',
     });
-    execSync(
-      `git -C ${JSON.stringify(repoDir)} reset --hard origin/${branch}`,
-      { stdio: 'pipe' }
-    );
+    execFileSync('git', ['reset', '--hard', `origin/${branch}`], {
+      cwd: repoDir,
+      stdio: 'pipe',
+    });
   } else {
     console.log(`  Cloning ${source.repo} (shallow)...`);
-    execSync(
-      `git clone --depth=1 --branch ${branch} ${repoUrl} ${JSON.stringify(repoDir)}`,
-      { stdio: 'pipe' }
-    );
+    execFileSync('git', ['clone', '--depth=1', '--branch', branch, repoUrl, repoDir], {
+      stdio: 'pipe',
+    });
   }
 
   return repoDir;
