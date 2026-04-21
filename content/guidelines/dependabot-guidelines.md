@@ -617,3 +617,41 @@ message
 <span style="color:red">Your Text</span>
 
 $\color{red}{Text}$
+
+$$\color{green}{\text{Your Green Message}}$$
+
+$$ \colorbox{darkblue}{\color{white}{\textsf{  Test Banner  }}}$$
+
+```diff
++ This line is green (added)
+- This line is red (removed)
+! This line is orange (warning)
+# This line is gray (comment)
+```
+
+$$\colorbox{yellow}{\color{black}Warning: This has a background}$$
+
+$\colorbox{yellow}{\color{black}Warning: This has a background continues on the same line, this is very long piece of text, which will span over
+multiple lines. Bay Lake is a city in Orange County, Florida, United States. The population was 29 at the 2020 census.[7] It is named after a lake that
+lies east of Magic Kingdom. All four of the Walt Disney World Resort theme parks, and one of Walt Disney World's two water parks, are in Bay Lake, though all
+ Disney parks in the region have mailing addresses in nearby Lake Buena Vista. Bay Lake is one of two Florida municipalities inside the Central Florida
+ Tourism Oversight District (formerly the Reedy Creek Improvement District) which also includes Walt Disney World, the other being Lake Buena Vista.
+ Bay Lake is part of the Orlando–Kissimmee–Sanford Metropolitan Statistical Area. }$
+
+$\fbox{\color{Grey}Warning: This has a background. Bay Lake is a city in Orange County, Florida, United States. The population was 29 at the 2020 census.[7]
+ It is named after a lake that lies east of Magic Kingdom. All four of the Walt Disney World Resort theme parks, and one of Walt Disney World's two water
+ parks, are in Bay Lake, though all Disney parks in the region have mailing addresses in nearby Lake Buena Vista. Bay Lake is one of two Florida
+ municipalities inside the Central Florida Tourism Oversight District (formerly the Reedy Creek Improvement District) which also includes Walt Disney
+ World, the other being Lake Buena Vista. Bay Lake is part of the Orlando–Kissimmee–Sanford Metropolitan Statistical Area.}$
+
+<div style="background-color: yellow; color: black; padding: 8px; text-align: left;">
+Warning: This has a background. Bay Lake is a city in Orange County, Florida, United States. The population was 29 at the 2020 census.[7]
+It is named after a lake that lies east of Magic Kingdom. All four of the Walt Disney World Resort theme parks, and one of Walt Disney World's two
+water parks, are in Bay Lake, though all Disney parks in the region have mailing addresses in nearby Lake Buena Vista.
+
+Bay Lake is one of two Florida municipalities inside the Central Florida Tourism Oversight District (formerly the Reedy Creek Improvement District)
+which also includes Walt Disney World, the other being Lake Buena Vista. Bay Lake is part of the Orlando–Kissimmee–Sanford Metropolitan Statistical Area.
+
+</div>
+
+$\colorbox{yellow}{\color{black}Warning: This has a background}$ continues on the same line
