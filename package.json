@@ -43,14 +43,14 @@
   "devDependencies": {
     "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
-    "@vitest/coverage-v8": "^4.1.4",
+    "@vitest/coverage-v8": "4.1.4",
     "cspell": "^10.0.0",
     "markdownlint-cli": "^0.48.0",
     "pagefind": "^1.5.0",
     "prettier": "^3.8.1",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.4"
+    "vitest": "4.1.4"
   },
   "engines": {
     "node": ">=18.0.0"
