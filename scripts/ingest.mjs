@@ -65,9 +65,7 @@ async function main() {
 
   fs.mkdirSync(CLONE_DIR, { recursive: true });
 
-  const toProcess = sources.filter(
-    (s) => s.enabled && (!targetId || s.id === targetId)
-  );
+  const toProcess = sources.filter((s) => s.enabled && (!targetId || s.id === targetId));
 
   if (toProcess.length === 0) {
     console.log('No matching sources found.');
@@ -134,7 +132,7 @@ async function ingestSource(source) {
         converted.content,
         f.absolute,
         docsRoot,
-        config.docsPath || ''
+        config.docsPath || '',
       );
 
       for (const relPath of referencedAssets) {
@@ -170,7 +168,7 @@ async function ingestSource(source) {
       converted.content,
       file.absolute,
       docsRoot,
-      config.docsPath || ''
+      config.docsPath || '',
     );
     for (const relPath of referencedAssets) {
       assetPaths.add(relPath);
@@ -202,11 +200,7 @@ async function ingestSource(source) {
     source_repo: source.repo,
     ingested_at: new Date().toISOString(),
   };
-  fs.writeFileSync(
-    path.join(outputDir, '_meta.json'),
-    JSON.stringify(meta, null, 2),
-    'utf-8'
-  );
+  fs.writeFileSync(path.join(outputDir, '_meta.json'), JSON.stringify(meta, null, 2), 'utf-8');
 
   return { pages: pageCount, assets: assetCount };
 }
@@ -334,7 +328,7 @@ function stripErb(content) {
   // Remove ERB-style partial includes and replace with a note
   result = result.replace(
     /<%=?\s*partial\s*\(\s*['"]([^'"]+)['"]\s*\)\s*%>/g,
-    '\n> *Content from partial: $1*\n'
+    '\n> *Content from partial: $1*\n',
   );
 
   // Remove now-empty markdown headings (e.g., "# " or "## ")
@@ -348,24 +342,18 @@ function convertTechDocsPatterns(body, source) {
   // Convert [link text](/path.html) to [link text](/docs/source-id/path)
   // Also strip the docsPath prefix if it's in the link
   const docsPath = source.docsPath ? source.docsPath.replace(/^source\//, '') : 'documentation';
-  
+
   // First, convert internal links that include the docsPath prefix
   let result = body.replace(
     new RegExp(`\\[([^\\]]+)\\]\\(\\/${docsPath.replace('/', '\\/')}\/([^)]+?)\\.html\\)`, 'g'),
-    `[$1](/docs/${source.id}/$2)`
-  );
-  
-  // Then convert any remaining /path.html links (that don't have the docsPath)
-  result = result.replace(
-    /\[([^\]]+)\]\(\/([^)]+?)\.html\)/g,
-    `[$1](/docs/${source.id}/$2)`
+    `[$1](/docs/${source.id}/$2)`,
   );
 
+  // Then convert any remaining /path.html links (that don't have the docsPath)
+  result = result.replace(/\[([^\]]+)\]\(\/([^)]+?)\.html\)/g, `[$1](/docs/${source.id}/$2)`);
+
   // Remove .html extensions from internal links
-  result = result.replace(
-    /\[([^\]]+)\]\(([^)]+?)\.html\)/g,
-    '[$1]($2)'
-  );
+  result = result.replace(/\[([^\]]+)\]\(([^)]+?)\.html\)/g, '[$1]($2)');
 
   // Convert indented code blocks that use ERB markers
   result = result.replace(/```erb\n/g, '```\n');
@@ -415,7 +403,10 @@ function normalizeAssetLink(rawLink) {
   let link = rawLink.trim();
   if (!link) return null;
 
-  if ((link.startsWith('"') && link.endsWith('"')) || (link.startsWith("'") && link.endsWith("'"))) {
+  if (
+    (link.startsWith('"') && link.endsWith('"')) ||
+    (link.startsWith("'") && link.endsWith("'"))
+  ) {
     link = link.slice(1, -1);
   }
 
@@ -458,14 +449,12 @@ function resolveAssetAbsolutePath(link, markdownFileDir, docsRoot, docsPath) {
 
   if (pathOnly.startsWith('/')) {
     const withoutLeadingSlash = pathOnly.replace(/^\/+/, '');
-    const withoutDocsPrefix = docsPrefix && withoutLeadingSlash.startsWith(`${docsPrefix}/`)
-      ? withoutLeadingSlash.slice(docsPrefix.length + 1)
-      : withoutLeadingSlash;
+    const withoutDocsPrefix =
+      docsPrefix && withoutLeadingSlash.startsWith(`${docsPrefix}/`)
+        ? withoutLeadingSlash.slice(docsPrefix.length + 1)
+        : withoutLeadingSlash;
 
-    candidates = [
-      path.join(docsRoot, withoutDocsPrefix),
-      path.join(docsRoot, withoutLeadingSlash),
-    ];
+    candidates = [path.join(docsRoot, withoutDocsPrefix), path.join(docsRoot, withoutLeadingSlash)];
   } else {
     candidates = [path.resolve(markdownFileDir, pathOnly)];
   }
@@ -530,8 +519,7 @@ function cleanYamlValue(val) {
   if (val === 'true') return true;
   if (val === 'false') return false;
   // Remove surrounding quotes
-  if ((val.startsWith('"') && val.endsWith('"')) ||
-      (val.startsWith("'") && val.endsWith("'"))) {
+  if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
     return val.slice(1, -1);
   }
   // Try number
@@ -547,7 +535,12 @@ function buildFrontmatter(obj) {
     if (value === null || value === undefined) continue;
     if (typeof value === 'string') {
       // Quote strings that contain special chars
-      if (value.includes(':') || value.includes('#') || value.includes('"') || value.includes('\\')) {
+      if (
+        value.includes(':') ||
+        value.includes('#') ||
+        value.includes('"') ||
+        value.includes('\\')
+      ) {
         // Escape backslashes first, then double quotes to prevent incomplete escaping
         const escaped = value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
         result += `${key}: "${escaped}"\n`;
