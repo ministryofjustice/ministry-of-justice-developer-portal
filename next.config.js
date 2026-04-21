@@ -1,8 +1,7 @@
 const path = require('path');
 
-const isGitHubPages = process.env.GITHUB_ACTIONS === 'true';
-const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1] || 'developer-portal';
-const basePath = isGitHubPages ? `/${repoName}` : '';
+// Set NEXT_PUBLIC_BASE_PATH explicitly only when a non-root base path is required.
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

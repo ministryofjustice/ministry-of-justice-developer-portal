@@ -52,11 +52,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Keep secrets/vars environment-scoped for strict dev/prod separation.
-          echo "${{ secrets.KUBE_CERT }}" | base64 --decode > ca.crt
-          kubectl config set-cluster cp-cluster --server="${{ vars.KUBE_CLUSTER }}" --certificate-authority=ca.crt
-          kubectl config set-credentials github-actions --token="${{ secrets.KUBE_TOKEN }}"
-          kubectl config set-context dev --cluster=cp-cluster --user=github-actions --namespace="${{ vars.KUBE_NAMESPACE }}"
+          # Use Cloud Platform-provisioned DEV_* GitHub secrets.
+          echo "${{ secrets.DEV_KUBE_CERT }}" | base64 --decode > ca.crt
+          kubectl config set-cluster cp-cluster --server="${{ secrets.DEV_KUBE_CLUSTER }}" --certificate-authority=ca.crt
+          kubectl config set-credentials github-actions --token="${{ secrets.DEV_KUBE_TOKEN }}"
+          kubectl config set-context dev --cluster=cp-cluster --user=github-actions --namespace="${{ secrets.DEV_KUBE_NAMESPACE }}"
           kubectl config use-context dev
 
       - name: Deploy manifests
@@ -64,13 +64,13 @@ jobs:
         run: |
           set -euo pipefail
           sed "s|IMAGE_PLACEHOLDER|${{ steps.build-push.outputs.image_uri }}|g" k8s/dev/deployment.yaml | kubectl apply -f -
-          kubectl rollout status deployment/developer-portal --namespace "${{ vars.KUBE_NAMESPACE }}" --timeout=180s
+          kubectl rollout status deployment/developer-portal --namespace "${{ secrets.DEV_KUBE_NAMESPACE }}" --timeout=180s
 
       - name: Smoke test
         shell: bash
         run: |
           set -euo pipefail
-          HTTP_CODE=$(curl -sS -o /tmp/dev-smoke.out -w "%{http_code}" https://dev.developerportal.service.justice.gov.uk/healthz)
+          HTTP_CODE=$(curl -sS -o /tmp/dev-smoke.out -w "%{http_code}" https://dev.developer-portal.service.justice.gov.uk/healthz)
           if [ "${HTTP_CODE}" != "200" ]; then
             echo "Expected HTTP 200 from dev smoke test, got ${HTTP_CODE}"
             cat /tmp/dev-smoke.out

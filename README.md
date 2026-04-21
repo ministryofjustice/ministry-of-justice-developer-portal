@@ -23,7 +23,7 @@ A cross-government developer portal inspired by [Singapore's Government Develope
 | Content | Markdown with YAML frontmatter |
 | Search | [Pagefind](https://pagefind.app/) (client-side, zero-dependency) |
 | Ingestion | Node.js script that clones repos and converts `.html.md.erb` → `.md` |
-| Hosting | GitHub Pages (static), containerisable for Cloud Platform |
+| Hosting | Cloud Platform (containerised, Kubernetes) |
 
 ## Getting started
 
@@ -195,6 +195,46 @@ Source repos can trigger re-ingestion automatically using `repository_dispatch`.
 ### Cloud Platform (containerised)
 
 This repository deploys to Cloud Platform via dedicated dev and prod GitHub workflows. The container image is built from the included `Dockerfile`, pushed to ECR, and deployed to Kubernetes using environment-scoped credentials.
+
+#### Required GitHub Actions secrets
+
+The deploy workflows expect separate Kubernetes credentials for dev and prod:
+
+| Environment | Required secrets |
+|---|---|
+| Dev | `DEV_KUBE_CLUSTER`, `DEV_KUBE_NAMESPACE`, `DEV_KUBE_CERT`, `DEV_KUBE_TOKEN` |
+| Prod | `PROD_KUBE_CLUSTER`, `PROD_KUBE_NAMESPACE`, `PROD_KUBE_CERT`, `PROD_KUBE_TOKEN` |
+
+These are provided by Cloud Platform module configuration (for this repository) once the relevant Cloud Platform PRs are merged.
+
+#### Required GitHub Actions variables
+
+The workflows also require:
+
+- `ECR_REGION`
+- `ECR_REPOSITORY`
+
+Set these in GitHub Actions variables at repository level, or as environment variables in `dev` and `prod` if you need them to differ between environments.
+
+#### Deployment workflows
+
+- Dev deployment runs automatically on push to `main` and can also be run manually via `.github/workflows/deploy-dev.yml`.
+- Prod deployment is manual-only via `.github/workflows/deploy-prod.yml`.
+
+#### Target domains
+
+- Dev: `https://dev.developerportal.service.justice.gov.uk`
+- Prod: `https://developerportal.service.justice.gov.uk`
+
+#### Cutover from GitHub Pages
+
+1. Merge Cloud Platform PRs that provision domains and GitHub secrets.
+2. Merge this deployment branch to `main`.
+3. Trigger/confirm successful dev deployment and smoke test (`/healthz` returns `ok`).
+4. Trigger/confirm successful prod deployment and smoke test (`/healthz` returns `ok`).
+5. After prod is serving from Cloud Platform, disable GitHub Pages in repository settings.
+
+Keeping Pages enabled until prod verification avoids downtime during migration.
 
 ## Licence
 
