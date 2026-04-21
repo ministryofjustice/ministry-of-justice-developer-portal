@@ -48,11 +48,11 @@ docker-run:
 	docker run --rm -p 8080:8080 "$(IMAGE_URI)"
 
 k8s-apply-dev:
-	sed "s|IMAGE_PLACEHOLDER|$(IMAGE_URI)|g" k8s/dev/deployment.yaml | kubectl apply -f -
+	sed -e "s|IMAGE_PLACEHOLDER|$(IMAGE_URI)|g" -e "s|^\([[:space:]]*namespace:\)[[:space:]]*.*$|\1 $(KUBE_NAMESPACE_DEV)|" k8s/dev/deployment.yaml | kubectl apply -f -
 	kubectl rollout status deployment/developer-portal --namespace "$(KUBE_NAMESPACE_DEV)" --timeout=180s
 
 k8s-apply-prod:
-	sed "s|IMAGE_PLACEHOLDER|$(IMAGE_URI)|g" k8s/prod/deployment.yaml | kubectl apply -f -
+	sed -e "s|IMAGE_PLACEHOLDER|$(IMAGE_URI)|g" -e "s|^\([[:space:]]*namespace:\)[[:space:]]*.*$|\1 $(KUBE_NAMESPACE_PROD)|" k8s/prod/deployment.yaml | kubectl apply -f -
 	kubectl rollout status deployment/developer-portal --namespace "$(KUBE_NAMESPACE_PROD)" --timeout=180s
 
 smoke-dev:

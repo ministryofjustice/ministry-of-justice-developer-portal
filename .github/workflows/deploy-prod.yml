@@ -11,6 +11,10 @@ permissions:
 env:
   IMAGE_TAG: ${{ github.sha }}
 
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
 jobs:
   deploy-prod:
     name: Build, Push, Deploy (Prod)

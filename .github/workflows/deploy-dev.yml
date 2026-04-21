@@ -14,11 +14,16 @@ permissions:
 env:
   IMAGE_TAG: ${{ github.sha }}
 
+concurrency:
+  group: deploy-dev
+  cancel-in-progress: false
+
 jobs:
   deploy-dev:
     name: Build, Push, Deploy (Dev)
     runs-on: ubuntu-latest
     environment: dev
+    if: github.actor != 'github-actions[bot]'
 
     steps:
       - name: Checkout
