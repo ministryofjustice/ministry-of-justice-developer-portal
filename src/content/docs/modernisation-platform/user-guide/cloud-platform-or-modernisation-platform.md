@@ -1,0 +1,20 @@
+---
+owner_slack: "#modernisation-platform"
+title: Should I use the Cloud Platform, or the Modernisation Platform?
+weight: 0
+last_reviewed_on: 2026-03-03
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: user-guide/cloud-platform-or-modernisation-platform.html.md.erb
+ingested_at: "2026-04-09T10:46:00.982Z"
+---
+
+You should refer to the MoJ Technical Guidance for [how to host services](https://ministryofjustice.github.io/technical-guidance/documentation/standards/hosting.html#how-to-host-services).
+
+By default, you must use the Cloud Platform unless you're advised otherwise by a member of the [Hosting team](https://peoplefinder.service.gov.uk/teams/hosting-platforms).
+
+The Modernisation Platform is generally for applications that don't fit into the Cloud Platform, which tend to be legacy applications.
+
+However, if you require an AWS account for a proof of concept, or for functionality the Cloud Platform does not offer, feel free to contact the Modernisation Platform about this to work out its suitability.
+
+For your specific use-case, you should contact the [Hosting team](https://peoplefinder.service.gov.uk/teams/hosting-platforms) who can help advise what you should use.

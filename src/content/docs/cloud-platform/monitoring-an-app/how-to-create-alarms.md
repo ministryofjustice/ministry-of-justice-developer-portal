@@ -1,0 +1,188 @@
+---
+title: Creating your own custom alerts
+last_reviewed_on: 2025-12-01
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: monitoring-an-app/how-to-create-alarms.html.md.erb
+ingested_at: "2026-04-09T10:46:00.215Z"
+owner_slack: "#cloud-platform"
+---
+
+### Overview
+
+Alertmanager allows you to define your own alert conditions based on [Prometheus expression language](https://prometheus.io/docs/prometheus/latest/querying/basics) expressions.
+
+The aim of this document is to provide you with the necessary information to create and send application-specific alerts to a Slack channel of your choosing.
+
+### Prerequisites
+This guide assumes the following:
+
+* You have [created a namespace for your application][env-create]
+
+### Create a slack webhook, and amend Alertmanager
+
+1. Create a [slack webhook - Set up incoming webhooks](https://api.slack.com/messaging/webhooks) if you don't already have one for the channel you want to send the alerts.
+  - Follow the steps in "Set up incoming webhooks" (starting with "Create an app"  "From scratch")
+  - Webhook approval is not carried out by the Cloud Platform team. Post in the [#digital_it_forum](https://moj.enterprise.slack.com/archives/C0282GUGKL7) Slack channel once you have requested your webhook
+
+2. Create a [kubernetes secret](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/add-secrets-to-deployment.html#configuring-secrets-manually-using-kubenetes-secret) to store the slack webhook.
+
+3. Create a [ticket to request a new alert route in Alertmanager](https://github.com/ministryofjustice/cloud-platform/issues/new?assignees=&labels=&template=cloud-platform-support-request.md). The Cloud Platform team will need the following information:
+
+- namespace name
+- team name
+- application name
+- slack channel
+- kubernetes secret name where the webhook url is stored
+- severity level (warning/information)
+
+If you want an event/information type slack message for monitoring non-problem/non-failure type events
+- e.g. a team wants to positively know something happened (like a database refresh, or app deployment etc), specify the severity level as `information`
+
+The team will provide you with a "`custom severity level`" that will need to be defined in the next step. Please copy it to your clipboard.
+
+### Create a PrometheusRule
+
+A `PrometheusRule` is a custom resource that defines your triggered alert. This file will contain the alert name, promql expression and time of check.
+
+To create your own custom alert you'll need to fill in the template below and deploy it to your namespace (tip: you can check rules in your namespace by running `kubectl get prometheusrule -n <namespace>`).
+
+- Create a file called `prometheus-custom-rules-<application_name>.yaml`
+- Copy in the template below and replace the bracket values, specifying the requirements of your alert. The `<custom_severity_level>` field is the value you were given earlier, by the cloud platform team.
+
+```yaml
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  namespace: <namespace>
+  labels:
+    role: alert-rules
+  name: prometheus-custom-rules-<application_name>
+spec:
+  groups:
+  - name: application-rules
+    rules:
+    - alert: <alert_name>
+      expr: <alert_query>
+      for: <check_time_length>
+      labels:
+        severity: <custom_severity_level>
+      annotations:
+        message: <alert_message>
+        runbook_url: <http://my-support-docs>
+        dashboard_url: <http://my-dashboard>
+```
+- Run:
+
+```
+kubectl apply -f prometheus-custom-rules-<application_name>.yaml -n <namespace>
+```
+
+A working example of this would be:
+
+```yaml
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  creationTimestamp: null
+  namespace: test-namespace
+  labels:
+    role: alert-rules
+  name: prometheus-custom-rules-my-application
+spec:
+  groups:
+  - name: node.rules
+    rules:
+    - alert: Quota-Exceeded
+      expr: 100 * kube_resourcequota{job="kube-state-metrics",type="used",namespace="monitoring"} / ignoring(instance, job, type) (kube_resourcequota{job="kube-state-metrics",type="hard"} > 0) > 90
+      for: 5m
+      labels:
+        severity: cp-team
+      annotations:
+        message: Namespace {{ $labels.namespace }} is using {{ printf "%0.0f" $value}}% of its {{ $labels.resource }} quota.
+        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/blob/master/runbook.md#alert-name-kubequotaexceeded
+        dashboard_url: https://grafana.live.cloud-platform.service.justice.gov.uk/d/application-alerts/application-alerts?orgId=1&var-namespace=cloud-platform-reference-app
+```
+
+The `alert` name, `message`, `runbook_url` and `dashboard_url` annotations will be sent to the Slack channel when the rule has been triggered.
+
+For information type alerts, you can also add a label `status_icon: information` to have an information icon on the alert title.
+
+You can view the applied rules with the following command:
+
+```sh
+kubectl -n <namespace> describe prometheusrules prometheus-custom-rules-<application_name>
+```
+
+#### Information type alerts
+
+If you want to use the same Slack Channel and webhook to send information type alerts, you can do so by adding a label `severity: info-<custom_severity_level>` to the prometheus rule.
+
+If the custom-severity provided is `cp-team`, an example of this would be:
+
+```yaml
+apiVersion: monitoring.coreos.com/v1
+    kind: PrometheusRule
+    metadata:
+      namespace: test-namespace
+    labels:
+      role:
+    name: prometheus-custom-rules-secretsmanager
+    spec:
+    groups:
+      - name: application-rules
+      rules:
+      - alert: SecretsManagerPutSecretValue
+        expr: secretsmanager_put_secret_value_sum{exported_job="secretsmanager", secret_id="arn:aws:secretsmanager:eu-west-2:754256621582:secret:<your-secret-arn>"} > 0
+        for: 1m
+        labels:
+          severity: info-cp-team
+        annotations:
+          message: |
+            {{ $labels.secret_id }} has had {{ $value }} PutSecretValue operations recently.
+            {{ $labels.user_arn }} has had {{ $value }} PutSecretValue operations recently.
+          runbook_url: <runbook_url>
+          dashboard_url: <dashboard_url>
+```
+
+### PrometheusRule examples
+
+If you're struggling for ideas on how and which alerts to setup, please see some examples [here](https://github.com/ministryofjustice/cloud-platform-terraform-monitoring/blob/main/resources/prometheusrule-alerts/application-alerts.yaml)
+
+### Alerting on 403 errors
+When you want to alert on 403 errors, this cant be done on the namespace level, as the 403 errors are not exposed to the namespace.
+These errors are exposed at the ingress level, you can query these errors by using the host, and the status code. An example of the promql query would be:
+
+```yaml
+sum(rate(nginx_ingress_controller_requests{host=~"[your ingress host name]", status="403"}[1m]))
+```
+
+this will alert on the rate of 403 errors on the ingress host name connect to the namespace you would like to monitor.
+
+
+### Advisory Note 1: If Prometheus gets re-installed
+
+In the event of a serious failure, or for a required upgrade, it may be necessary to re-install Prometheus.
+
+`PrometheusRule` is a [CRD](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) that declaratively defines a desired Prometheus rule.
+
+If for any reason Prometheus has to be re-installed, **all PrometheusRules are removed with the CRD.**
+
+We recommend that all PrometheusRules are added to your namespace folder in the [Environments Repo](https://github.com/ministryofjustice/cloud-platform-environments). This will ensure all rules are applied/present at all times.
+
+PrometheusRules can still be tested/amended/applied manually, then a PR can be created to add to the Environments Repo when ready.
+
+### Advisory Note 2: CPUThrottlingHigh Alert
+
+The `CPUThrottlingHigh` alert is configured as part of the default rules when installing prometheus-operator.
+
+This alert can trigger if containers have low CPU limits, and/or spiky workloads but with very low average usage. CPU throttling can activate during those spikes. CPU usage is based on [CFS](https://en.wikipedia.org/wiki/Completely_Fair_Scheduler).
+
+If you think this may be causing an issue with your application, we recommend raising your CPU limit, whilst keeping the container CPU request as close to the 95%-ile average usage as possible.
+
+### Further reading
+
+- [Prometheus](https://github.com/prometheus-operator/prometheus-operator/)
+
+[env-create]: /documentation/getting-started/env-create.html#creating-a-cloud-platform-environment

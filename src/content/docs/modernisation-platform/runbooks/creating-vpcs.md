@@ -1,0 +1,69 @@
+---
+owner_slack: "#modernisation-platform"
+title: Creating VPCs in AWS
+last_reviewed_on: 2026-02-18
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: runbooks/creating-vpcs.html.md.erb
+ingested_at: "2026-04-09T10:46:00.957Z"
+---
+
+## Overview
+
+Following these steps will allow you to create a new VPC for a business unit. Previously, we created VPCs when they were needed as part of the account creation process, however we have now cut down the number of steps to make it easier, and reduce the chance of error.
+
+Example PR for this work [here](https://github.com/ministryofjustice/modernisation-platform/pull/2283/files#diff-5ee99e84753771a6c78bed0261809c2a8ab275d1e63c7fddbe222cf426a50927)
+
+## Information Required
+
+The only information that is required is the name of the business unit. From there we can create a VPC relating to the current environment, e.g. **hq-test.**
+
+Other information to build **extended DNS zones** and **NACLS** as well as any **additional endpoints** or **additional CIDR ranges** can be _useful_, but are not required at this stage. These things can be added after creation easily.
+
+## Files to Change.
+
+Firstly, a cidr range needs to be reserved. The [`cidr-allocation.md`](https://github.com/ministryofjustice/modernisation-platform/blob/main/cidr-allocation.md) file contains the ranges that can be reserved. Depending on your environment, pick the correct table and put the business unit next to your range.
+
+Secondly, the [`expected.rego`](https://github.com/ministryofjustice/modernisation-platform/blob/main/policies/networking/expected.rego) file needs to be edited under `policies/networking`. In here, we add the accounts that will go in this VPC, or leave it empty if you are building the vpc ahead of account creation.
+
+Here's an example of what to add.
+
+```
+"opg-production": {
+  "general": {
+    "cidr": "10.27.48.0/21",
+    "accounts": []
+  }
+},
+```
+
+## Files to Add
+
+Aside from the two files that need to be edited, a new file will be need to be added. This is done in the same pull request, and you will need a separate file for each VPC.
+For example if you are creating a development, test, preproduction and production VPC for OPG, you will need four separate files.
+
+Here’s an example of what one looks like
+
+```
+{
+  "cidr": {
+    "subnet_sets": {
+      "general": {
+        "cidr": "10.27.72.0/21",
+        "accounts": []
+      }
+    }
+  },
+  "options": {
+    "bastion_linux": false,
+    "additional_endpoints": [],
+    "dns_zone_extend": []
+  },
+}
+```
+
+The file name is the business unit - environment. For example **laa-test.json**.
+
+## Subnet sets
+
+All VPCs must have a `general` subnet set. Additional subnet sets can be added if needed. For more information on subnet sets see [subnet allocation](../concepts/networking/subnet-allocation)

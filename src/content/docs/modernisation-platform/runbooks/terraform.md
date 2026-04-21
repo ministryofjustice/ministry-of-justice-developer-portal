@@ -1,0 +1,87 @@
+---
+owner_slack: "#modernisation-platform"
+title: Terraform
+last_reviewed_on: 2025-11-25
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: runbooks/terraform.html.md.erb
+ingested_at: "2026-04-09T10:46:00.973Z"
+---
+
+## What we manage in Terraform
+
+We currently manage the following in Terraform:
+
+- GitHub resources, including teams, repositories, actions secrets, etc
+- AWS resources, such as
+  - [setting up new environments](https://github.com/ministryofjustice/modernisation-platform/tree/main/terraform/environments)
+    - [bootstrapping environments](https://github.com/ministryofjustice/modernisation-platform/tree/main/terraform/environments/bootstrap), including the secure baselines and giving access to a role from the Modernisation Platform landing zone account
+    - [environment-specific infrastructure that we manage](https://github.com/ministryofjustice/modernisation-platform/tree/main/terraform/environments), including the core accounts for the Modernisation Platform
+  - [the Modernisation Platform landing zone account](https://github.com/ministryofjustice/modernisation-platform/tree/main/terraform/modernisation-platform-account), including S3 state storage for all environments
+- PagerDuty resources, including users, teams, services and schedules
+
+### Terraform workspaces
+
+We make use of Terraform workspaces to create the same resources in each environment. This allows you to interpolate `terraform.workspace` to configure different values, such as Autoscaling Group limits or tags, in different environments. For example:
+
+```
+resource "aws_instance" "example" {
+  count = "${terraform.workspace == "production" ? 5 : 1}"
+
+  tags = {
+    environment = terraform.workspace
+    is-production = "${terraform.workspace == "production" ? true : false}"
+  }
+}
+```
+
+When you are running Terraform, check your workspace is set correctly for where you want to deploy changes, e.g for `core-logging`:
+
+```bash
+$ cd terraform/environments/core-logging
+$ terraform workspace list
+* default
+  core-logging-production
+$ terraform workspace select core-logging-production
+$ terraform plan
+```
+
+You will get errors if you haven't changed your workspace from `default`.
+
+### Permissions required for `terraform/environments/` directory in [`modernisation-platform-environments`](https://github.com/ministryofjustice/modernisation-platform-environments) repo
+
+You can run `terraform plan` and `terraform apply` in customer directories using credentials for AdministratorAccess SSO role for the terraform workspace you're running against. For example, if you're want to run code in the `terraform/environments/nomis` directory in the `nomis-development` workspace, you will need to retrieve the [AWS SSO credentials](../user-guide/getting-aws-credentials) for the `nomis-development` account and paste them into your environment prior to running terraform commands.
+
+After pasting the credentials, use the following steps to run terraform in the `example` directory against `example-development` account:
+
+```bash
+$ cd terraform/environments/nomis
+$ terraform init
+$ terraform workspace list
+$ terraform workspace select example-development
+$ terraform plan
+$ terraform apply
+```
+
+> If you encounter `Access Denied` error, try running `rm -rf .terraform` and rerun `terraform init`
+
+### Permissions required for each directory in `terraform/` in [`modernisation-platform`](https://github.com/ministryofjustice/modernisation-platform) repo
+
+Terraform doesn't look recursively for `.tf` files, so we utilise subdirectories to keep related infrastructure together. You need different permissions to run each directory, following the directory structure:
+
+- `terraform/`
+  - `environments/` needs to be run with an MOJ organisational root account IAM user
+    - `bootstrap/` Can be run using Modernisation Platform Account AdministratorAccess SSO role
+    - any other subdirectory (e.g. `bichard7/`, `core-logging/` can be run using an Modernisation Platform AdministratorAccess SSO role, after `bootstrap/` has been run for that environment
+  - `github/` can be run using an Modernisation Platform Account AdministratorAccess SSO role, and requires a `GITHUB_TOKEN` to be set as an environment variable that has permissions to create repositories
+  - `pagerduty/` can be run using an Modernisation Platform Account AdministratorAccess SSO role, and requires a `pagerduty_token` to be passed in as a Terraform variable with permissions to the MoJ PagerDuty account
+  - `modernisation-platform-account/` can be run using an Modernisation Platform Account AdministratorAccess SSO role
+
+> Unlike in `modernisation-platform-environments` repo, you can use Modernisation Platform Account AdministratorAccess SSO role to run terraform, rather than using the AdministratorAccess SSO role of the target account.
+
+### Permissions required for each directory in [`modernisation-platform-ami-builds`](https://github.com/ministryofjustice/modernisation-platform-ami-builds) repo
+
+- `modernisation-platform/` Can be run using Modernisation Platform Account AdministratorAccess SSO role
+- `teams/` Can be run using Modernisation Platform Account AdministratorAccess SSO role
+
+All of the Terraform on the platform is also run on GitHub Actions pipelines, so running locally is not required, but can be quicker for larger development tasks. Please note that running Terraform locally will need to be run using MFA, there are different ways to do this but we are using [AWS Vault](https://github.com/99designs/aws-vault).

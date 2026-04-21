@@ -1,0 +1,184 @@
+---
+title: Creating a Route 53 Hosted Zone
+last_reviewed_on: 2025-04-17
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: other-topics/route53-zone.html.md.erb
+ingested_at: "2026-04-09T10:46:00.237Z"
+owner_slack: "#cloud-platform"
+---
+
+## Overview
+
+This short guide will run through the process of creating a [Route 53 Hosted Zone][aws-hosted-zone] through Terraform for your environment.
+
+## Pre-Requisites
+
+This guide assumes you have an environment already created in the `Live` cluster and defined in the [cloud-platform-environments repository][env-repo]. If you have a service running on a `*.apps.live.cloud-platform.service.justice.gov.uk/` URL, then you are on the Live cluster already.
+
+## Terraform files
+
+Copy the Terraform resource code below and save it into the respective 3 files in the `[your namespace]/resources` directory in the [cloud-platform-environments repository][env-repo]:
+
+ * `main.tf`
+ * `route53.tf`
+ * `variables.tf`
+
+### main.tf
+```
+terraform {
+  backend "s3" {}
+  required_version = ">= 1.2.5"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.64.0"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.23.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "eu-west-2"
+}
+
+```
+> Note: If you already have that file defined in your environment, do not recreate it.
+
+### variables.tf
+
+This file declares the variables fields utilised in the route53.tf file below
+
+Fill in the variables below with your settings. Fill _namespace_ field below with your existing kubernetes namespace, all the _example_ fields below with desired values (all lowercase, and no spaces), and the _domain_ variable with your desired URL (pay special attention if your URL contains "justice" or not).
+
+```
+variable "namespace" {
+  default = "YOUR KUBERNETES NAMESPACE GOES HERE"
+  type    = string
+}
+
+variable "business_unit" {
+  default = "example-bu"
+  type    = string
+}
+
+variable "team_name" {
+  default = "example-team-name"
+  type    = string
+}
+
+variable "application" {
+  default = "example-app"
+  type    = string
+}
+
+variable "environment_name" {
+  default = "dev"
+  type    = string
+}
+
+variable "is_production" {
+  default = false
+  type    = bool
+}
+
+variable "infrastructure_support" {
+  default = "example@example.com"
+  type    = string
+}
+
+variable "owner" {
+  default = "example-owner"
+  type    = string
+}
+
+variable "domain" {
+  default = "YOURDOMAIN.service.(justice).gov.uk"
+  type    = string
+}
+```
+
+> Note: If you already have that file defined in your environment, do not recreate it, but make sure that all the variables mentioned above are included, for example, the _domain_
+
+### route53.tf
+
+Make sure to replace the placeholders and example values below with relevant ones. If you are referring from variables in variables.tf, use `var.VARIABLE NAME`, so for example, the "domain" variable defined in `variable.tf` can be referenced as `var.domain`.
+
+> Note: Please follow the convention on when to use `_` vs `-`.
+
+```hcl
+resource "aws_route53_zone" "example_team_route53_zone" {
+  name = var.domain
+
+  tags = {
+    team_name              = var.team_name
+    business-unit          = var.business_unit
+    application            = var.application
+    is-production          = var.is_production
+    environment-name       = var.environment_name
+    owner                  = var.owner
+    infrastructure_support = var.infrastructure_support
+    namespace              = var.namespace
+  }
+}
+
+resource "kubernetes_secret" "example_route53_zone_sec" {
+  metadata {
+    name      = "example-route53-zone-output"
+    namespace = var.namespace
+  }
+
+  data = {
+    zone_id = aws_route53_zone.example_team_route53_zone.zone_id
+    nameservers = join("\n", aws_route53_zone.example_team_route53_zone.name_servers)
+  }
+}
+
+```
+
+## Creating the resource
+
+Commit your changes to a new branch and raise a pull request.
+Once approved, you can merge and the changes will be applied.
+Shortly after, to confirm the zone has been created, you should be able to access the `Zone_ID` and `Nameservers` as Secret on kubernetes in your namespace.
+
+## Add DNS records to a route53 zone (Optional)
+
+If you are migrating an existing domain to the Cloud Platform, you can first move the nameservers management to Cloud Platform before migrating the app to CP.
+
+In that case, copy all the current DNS records and set the same in Cloud Platform account. This can be done prior to the migration using terraform.
+
+Collect all existing dns records that are pointing to your custom domain and add them to the route53 zone you created using the [aws_route53_record][aws_route53_record] terraform resource.
+
+Example below, will add a record set of type "CNAME" to the route53 zone.
+
+```
+resource "aws_route53_record" "add_cname_email" {
+  name    = "YOUR DOMAIN GOES HERE"
+  zone_id = aws_route53_zone.example_team_route53_zone.zone_id
+  type    = "CNAME"
+  records = ["test.org"]
+  ttl     = "300"
+}
+
+```
+
+Follow the [example-usage][aws_route53_record], to create different type of record sets, using aws_route53_record resource.
+
+## Delegating the zone
+
+For any custom subdomain of `service.justice.gov.uk` or `justice.gov.uk`, the delegation of the zone is done by Operations Engineering team.
+Please contact #ask-operations-engineering slack channel or [domains@digital.justice.gov.uk](mailto:domains@digital.justice.gov.uk) and provide the `nameservers`
+you fetched from the secrets in your namespace for that custom domain above.
+
+For any other domain, you will need to contact the parent zone's administrators (usually GDS) and provide the `nameservers` details to setup delegation.
+If in doubt, check with #ask-operations-engineering slack channel or [domains@digital.justice.gov.uk](mailto:domains@digital.justice.gov.uk)
+
+[env-repo]: https://github.com/ministryofjustice/cloud-platform-environments
+[aws-hosted-zone]: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/AboutHZWorkingWith.html
+[support ticket]: https://github.com/ministryofjustice/cloud-platform/issues/new?template=cloud-platform-support-request.md&labels=support+team
+[aws_route53_record]: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record

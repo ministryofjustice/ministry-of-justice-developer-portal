@@ -1,0 +1,115 @@
+---
+owner_slack: "#modernisation-platform"
+title: Our ways of working
+last_reviewed_on: 2025-11-25
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: team/ways-of-working.html.md.erb
+ingested_at: "2026-04-09T10:46:00.978Z"
+---
+
+## Team Availability and Support
+
+- Maintain a minimum of two engineers per sprint
+- Provide notice for leave (generally twice the leave period)
+- Operate a [duty rota](https://user-guide.modernisation-platform.service.justice.gov.uk/runbooks/duty-rota) for #ask-modernisation-platform channel support
+
+## On-Call Support
+
+- Only during listed hours
+  - 7AM-9AM and 4PM-10PM weekdays
+  - 7AM-10PM weekends and bank holidays
+- Must be working as [DevOps engineer](https://ddat-capability-framework.service.gov.uk/role/development-operations-devops-engineer#devops-engineer) or above
+- Must have passed their probationary period
+- Members require sufficient experience
+- Opt-in basis for rota
+
+## Work and Task Management
+
+- [GitHub projects](https://github.com/orgs/ministryofjustice/projects/17) are used to manage our workload
+- Work in two-week sprints
+- Longer term objectives tracked in team [roadmap](https://app.productplan.com/pr/rY8sb6v1YYLZl4_dSKNSrUbasx2Ivzob).
+- Ensure tasks meet Definition of Ready (DoR) before sprint planning
+- Backlog issues are adequately refined by the team
+- Issues in sprint can be: `To Do`, `In Progress`, `Blocked`, `For Review`, `Done`
+  - `To Do`: issues here should be adequately refined. If not, they should be removed from the sprint and placed onto the backlog. Tickets marked as prioritised should be done first, assuming you are confident that you have the technical knowledge to do so.
+  - `In Progress`: issues here have an assigned team member. Updates are added as milestones are reached. Links to PRs and other useful information should be included.
+  - `Blocked`: issues here have external dependencies preventing their progress. Issues we expect to be blocked for the duration of a sprint should be placed onto the backlog.
+  - `For Review`: once the technical work is completed a summary is written and the issue is moved here. It will be compared to the definition of done by the reviewer then moved to `done`.
+  - `Done`: issues here have been implemented, tested, and reviewed.
+- When an issues is `Done` it should be closed
+
+## Git and GitHub Practices
+
+- Maintain good git hygiene (fetch/pull before branching, regular merging, squashing extensive commit lists)
+- Use meaningful branch naming (e.g., `feature/`, `fix/`, `docs/`)
+- Sign your commits
+- Write meaningful commit messages
+- Verify tests and pipeline completion before raising PRs
+- Provide clear PR descriptions with context (try to answer "why" as well as "what", provide a link to relevant issues)
+- Break large changes into smaller, focused PRs where possible
+- Review PRs thoroughly, approving only those you understand
+- Use GitHub PR for discussion of content, rather than Slack
+- Follow [Semver](https://semver.org/) for versioning
+  - Provide a high-level `What's New` in the version release notes
+  - Make use of GitHub's automatically generated release notes feature
+  - Optionally trim the release notes down to commits affecting consumers
+
+## Contributing to Modernisation Platform Modules
+
+[We work in the open](https://mojdigital.blog.gov.uk/2017/02/21/why-we-code-in-the-open/), and welcome contributions to our code.
+
+Anyone is welcome to submit fixes, features, or enhancements to our repositories where we maintain a standard [CONTRIBUTING.md](https://github.com/ministryofjustice/modernisation-platform/blob/main/CONTRIBUTING.md) document.
+
+### Review criteria
+
+- Ensure builds are error-free
+- Maintain backwards compatibility for new features
+- Test thoroughly when amending existing features
+- Add tests for new features
+- Discuss reasons for removing features
+- If in any doubt, speak to team colleagues for assistance.
+
+## Change Management in Modernisation Platform repositories
+Some changes to our platform are safe to roll out at any point once they are reviewed and approved. Others need more caution and require communicating to our tenants and sometimes need actioning.
+The following table is to class the changes and to describe the process of communicating such changes.
+
+| Change Classification                                   | Change Characteristics                                                                                                                                                                                                                                                          | Rollout Process                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| No communication needed                                 | These are changes that do not require an outage and can be safely deployed with no impact on users.                                                                                                                                                                             | No action needed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| Needs communicating, but no action and no notice needed | These are changes that add new features or enhance new features, but do not change the existing fundamental behaviour of the platform.                                                                                                                                          | Use the ask and update channels to communicate it and keep the announcement neutral. The information should include **what** is changing (e.g. which service or feature) and its **impact**.                                                                                                                                                                                                                                                                                                                                                                                             |
+| Needs communicating in advance                          | These are changes that are not backwards compatible or require an outage (some or all platform's feature will not be accessible at the time of the changes deployment) or are of high impact (e.g. changing evaluation order of the firewall could potentially cause an outage to all deployed applications). In other words, these are changes of which deployment causes a temporary loss of service or access. | Agree within the team on the **notice period** prior to the update rollout. Prepare an action plan runbook that will state the purpose, highlight the impact and walk through the process of rolling and backing it out. This should be reviewed within the team. Post on the Pager Duty [Modernisation Platform status page](https://moj-digital-tools.pagerduty.com/external-status-dashboard/PN2KMAZ/maintenance?tab=ongoing) about the planned maintenance. This will automatically post in the ask and update channels. The information should include **what** is changing, its **impact** and **how long** it will take to roll it out. Post a reminder in our channels closer to the scheduled outage.                                                                                                                                                                                                      |
+| Requires user action                                    | These are changes that are not backwards compatible and require user's input to be completed (e.g. changes to platform files in the modernisation-platform-environments repository require deploying to users environments).                                                    | Agree within the team on the **deprecation period**. Once the changes are rolled out, communicate it in the ask and update channels. The information should include **what** is changing, its **impact** and **how long** is the deprecation period. During the deprecation period post reminders in the ask and update channels if not all users have actioned. When the deprecation period expires, reach out to users via email using the infrastructure-support contact information from the environment files. Making sure that all users have updated is part of the issue's DoD. |
+
+## Change Management in the AWS management and delegated administrator accounts
+Sometimes there may be a need to make changes at the top organisation level in one of the organisation management or the delegated administrator accounts. This could be done through changes in the [aws-root-account](https://github.com/ministryofjustice/aws-root-account/), [moj-terraform-aws-sso](https://github.com/ministryofjustice/moj-terraform-aws-sso/), [moj-terraform-scim-entra-id](https://github.com/ministryofjustice/moj-terraform-scim-entra-id/), [moj-terraform-scim-github](https://github.com/ministryofjustice/moj-terraform-scim-github/), [moj-ip-addresses](https://github.com/ministryofjustice/moj-ip-addresses/) or other MOJ wide repositories. If the changes have an impact outside of the Modernisation Platform AWS Organisation Units (OU), they need communicating with the owners of all the affected OUs.
+For that we will communicate in advance by labeling GitHub issus with the `ORG-WIDE` label during the ticket creation or backlog refinement and by posting on [the Pager Duty Hosting Status page](https://moj-digital-tools.pagerduty.com/external-status-dashboard/PZEG8EK/maintenance?tab=ongoing). We should aim to provide two weeks of notice at minimum (changes that are more transactional, e.g. terraform/code version patching/upgrades can allow shorter notice). For more guidance on this process, please refer to the [ Making Changes that Impact the Entire Organisation ]("https://github.com/ministryofjustice/aws-root-account/blob/main/README.md#-runbooks") runbook of the [aws-root-account](https://github.com/ministryofjustice/aws-root-account/) repository.
+
+## Spikes
+
+- Timeboxed research tasks (maximum length one sprint)
+- Use `SPIKE:` prefix in issue title
+- Document findings and present to team
+- Create follow-up issues if proceeding
+- Create [Architectural Decision Record](https://github.com/ministryofjustice/modernisation-platform/tree/main/architecture-decision-record) if outcome is of architectural significance
+
+## Firebreaks
+
+A **Firebreak Sprint** is a dedicated sprint held once every quarter, designed to give the team a chance to step back from regular work and focus on tasks that inspire creativity, foster growth, and strengthen our platform and services. It’s a time to innovate, learn, and address areas that don’t fit into the usual sprint cadence.
+
+### Why do we run Firebreak Sprints?
+
+- **Promote Learning and Growth**: Firebreaks provide the freedom to learn new skills, explore emerging technologies, and invest in personal and professional development.
+- **Encourage Innovation**: A chance to experiment with tools, processes, or ideas that spark creativity and bring long-term value.
+- **Enhance Platforms and Services**: Focus on meaningful improvements, like automating tasks or optimizing services, to improve efficiency and reliability.
+- **Support Team Well-being**: A break from the regular sprint cycle helps refresh the team, prevent burnout, and create a positive and collaborative environment.
+
+### How do we run Firebreak Sprints?
+
+- **Plan the Schedule**: Firebreak Sprints occur every 6 sprints (5 regular sprints followed by 1 Firebreak Sprint), aligning with a quarterly rhythm.
+- **Continue Key Ceremonies**: Regular ceremonies, such as sprint planning, will take place to prepare for the following sprint. Team members can choose to work on this planned work during the Firebreak if preferred.
+- **Encourage Individual Focus**: Team members can choose tasks that matter most to them—whether learning, platform improvements, service optimization, or automation.
+- **Experiment Safely**: Experimentation and innovation are highly encouraged. However, major changes to the platform or services may be delayed if they are considered too risky or experimental for immediate rollout.
+- **Leverage the Ideas Backlog**: We maintain an optional **Firebreak** label on our board to highlight ideas suitable for Firebreak Sprints. These can include tasks focused on innovation, learning, or platform improvements. You can explore the current stock of labelled issues [here](https://github.com/orgs/ministryofjustice/projects/17/views/41).
+- **Keep Work Visible** - Team members should have a ticket to reflect Firebreak work with a reasonable description of it's proposed value. The detail does not have to be extensive, as we understand some work done within Firebreak may be personal - but there should be enough detail of the proposed value of the work to meaningfully reflect on the outcomes after Firebreak has completed.
+- **Fair Participation** - Not every team member will be able to fully participate in every Firebreak due to holidays, sickness, support work, emergency work or high-priority work. We will try to ensure the ability to fully participate in Firebreaks is available to all team members.

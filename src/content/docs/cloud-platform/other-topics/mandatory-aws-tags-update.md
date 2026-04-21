@@ -1,0 +1,71 @@
+---
+title: Updating Mandatory Tags for AWS provider in Cloud Platform namespace resources
+last_reviewed_on: 2025-11-21
+review_in: 12 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: other-topics/mandatory-aws-tags-update.html.md.erb
+ingested_at: "2026-04-09T10:46:00.232Z"
+owner_slack: "#cloud-platform"
+---
+
+### Overview
+
+This guide explains how to update the mandatory tags for the Terraform AWS provider managed resources in your Cloud Platform environment. This is essential for compliance and resource management of AWS resources.
+
+### Prerequisites
+
+Before you begin, ensure you have the following:
+
+- Access to the Cloud Platform namespace where the resources are located.
+- Latest version of the Cloud Platform CLI installed.
+
+### Steps to Update Mandatory AWS Tags
+
+1. **Running the cloud-platform CLI command to update tags:**
+    
+    Use the following command to update the mandatory AWS tags for your namespace resources:
+
+    ```bash
+    cloud-platform environment namespace-tags --namespaces namespace1,namespace2 --repo-path /path/to/cloud-platform-environments
+    ```
+
+    Replace `namespace1` with the actual namespace you want to update, and `/path/to/cloud-platform-environments` with the path to your Cloud Platform environments repository.
+
+2. **Verify the Update:**
+
+    After running the command, verify that the tags have been updated correctly by checking the resources in your cloud-platform-environments repository.
+
+    Before Update:
+
+    ```bash
+    provider "aws" {
+        region = "eu-west-2"
+    }
+    ```
+
+    After Update:
+
+    ```bash
+    provider "aws" {
+        default_tags {
+            tags = {
+            business-unit = var.business_unit
+            application = var.application
+            is-production = var.is_production
+            owner = var.team_name
+            namespace = var.namespace
+            service-area = var.service_area
+            }
+        }
+        region = "eu-west-2"
+    }
+    ```
+
+    The service-area tag may not be included in your `variables.tf` file, you will need to add this manually. Please follow this guidance on naming conventions: [Service Area Tag Naming Conventions](https://cloud-optimisation-and-accountability.justice.gov.uk/documentation/finops-and-greenops-at-moj/standards/tagging.html#mandatory)
+
+    If there are other tags already present, the script should add the mandatory tags without removing the existing ones. But please ensure they are preserved along with the new mandatory tags.
+
+3. **Commit and Push Changes:**
+
+    Once the tags have been updated successfully, commit, push and create a pull request for the changes for review.

@@ -1,0 +1,24 @@
+---
+owner_slack: "#modernisation-platform"
+title: Sandbox and Testing environments
+last_reviewed_on: 2026-01-27
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: concepts/sdlc/sandbox-testing-environments.html.md.erb
+ingested_at: "2026-04-09T10:46:00.943Z"
+---
+
+This is a list of non core or member environments. These environments are used for core platform development and testing work.
+
+Please note this does not include member development accounts which are given [sandbox access](../../user-guide/platform-user-roles.html#sandbox) to enable rapid development.
+
+## Environments
+
+| Name                  | AWS Account Name      | Terraform Location                                                                                                               | Usage                                                                                                                                                                                                                                         | How to run Terraform                                                                                         |
+| --------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Core Sandbox          | shared-services-dev   | [core-sandbox](https://github.com/ministryofjustice/modernisation-platform/tree/main/terraform/environments/core-sandbox)        | Development or prototyping work that requires a completely disconnected account.                                                                                                                                                              | This account does not have secure baselines or a Github actions workflow. Terraform must be run locally.     |
+| Core VPC Sandbox      | core-vpc-sandbox      | [core-vpc](https://github.com/ministryofjustice/modernisation-platform/tree/main/terraform/environments/core-vpc)                | Development work for the core-vpc. This account is associated with the core-vpc-sandbox workspace and is identical to the other core-vpc accounts, except that only sprinkler-development and cooker-development use the networking provided. | Github action in modernisation platform repository                                                           |
+| Testing Test          | testing-test          | [testing](https://github.com/ministryofjustice/modernisation-platform/tree/main/terraform/environments/testing)                  | Exact copy of a member account in terms of networking and baselines, but empty. Used for running Terratests in.                                                                                                                               | Github action for the networking configuration, but only Terraform run as part of tests should be used here. |
+| Sprinkler Development | sprinkler-development | [sprinkler](https://github.com/ministryofjustice/modernisation-platform-environments/tree/main/terraform/environments/sprinkler) | Like a member account but uses core-vpc-sandbox networking. Used to create and test infrastructure.                                                                                                                                           | Github action in the environments repository.                                                                |
+| Cooker Development    | cooker-development    | [cooker](https://github.com/ministryofjustice/modernisation-platform-environments/tree/main/terraform/environments/cooker)       | Like a member account but uses core-vpc-sandbox networking. Used to create and test infrastructure.                                                                                                                                           | Github action in the environments repository.                                                                |
+| Example               | example-development   | [example](https://github.com/ministryofjustice/modernisation-platform-environments/tree/main/terraform/environments/example)     | Example code to show users how to create simple infrastructure. Infrastructure should only be created here to test that the example code is valid, then destroyed.                                                                            | Github action in the environments repository                                                                 |

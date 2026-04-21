@@ -1,0 +1,38 @@
+---
+owner_slack: "#modernisation-platform"
+title: Viewing Core Account resources as a Member Account Developer
+last_reviewed_on: 2026-01-23
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: user-guide/member-read-only-core-accounts.html.md.erb
+ingested_at: "2026-04-09T10:46:00.996Z"
+---
+
+## Overview
+
+To view core account resources (that is resources created in a core account and shared to member accounts) developers can switch to Read-only roles to view their created resources.
+
+## Switching Roles
+
+1. Log in (to your member account) the AWS Console using SSO. Click the drop down menu at the top right and choose `Switch Role`.
+
+2. To view VPCs and lower level DNS resources (eg `hmpps-development.modernisation-platform.service.justice.gov.uk`) use the `member-delegation-read-only` role and use the account aliases for each Core VPC account:
+
+`core-vpc-development`
+`core-vpc-test`
+`core-vpc-preproduction`
+`core-vpc-production`
+
+![Switch roles to view VPC resources](../images/vpc-role-switch.png)
+
+3. To view higher level DNS resources (eg. `modernisation-platform.service.justice.gov.uk`), or to view Network Firewall resources (eg. CloudWatch logs or Network Firewall policies) use the `read-log-records` role and use the account alias for the Core Network account:
+
+`core-network-services-production`
+
+![Switch roles to view DNS resources](../images/read-log-records.png)
+
+4. To view Shared Services resources i.e AMIs created and shared, use the `member-shared-services` role and use the account alias for the Shared Services account:
+
+`core-shared-services-production`
+
+![Switch roles to view Shared Services resources](../images/shared-services-role-switch.png)

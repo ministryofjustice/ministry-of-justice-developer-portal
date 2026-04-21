@@ -1,0 +1,88 @@
+---
+owner_slack: "#modernisation-platform"
+title: User Workflows (CI/CD)
+last_reviewed_on: 2026-02-13
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: concepts/sdlc/user-workflow.html.md.erb
+ingested_at: "2026-04-09T10:46:00.945Z"
+---
+
+## Introduction
+
+We use [trunk base development](https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development) in the Modernisation Platform, with all user application infrastructure stored in the [modernisation-platform-environments](https://github.com/ministryofjustice/modernisation-platform-environments) repository.
+
+## Environments
+
+There are as standard up to four different environments that can be used per application:
+
+- development
+- test
+- preproduction
+- production
+
+In order to avoid having duplicate Terraform code for each environment, we use [Terraform Workspaces](https://developer.hashicorp.com/terraform/language/state/workspaces).
+This allows us to store the Terraform [state](https://developer.hashicorp.com/terraform/language/state) for each of those environments separately and deploy to the relevant environment by switching the workspace.
+
+You can choose which environments you want for your application with multiple configurations possible.
+
+![Environment configurations](../../images/environment-configurations.png)
+
+## Deploying Infrastructure
+
+For our CI/CD pipelines we use [GitHub actions](https://docs.github.com/en/actions).
+
+Workflow files are found [here](https://github.com/ministryofjustice/modernisation-platform-environments/tree/main/.github/workflows) and are named after your application.
+They are generated as part of the [initial environment set up workflow](core-workflow) and based off of a [template](https://github.com/ministryofjustice/modernisation-platform/blob/main/.github/workflows/templates/workflow-template.yml)
+
+Environment workflow:
+
+![Environment Workflow](../../images/environment-workflow.png)
+
+We use [GitHub Environments](https://docs.github.com/en/actions/reference/environments) to create a manual approval gate before each deployment.
+This gives you chance to review the Terraform plan before approving the deployment. The GitHub environments are automatically created by the [git-create-environments-script.sh](https://github.com/ministryofjustice/modernisation-platform/blob/main/scripts/git-create-environments.sh) using your GitHub team as the reviewer, as part of the initial account creation process.
+
+After approving, the infrastructure is deployed with the [`terraform apply`](https://developer.hashicorp.com/terraform/cli/commands/apply) command.
+
+### Permissions
+
+The code and AWS account is protected in a few different ways which work together to ensure that your AWS account is only modified by a member of your GitHub team or a Modernisation Platform engineer.
+
+#### CODEOWNERS
+
+Your GitHub team will be assigned as a [codeowner](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/about-code-owners) for your application folder, so someone in your team or the Modernisation Platform team will be required to review any pull requests before they can be merged.
+Members of your Github team will be able to approve a majority of pull requests. Approvals from the modernisation platform team members are only required in cases where a change might impact other customers or core platform components such as any files in the `.github/` directory, as well as `providers.tf`, `backend.tf` and `networking.auto.tfvars.json` files in your application directory. For specific rules please see the [`CODEOWNERS`](https://github.com/ministryofjustice/modernisation-platform-environments/blob/main/.github/CODEOWNERS) file.
+For [modernisation-platform-ami-builds](https://github.com/ministryofjustice/modernisation-platform-ami-builds) you will need to add your team to `CODEOWNERS` when you add a team to the list. See the file for examples.
+
+#### GitHub Environments
+
+GitHub environments prevents any workflow being deployed to your environments unless it is approved by a member of your GitHub team.
+
+#### AWS IAM (Identity and Access Management)
+
+Each account has a [`MemberInfrastructureAccess`](https://github.com/ministryofjustice/modernisation-platform/blob/main/terraform/environments/bootstrap/member-bootstrap/iam.tf) IAM role that allows the GitHub workflows to create resources in each AWS account.
+Each application workflow will use the role for the relevant account, ensuring one account can't create resources in another.
+
+For modifying DNS entries, a `dns-<business-unit>-<environment>` role is used. It is only capable of changes to the DNS hosted zone for your particular business unit.
+
+For creating certificates, a `modify-dns-records` role in the core-network-services account is used to create DNS validation records.
+
+#### AWS SCPs
+
+[Service Control Policies (SCPs)](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps) prevent certain actions from running which may have a detrimental effect on the platform.
+
+These are applied at a higher Organisational Unit (OU) level and are inherited by the application OUs.
+
+## Deploying Applications
+
+Legacy applications often use "Click Ops" to make application deployments (manual configuration through the AWS console). Whilst this is still possible on the Modernisation Platform, we encourage and can help people to build application deployment pipelines.
+
+To allow automated access to your AWS account we provide an "OIDC CI/CD (Continuous integration / continuous delivery)" role - `modernisation-platform-oidc-cicd`.
+
+This role has restricted access to your AWS account, with the minimum permissions needed to do things like push a new image to an ECR repo.
+
+The application pipeline is the responsibility of the application owner, details on using the role are detailed [here](../../user-guide/deploying-your-application)
+
+## Diagram
+
+![Member CI/CD](../../images/member-ci-cd.png)

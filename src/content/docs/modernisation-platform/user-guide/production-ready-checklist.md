@@ -1,0 +1,46 @@
+---
+owner_slack: "#modernisation-platform"
+title: Production Ready Checklist
+weight: 1
+last_reviewed_on: 2025-10-15
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: user-guide/production-ready-checklist.html.md.erb
+ingested_at: "2026-04-09T10:46:00.997Z"
+---
+
+Before an application goes into production, the Modernisation Platform team will check that the following steps have been taken on the production account to ensure the high quality of infrastructure on the platform.
+
+You can speed up these checks by preparing as much as possible in advance.
+
+## Checklist
+
+1. For public facing interfaces - [Create DDoS alarms, enable SRT access, enable Layer 7 Mitigation for ELBs](../runbooks/enabling-shield-advanced) This is not required if the interface is restricted to internal use only.
+1. All EC2 instances have the AWS Systems Manage Session Manager [SSM Agent](https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-agent) installed.
+1. There are no `CRITICAL` or `HIGH` severity level findings in Security Hub for the production account.
+1. Infrastructure code has been reviewed and signed off by a Modernisation Platform engineer.
+1. The application runbook (`README.md` in the application folder in the [modernisation-platform-environments repository](https://github.com/ministryofjustice/modernisation-platform-environments/tree/main/terraform/environments)) has been completed.
+1. The application conforms to the [MoJ Technical Guidance](https://technical-guidance.service.justice.gov.uk/) and [MoJ Security Guidance](https://security-guidance.service.justice.gov.uk/)
+1. The application has been tested.
+1. The applications `go-live-date` date has been updated in the environments folder [here](https://github.com/ministryofjustice/modernisation-platform/blob/main/environments) by adding this to the <application_name>.json in the format yyyy-mm-dd e.g. 2022-06-17
+1. Appropriate application monitoring and logging is in place.
+1. There is an application support team in place and their contact details are in the application runbook.
+1. The Modernisation Platform team are aware of any cutover/migration dates/times and have agreed additional cover if required.
+1. Backups are in place for all critical data and infrastructure, with a clear restore strategy.
+1. Tagging standards are applied to all resources for effective management and cost tracking.
+1. Application IAM roles and policies follow least-privilege principles.
+
+## Infrastructure Review
+
+When reviewing the application infrastructure, the Modernisation Platform team will check for the following things:
+
+1. No hard coded secrets or account numbers.
+1. No sensitive data is made public.
+1. Secrets are stored in Secrets Manager and rotation is enabled.
+1. Security groups are locked down as much as possible.
+1. The infrastructure is resilient and spread across availability zones.
+1. 3rd party modules or code are not used.
+1. The infrastructure is sensibly sized.
+1. There is no attempt to escalate privileges or provide access to parties outside of the platform.
+1. Data is encrypted at rest and in transit.
+1. Code is dry and well written with no commented out blocks.

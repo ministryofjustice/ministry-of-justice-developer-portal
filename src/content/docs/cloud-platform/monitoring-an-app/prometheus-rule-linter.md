@@ -1,0 +1,81 @@
+---
+title: Using PrometheusRule Linter in Github Action pipeline
+last_reviewed_on: 2025-03-05
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: monitoring-an-app/prometheus-rule-linter.html.md.erb
+ingested_at: "2026-04-09T10:46:00.216Z"
+owner_slack: "#cloud-platform"
+---
+
+### Introduction
+
+This is a guide of how to use the prometheus operator linter to check `PrometheusRules` YAML files for syntax errors within a CI/CD pipeline.
+
+Github Repository: [cloud-platform-po-linter](https://github.com/ministryofjustice/cloud-platform-po-linter)
+
+### Using Linter in Github Actions
+
+This Linter should be ran on pull request on new PrometheusRule yaml if their is a error the binary will return with a error detailing the incorrect syntax.
+
+Required to run linter:
+
+- `GITHUB_OAUTH_TOKEN`: This should be the repository key to allow binary to run on the pull request
+- `REPO_DIRECTORY`: This is the directory where the yaml file will be stored
+
+Required for commenting results to Pull Request:
+
+- `steps.po-linter.outputs.po-linter`: This is needed if you want to print error.
+
+### Example
+```
+name: Prometheus Operator Linter
+
+on:
+  pull_request:
+    paths:
+    - <DIRECTORY>/<FILE>
+  workflow_dispatch:
+
+jobs:
+  po-lint:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Run po-linter
+        uses: docker://ministryofjustice/cloud-platform-po-linter:latest
+        continue-on-error: true
+        id: po-linter
+        env:
+          GITHUB_OAUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_DIRECTORY: <DIRECTORY>
+
+      - name: Result
+        uses: actions/github-script@v6
+        env:
+            summary: "Result:\n${{ steps.po-linter.outputs.po-linter }}"
+        with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            script: |
+                const output = `#### Prometheus Operator Linting Results \`${{ steps.po-linter.outcome }}\`
+                <details><summary>Show</summary>
+                ${process.env.summary}
+                </details>`
+                github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: output
+                })
+      - name: Exitcode
+        if: steps.po-linter.outcome != 'success'
+        run: exit 1
+```

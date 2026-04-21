@@ -1,0 +1,68 @@
+---
+owner_slack: "#modernisation-platform"
+title: Integrating CloudWatch Alarms with PagerDuty and Slack
+last_reviewed_on: 2026-01-27
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: user-guide/integrating-alarms-with-pagerduty-with-slack.html.md.erb
+ingested_at: "2026-04-09T10:46:00.995Z"
+---
+
+### Introduction
+
+This guide will show you how to link your AWS CloudWatch alarms through to PagerDuty and Slack.
+
+### 1. Create an SNS topic
+
+In your application infrastructure code in the [environments repository](https://github.com/ministryofjustice/modernisation-platform-environments), create an SNS topic.
+
+### 2. Create alarms
+
+In your application infrastructure code in the [environments repository](https://github.com/ministryofjustice/modernisation-platform-environments), create your CloudWatch alarms based on the monitoring you require.
+
+We recommend only creating alarms for things which need action, if you create too many alarms the alerting becomes noisy and ends up being ignored.
+
+Configure your alarms to notify your SNS topic created in step 1.
+
+### 3. Create a PagerDuty service
+
+1. In the [Modernisation Platform repository](https://github.com/ministryofjustice/modernisation-platform/) create a PagerDuty service [here](https://github.com/ministryofjustice/modernisation-platform/blob/main/terraform/pagerduty/member-services-integrations.tf)
+
+1. Copy the top section of code to create a `pagerduty_service`, `pagerduty_service_integration` and `pagerduty_slack_connection` if you want to connect you pager duty service to a slack channel for your application.
+
+1. Add the `pagerduty_service_integration` integration key [here](https://github.com/ministryofjustice/modernisation-platform/blob/main/terraform/pagerduty/aws.tf#L14)
+
+1. Raise a PR for approval by the Modernisation Platform terraform.
+
+### 4. Link your SNS topic to your PagerDuty services
+
+Add the following code to your application infrastructure in the modernisation platform environments repository, replacing as appropriate:
+
+```
+# Pager duty integration
+
+# Get the map of pagerduty integration keys from the modernisation platform account
+data "aws_secretsmanager_secret" "pagerduty_integration_keys" {
+  provider = aws.modernisation-platform
+  name     = "pagerduty_integration_keys"
+}
+data "aws_secretsmanager_secret_version" "pagerduty_integration_keys" {
+  provider  = aws.modernisation-platform
+  secret_id = data.aws_secretsmanager_secret.pagerduty_integration_keys.id
+}
+
+# Add a local to get the keys
+locals {
+  pagerduty_integration_keys = jsondecode(data.aws_secretsmanager_secret_version.pagerduty_integration_keys.secret_string)
+}
+
+# link the sns topic to the service
+module "pagerduty_core_alerts" {
+  depends_on = [
+    aws_sns_topic.<my sns topic>
+  ]
+  source                    = "github.com/ministryofjustice/modernisation-platform-terraform-pagerduty-integration?ref=v2.0.0"
+  sns_topics                = [aws_sns_topic.<my sns topic>.name]
+  pagerduty_integration_key = local.pagerduty_integration_keys["<my integration key name>"]
+}
+```

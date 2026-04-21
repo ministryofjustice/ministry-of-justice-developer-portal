@@ -1,0 +1,51 @@
+---
+owner_slack: "#modernisation-platform"
+title: How to add an ECR for shared Docker images
+last_reviewed_on: 2026-02-24
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: user-guide/add-an-ecr-for-docker-images.html.md.erb
+ingested_at: "2026-04-09T10:46:00.980Z"
+---
+
+## Introduction
+
+You can create a shared [Amazon Elastic Container Registry (ECR)](https://aws.amazon.com/ecr/) in the Modernisation Platform to store your [Docker](https://www.docker.com/) container images.
+
+The ECR can then be shared to all of your application accounts.
+
+## Steps
+
+1. Clone the [modernisation-platform](https://github.com/ministryofjustice/modernisation-platform/) GitHub repository.
+2. Add your ECR registry to a **Terraform file** in [terraform/environments/core-shared-services/](https://github.com/ministryofjustice/modernisation-platform/tree/main/terraform/environments/core-shared-services)
+   - Check if a Terraform file already exists for your application in [terraform/environments/core-shared-services/](https://github.com/ministryofjustice/modernisation-platform/tree/main/terraform/environments/core-shared-services)
+   - If it does not exist, create a new file
+   - If it already exists, use the existing file
+   - The file **must be named after your application** and match the name defined in the [environments](https://github.com/ministryofjustice/modernisation-platform/tree/main/environments) configuration
+3. You will need to specify the `push_principals` (who do you want to be able to upload to the ECR) and `pull_principals` (who do you want to be able to download from the ECR)
+4. Raise a pull request
+5. The pull request will require approval from the team associated with the Terraform file, as defined in the [CODEOWNERS](https://github.com/ministryofjustice/modernisation-platform/blob/main/.github/CODEOWNERS) configuration. Once the relevant team approves, the pull request can be merged.
+
+## Example: Defining a per-application ECR using the shared module
+
+Below is an example Terraform configuration using the shared [ECR module](https://github.com/ministryofjustice/modernisation-platform/tree/main/terraform/modules/app-ecr-repo). Modify it for your application:
+
+```hcl
+module "sprinkler_ecr_repo" {
+  source = "../../modules/app-ecr-repo"
+
+  app_name = "sprinkler-test"
+
+  push_principals = [
+    "arn:aws:iam::${local.environment_management.account_ids["sprinkler-development"]}:role/modernisation-platform-oidc-cicd",
+    local.environment_management.account_ids["sprinkler-development"]
+  ]
+
+  pull_principals = [
+    "arn:aws:iam::${local.environment_management.account_ids["sprinkler-development"]}:role/modernisation-platform-oidc-cicd"
+  ]
+
+  # Tags
+  tags_common = local.tags
+}
+```

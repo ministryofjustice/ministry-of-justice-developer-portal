@@ -1,0 +1,215 @@
+---
+title: Deploying to the Cloud Platform
+last_reviewed_on: 2025-07-18
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: concepts/deploying.html.md.erb
+ingested_at: "2026-04-09T10:46:00.196Z"
+owner_slack: "#cloud-platform"
+---
+
+## Declarative, not Imperative
+
+Deploying to kubernetes is done **declaratively** rather than imperatively. So,
+instead of defining a list of instructions to be carried out (e.g. "install
+these gems, then run this install script"), you tell the cluster what
+state it should be in, and then leave it to the cluster to do whatever is
+necessary to get from the state it's in to the state you want it to be in.
+
+> By 'state' here, we usually mean something like *"there should be 4 pods, each
+running an instance of this docker image, listening on port 3000, with a
+service called 'rails-app' distributing inbound traffic to them."*
+
+Much of the configuration of your service on the cloud platform will be done
+via kubernetes deployment objects. You can learn more about deployments, and
+see an example, [here][kubernetes deployments].
+
+## Use image tags
+
+You specify the docker images which comprise your application like this:
+
+```
+image: ministryofjustice/my-awesome-app:0.8.1
+```
+
+The `0.8.1` above refers to the **tag** of the named docker image. This is
+often a semantic version number, as above, but it could also be the hash of a
+specific commit in the underlying software repo.
+
+```
+image: ministryofjustice/my-awesome-app:c135228626f0d647d699ecb3e9572dbd3750ec3d
+```
+
+It is possible to omit the tag altogether:
+
+```
+image: ministryofjustice/my-awesome-app
+```
+
+If you do this, you will get the `latest` version of the image (`latest` is the
+default tag value that all docker images have, assigned to the last version
+pushed to the image repository).
+
+> We strongly advise against deploying the `latest` version of any images.
+Doing this makes it difficult or impossible to reproduce a known state, for
+example if you wanted to roll back a deployment to an earlier version.
+
+**Always specify specific tagged versions of your docker images.**
+
+## Multiple replicas
+
+Kubernetes makes it very easy to deploy your services in a
+high-availability configuration.  All you need to do is set the value of
+`replicas` in your [deployments][kubernetes deployments] to a value higher than
+1. For production services, we recommend 4 as a sensible number of replicas.
+
+This means that, in the event that a [worker node] dies, taking one of your
+replicas with it, the remaining replicas will handle all application traffic,
+so that there is no downtime for your service while the missing replica is
+replaced.
+
+> Kubernetes will automatically try to schedule your replicas on
+different worker nodes, to minimise the impact of a node outage on all the
+services running in the cluster.
+
+Running multiple replicas is usually sensible for things like web
+application servers, where you just want to be sure that an instance of your
+app. is always available to service web requests. But, for some types of
+workload, such as background job processing, it might make sense to ensure that
+you have zero or one instances, rather than one or more.
+
+An example of this
+would be a job processing tasks which **must** be handled in First In, First Out (FIFO) order -
+running multiple replicas in this case could mean tasks get processed out
+of order. For workloads like this, consider a [Recreate] deployment strategy.
+
+## Zero Downtime Deploys
+
+This is another feature you get 'for free' from kubernetes.
+
+Your [deployments][kubernetes deployments] have a `strategy` section, which
+could look something like this:
+
+```
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 100%
+    maxUnavailable: 50%
+```
+
+`rollingUpdate` (the default deployment strategy) means that when your
+deployment is updated, or your pods need to be moved to another node, the
+cluster will create new instances before terminating the old ones. `maxSurge:
+100%` means that a complete additional copy of your deployment will be created
+before any of your old pods are terminated, and `maxUnavailable: 50%` means the
+cluster will only allow at most half of your pods being unavailable (e.g. if
+the new version of your service fails to deploy, for some reason).
+
+To redeploy your application with zero downtime, all you need to do is create
+an updated version of your deployment and apply it to the cluster, which will
+then take care of launching new pods and deleting old ones.
+
+More information about deployment strategies is available in the [kubernetes
+documentation][kubernetes deployments], and there is more discussion of zero
+downtime deployments in [this article].
+
+## Horizontal Pod Autoscaling (HPA)
+
+The Horizontal Pod Autoscaler is a built-in Kubernetes feature that allows you to horizontally scale applications based on one or more monitored metrics such as cpu or memory usage.
+
+The metrics you specify in the `HorizontalPodAutoscaler` manifest will determine the minimum and maximum number of pods needed, and set the thresholds at which pods should be created or removed.
+
+The Horizontal Pod Autoscaler can ensure that critical applications are elastic and can scale out to meet increasing demand as well scale down to ensure optimal resource usage, it is also a great tool in saving money by auto-scaling down non-production work loads when not in use, such as overnight or at the weekend.
+
+The HPA calculates the number of replicas by calculating the ratio between desired metric value and current metric value. Details on how the algorithm works is explained [here](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
+
+#### Important aspects of the HorizontalPodAutoscaler to be aware of:
+
+* Resource Limits - You need to set resource limits otherwise HPA will not work, as it will not have a value to quantify from.
+* 15 seconds - The HPA controller checks the value of the metric used every 15 seconds per pod.
+* 3 minutes - The HPA scales up pods if the metric threshold has been continually exceeded for 3 mins.
+* 5 minutes - The HPA scales down pods if the metric threshold has not been exceeded for 5 mins.
+
+To create the horizontal pod autoscaler for your deployment, create a `hpa-myapp.yaml` similar to this:
+
+```Yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-app-name
+  namespace: my-namespace
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-app-name
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 95
+```
+
+The above manifest will ensure a minimum of 1 replica is available for the deployment called my-app-name, but will increase replicas, up to a maximum of 5, when the CPU utilization is above 95%.
+
+To configure what value to set for `averageUtilization` depends on resource limits set up in your namespace and how much the actual pods consume.
+This [limitrange file] defines the defaults we assign to new namespaces.
+
+- Check how much defaults is set for your namespace
+
+- Check how much the pods actually consume by running
+```
+kubectl top pods -n <namespace>
+```
+If your namespace `defaultRequest.cpu : 10m` and you pods consumes `8m` wihtout any traffic, then the usual CPUUtilizationPercentage is 80%.
+The pods doesnot need scaling until it reaches 95% of the `defaultRequest.cpu` which is already reserved for each of the containers. Hence the `averageUtilization` can be set as 95%.
+
+Run the following command to apply:
+
+```
+$ kubectl apply -f hpa-myapp.yaml -n my-namespace
+horizontalpodautoscaler.autoscaling/hpa-myapp autoscaled
+```
+Run the following to describe the status of the pod autoscaler:
+
+```
+$ kubectl describe hpa -n my-namespace my-app-name
+```
+
+```
+Name:                                                  my-app-name
+Namespace:                                             my-namespace
+Labels:                                                app=my-app-name
+Annotations:                                           <none>
+CreationTimestamp:                                     Tue, 01 Jun 2019 23:35:22 +0100
+Reference:                                             Deployment/my-app-name
+Metrics:                                               ( current / target )
+  resource cpu on pods  (as a percentage of request):  10% (1m) / 50%
+Min replicas:                                          1
+Max replicas:                                          5
+Deployment pods:                                       1 current / 1 desired
+Conditions:
+  Type            Status  Reason              Message
+  ----            ------  ------              -------
+  AbleToScale     True    ReadyForNewScale    recommended size matches current size
+  ScalingActive   True    ValidMetricFound    the HPA was able to successfully calculate a replica count from cpu resource utilization (percentage of request)
+  ScalingLimited  False   DesiredWithinRange  the desired count is within the acceptable range
+```
+
+For the above, the current use is 10% of the resource limit, if/when the CPU consumption exceeds the threshold of 50% for more than 3 minutes, the deployment will scale up.
+
+It is also possible to use custom metrics with the horizontal pod-autoscaler. However, this requires a bit more input from the development and Cloud-Platform team. If this is something you may be interested in, please speak to a member of the team on #ask-cloud-platform
+
+Click [here](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough) for the official Kubernetes documentation on the horizontal pod autoscaler walkthrough.
+
+[kubernetes deployments]: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment
+[worker node]: https://kubernetes.io/docs/concepts/architecture/nodes/
+[this article]: /documentation/other-topics/zero-downtime-deployment.html
+[Recreate]: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#recreate-deployment
+[limitrange file]: https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespace-resources-cli-template/02-limitrange.yaml

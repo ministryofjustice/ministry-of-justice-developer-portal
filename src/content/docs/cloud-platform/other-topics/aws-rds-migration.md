@@ -1,0 +1,184 @@
+---
+title: Migrating an RDS instance
+last_reviewed_on: 2025-03-13
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: other-topics/aws-rds-migration.html.md.erb
+ingested_at: "2026-04-09T10:46:00.224Z"
+owner_slack: "#cloud-platform"
+---
+
+This guide covers one way of migrating an RDS instance from one AWS account to another.
+This is a standard approach using`pg_dump` and `psql`.
+
+More complex scenarios, including migrating from a completely different provider and converting data across database engines, are described in the [DMS+SCT (Data migration Service + Schema Conversion tool)](https://github.com/ministryofjustice/cloud-platform-terraform-dms) Readme.
+
+This guide assumes the migration complies with the following :
+
+ - The migration happens from a _source_ postresql RDS instance to a _target_ postresql RDS instance
+ - Elevated & short-lived sets of postgres credentials are available for both _source_ and _target_
+
+> Generating these credentials for your source database depends on where it is. For the target database, in the Cloud Platform, if your regular credentials have enough access, you can use those, or post in #ask-cloud-platform when you're ready, and the team can generate credentials with elevated privileges and put them into a secret in your namespace.
+
+### Overview
+
+#### Postgres utilities
+
+It is possible to do a full database migration using only official CLI tools, provided by Postgres.
+Using `pg_dump` and `psql`, this document describes the migration process.
+
+[pg_dump](https://www.postgresql.org/docs/9.4/app-pgdump)
+
+
+**Using this tooling implies having _source_ database downtime**. (As you don't want data being written to it while migrating it.)
+
+The steps will always be the same; on one side we export from source, on the target side we restore.
+
+#### Pre-Data, Data, Post-Data
+
+`pg_dump` can be used to export one big archive that can then be restored with `pg_restore`.
+One issue with that approach is the difficulty of troubleshooting migration issues. 
+
+Since we are trying to make this process as clear as possible, the following guide deconstructs `pg_dump` into its three components:
+
+ - Pre-data: The table structures, functions.
+ - Data: data
+ - Post-data: indexes, triggers, rules, and constraints
+
+With that deconstructed process, it is easier to debug issues (and get help from the Cloud Platform team) and most importantly your team can perform validation/testing incrementally.
+
+### Step 0 - Pod
+
+In order to run postgresql commands against both of those endpoints, you need access to both.
+
+This is solved by launching a pod on the live1 kubernetes cluster, in the team's namespace.
+The migration steps outlined below have been tested from a pod running the `bitnamilegacy/postgresql` Docker image.
+
+Network access requirements:
+
+ - The _source_ RDS needs to have its `public accessibility` config turned on.
+ - The RDS security group needs to be opened to the Cluster. For that, add inbound rules from the NAT gateways' IP addresses to port 5432.
+ - The RDS instance needs to support SSL connections.
+
+### Step 1 - Pre-Data
+
+First, to export,  we run:
+
+```
+pg_dump -U source_username \
+     -h source_endpoint \
+     -d source_database \
+     -O \
+     --section=pre-data > pre-data.sql
+```
+
+Here, `-O` tells RDS to export the table structure without owners.
+The command above stores the data in a local file.
+
+Then to restore this into the _target_, we use `psql`:
+
+```
+psql -U target_username \
+     -h target_endpoint \
+     -d target_database \
+     -f pre-data.sql
+```
+
+If using a local file is problematic, those two commands can be piped together (`|`)
+
+### Step 2 - Sequences
+
+Sequences are essential for your database to know what the latest increment of the primary key is. Sequences are held in special tables that will not be migrated during step 1.
+
+First, to export,  we run :
+
+```
+pg_dump -U source_username \
+     -h source_endpoint \
+     -d source_database \
+     -t '*_seq' > sequences.sql
+```
+
+Here, `-t '*_seq'` indicates to `pg_dump` that we only want to export tables with names ending in `_seq`, which are the sequences.
+
+Then to restore this into the _target_, we use `psql`:
+
+```
+psql -U target_username \
+     -h target_endpoint \
+     -d target_database \
+     -f sequences.sql
+```
+
+If using a local file is problematic, those two commands can be piped together (`|`)
+
+### Step 3 - Data
+
+First, to export,  we run :
+
+```
+pg_dump -U source_username \
+     -h source_endpoint \
+     -d source_database \
+     -O \
+     --section=data > data.sql
+```
+
+Here, `-O` tells RDS to export the table structure without owners.
+The command above stores the data in a local file.
+
+Then to restore this into the _target_, we use `psql`:
+
+```
+psql -U target_username \
+     -h target_endpoint \
+     -d target_database \
+     -f data.sql
+```
+
+If using a local file is problematic, those two commands can be piped together (`|`)
+
+### Step 4 - Post-Data
+
+Any constraints, indexes and foreign keys are also a special kind of metadata that will not be migrated during any of the steps above.
+All the data is contained within the `post-data` section.
+
+The process is almost identical to Step 1:
+
+First, to export,  we run:
+
+```
+pg_dump -U source_username \
+     -h source_endpoint \
+     -d source_database \
+     -O \
+     --section=post-data > post-data.sql
+```
+
+Then to restore this into the _target_, we use `psql`:
+
+```
+psql -U target_username \
+     -h target_endpoint \
+     -d target_database \
+     -f post-data.sql
+```
+
+If using a local file is problematic, those two commands can be piped together (`|`)
+
+### Step 5 - Data Validation (Very Important)
+
+After a migration, **it is your team's responsibility** to ensure the data, its integrity and anything required by your application to operate properly have been preserved.
+
+Even though the process above migrates the data and the metadata, it is essential for you to have a _data validation strategy_ to confirm everything is in order.
+
+The Cloud Platform team can't provide a how-to guide on data validation, as each service's database migration is different.
+
+### Step 6 - Clean up
+
+After a successful migration, we can clean up by:
+
+ - Deleting the pod from STEP 1
+ - Disabling the network access from the live cluster to the _source_ RDS
+ - Revoking the temporary credentials created for the migration

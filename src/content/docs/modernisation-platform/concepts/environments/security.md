@@ -1,0 +1,68 @@
+---
+owner_slack: "#modernisation-platform"
+title: Environments (AWS accounts) security
+last_reviewed_on: 2026-02-11
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: concepts/environments/security.html.md.erb
+ingested_at: "2026-04-09T10:46:00.937Z"
+---
+
+> This document should be read in conjunction with the [MOJ Security Guidance - Baseline for Amazon Web Services accounts](https://ministryofjustice.github.io/security-guidance/baseline-aws-accounts/#baseline-for-amazon-web-services-accounts).
+
+As part of our offering in the Modernisation Platform, we secure all environments (AWS accounts) to mitigate risk and protect teams from common security concerns.
+
+## AWS services for secure baselines
+
+We enable the following AWS services for you in all accounts, as part of our secure baselines:
+
+- [AWS GuardDuty](https://aws.amazon.com/guardduty/)
+- [AWS CloudTrail](https://aws.amazon.com/cloudtrail/)
+- [AWS Config](https://aws.amazon.com/config/) and some [sensible rules](https://github.com/ministryofjustice/modernisation-platform-terraform-baselines/blob/main/modules/config/RULES.md)
+- [AWS SecurityHub](https://aws.amazon.com/security-hub/)
+
+## Tagging policies
+
+The MoJ has its own [tagging standard](https://cloud-optimisation-and-accountability.justice.gov.uk/documentation/finops-and-greenops-at-moj/standards/tagging).
+
+All accounts within the Modernisation Platform inherit the tag policy that includes these tags, which you can view as part of the [AWS Resource Groups: Tag Policies](https://eu-west-2.console.aws.amazon.com/resource-groups/tag-policies) service. You must ensure that your resources are tagged in accordance to the policy.
+
+We can see an overview of compliance across the Modernisation Platform and we will help you in meeting this requirement if needed.
+
+## Regional restrictions
+
+We restrict the regional usage of accounts that sit within the Modernisation Platform. We use a [Service Control Policy (SCP)](https://github.com/ministryofjustice/aws-root-account/blob/main/management-account/terraform/organizations-policy-service-control.tf) to do this.
+
+In accordance with the [Security Guidance](https://ministryofjustice.github.io/security-guidance/baseline-aws-accounts/#regions), you should only use EU AWS regions.
+
+All accounts within the Modernisation Platform can only use:
+
+### Regional services
+
+You can use all services in these regions:
+
+- `eu-central-1` - Europe (Frankfurt)
+- `eu-west-1` - Europe (Ireland)
+- `eu-west-2` - Europe (London)
+
+You should use `eu-west-2` for everything, by default.
+
+### Global services
+
+Global services are backed by `us-east-1` in AWS.
+
+You should use `us-east-1` for global services **only**.
+
+### Transit Gateway Network Manager
+
+Transit Gateway Network Manager is backed by `us-west-2` in AWS.
+
+You should use `us-west-2` for Transit Gateway Network Manager **only**.
+
+### Enabling other regions for service-specific use
+
+If you think you need another region for a particular service, let us know in the [#ask-modernisation-platform](https://mojdt.slack.com/archives/C01A7QK5VM1) Slack channel.
+
+## More information
+
+The [modernisation-platform-terraform-baselines](https://github.com/ministryofjustice/modernisation-platform-terraform-baselines) Terraform module implements further reasonable security, identity, and compliance services.

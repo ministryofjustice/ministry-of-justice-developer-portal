@@ -1,0 +1,165 @@
+---
+title: Using a custom domain
+last_reviewed_on: 2025-07-18
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: other-topics/custom-domain-cert.html.md.erb
+ingested_at: "2026-04-09T10:46:00.228Z"
+owner_slack: "#cloud-platform"
+---
+
+### Background
+
+Every application running on the Cloud Platform is able to use a hostname for its HTTP endpoints, using a pre-defined domain:
+
+```
+*.apps.live.cloud-platform.service.justice.gov.uk
+```
+
+This works automatically, using a wildcard [TLS] certificate.
+
+Most applications will need their own application-specific `gov.uk` hostnames. These hostnames (or usually, entire domains) are managed individually and a number of actions are required to set them up.
+
+> Note: Using pre-defined domain is only recommended for development/staging/uat environments, as this is cluster-bound and will not always be on the live cluster. For any production environments, we strongly recommend using the custom domain as it will always be the same regardless of what cluster the domain lives on.
+
+### Setup
+
+Domains are managed inside [DNS zones]. You can read more about the structure of the Domain Name System in this [page][wiki-domain-structure]. It is recommended that applications use their own DNS zones to provide better isolation and make management simpler.
+
+#### Defining the DNS zone
+
+To create the zone, you define it as a resource in your environment. Make sure to read [the guidance on naming domains][naming-domains] first, and follow the instructions to [create the Route53 zone][creating-zone].
+
+To simplify management, we recommend that you only define a single zone as part of the resources for your production environment, if possible. You can still use subdomains of that zone for different environments.
+
+Once the zone is created, you will need to setup the necessary name server (NS) records in the parent DNS zone before you can use it. **This step must be completed before proceeding to [create a certificate](#obtaining-a-certificate)**. For more information on how this delegation method works, you can read about authoritative name servers in this [page][wiki-nameservers].
+
+If your zone is for a subdomain of `service.justice.gov.uk` (eg.: `https://myapp.service.justice.gov.uk`), you can delegate the zone by providing the nameservers to the Operations Engineering team either by contacting `#ask-operations-engineering` or by emailing [domains@digital.justice.gov.uk](mailto:domains@digital.justice.gov.uk)
+
+For any other domains (including any subdomain of `gov.uk`, eg.: `https://myservice.gov.uk`), you will need to contact the parent zone's administrators (usually GDS) to set this up. If in doubt, contact `#ask-operations-engineering` who is the Domain Registrar for Ministry of Justice.
+
+Please note, once you setup the NS records, you'll be delegating control of the zone to the Cloud Platform. Hostnames used by your services (using `Ingresses`) will be automatically managed by the cluster.
+
+If you wish to create custom records in your zone, you can do so by defining them in the [environments repository][env-repo] using the terraform [`aws_route53_record`][tf-route53-record] resource.
+
+#### Obtaining a certificate
+
+1. Create the [Certificate][cert-guidance] resource, filling in any placeholders with your details. The `secretName` attribute defines the name of a [kubernetes secret] in your namespace where the certificate and key material will be stored.
+
+> Please add the certificate by defining it in your namespace folder in the environments repository. Doing so means it will be automatically restored in the event of any problems with our certificate/DNS systems.
+
+   ```
+   ---
+   apiVersion: cert-manager.io/v1
+   kind: Certificate
+   metadata:
+     name: <my-cert>
+     namespace: <my-namespace>
+   spec:
+     secretName: <my-cert-secret>
+     issuerRef:
+       name: letsencrypt-production
+       kind: ClusterIssuer
+     dnsNames:
+     - <hostname>
+   ```
+
+##### Certificate character limit
+
+The Common Name field in certificates is limited to 64 characters. As a consequence of this restriction, when a host or service has a DNS name longer than 64 characters, that name cannot be used as the CN. Right now, the advised workaround is to include a shorter common name alongside the long dns name. The short name can be your custom domain name.
+
+   ```
+     dnsNames:
+     - short-name.service.justice.gov.uk
+     - this-is-a-long-very-long-long-long-long-long-long-long-long-long-name.service.justice.gov.uk
+   ```
+
+2. Make sure the certificate has been issued correctly, by checking its `Status`:
+
+   ```
+   $ kubectl describe certificate <my-cert>
+   ```
+
+   The certificate status of type `"Ready"` should be `True`:
+
+   ```
+   Status:
+     Conditions:
+       Last Transition Time:  2019-06-05T10:16:43Z
+       Message:               Certificate is up to date and has not expired
+       Reason:                Ready
+       Status:                True
+       Type:                  Ready
+     Not After:               2019-09-03T09:16:42Z
+   Events:
+     Type    Reason         Age   From          Message
+     ----    ------         ----  ----          -------
+     Normal  Generated      3m    cert-manager  Generated new private key
+     Normal  OrderCreated   3m    cert-manager  Created Order resource "<my-cert>-3189350212"
+     Normal  OrderComplete  1m    cert-manager  Order "<my-cert>-3189350212" completed successfully
+     Normal  CertIssued     1m    cert-manager  Certificate issued successfully
+   ```
+
+   It generally takes just a few minutes for the certificate to be prepared and the events displayed should indicate if there is a problem, or it simply needs more time. If you cannot obtain a certificate, please get in touch with us in `#ask-cloud-platform`.
+
+3. You will need to update your `Ingress` spec to include the new hostname.
+
+   ```
+     apiVersion: networking.k8s.io/v1
+     kind: Ingress
+     metadata:
+       name: <ingress-name>
+       namespace: <namespace-name>
+       annotations:
+         external-dns.alpha.kubernetes.io/set-identifier: <ingress-name>-<namespace-name>-<colour>
+         external-dns.alpha.kubernetes.io/aws-weight: "100"
+     spec:
+       ingressClassName: default
+       tls:
+       - hosts:
+         - my-app.apps.live.cloud-platform.service.justice.gov.uk
+   +   - hosts:
+   +     - <hostname>
+   +     secretName: <my-cert-secret>
+       rules:
+       - host: my-app.apps.live.cloud-platform.service.justice.gov.uk
+         http:
+           paths:
+           - path: /
+             pathType: ImplementationSpecific
+               backend:
+                 service:
+                   name: <my-svc>
+                   port:
+                     number: 80
+   +   - host: <hostname>
+   +     http:
+   +       paths:
+   +       - path: /
+   +         pathType: ImplementationSpecific
+               backend:
+                 service:
+                   name: <my-svc>
+                   port:
+                     number: 80
+   ```
+
+`ingress-name`, `namespace-name`, `hostname`, `my-cert-secret`, `my-svc` must all be replaced with actual values.
+
+> Note: The `colour` must be `green` for ingress in EKS `live` cluster
+
+Once you've made the changes to your `Ingress`, the cluster (and more specifically, `external-dns`) will update the necessary records defined in it. This usually takes less than a minute until you are able to access your endpoint. However, depending on the DNS name servers your workstation uses, you might need to wait longer or try to "flush" your local DNS cache in order to speed up the process. You should search online for the proper method to do so, based on your operating system and/or browser.
+
+
+[env-repo]: https://github.com/ministryofjustice/cloud-platform-environments/
+[naming-domains]: https://cloud-optimisation-and-accountability.justice.gov.uk/documentation/operations-engineering-legacy/operations-engineering-user-guide/dns/domain-naming-standard.html
+[creating-zone]: /documentation/other-topics/route53-zone.html#creating-a-route-53-hosted-zone
+[support-ticket]: https://github.com/ministryofjustice/cloud-platform/issues/new?template=cloud-platform-support-request.md&labels=support+team
+[wiki-domain-structure]: https://en.wikipedia.org/wiki/Domain_Name_System#Structure
+[wiki-nameservers]: https://en.wikipedia.org/wiki/Name_server#Authoritative_name_server
+[tf-route53-record]: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record
+[cert-guidance]: https://cert-manager.io/docs/concepts/certificate/
+[TLS]: https://en.wikipedia.org/wiki/Transport_Layer_Security
+[DNS zones]: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-working-with.html
+[kubernetes secret]: https://kubernetes.io/docs/concepts/configuration/secret

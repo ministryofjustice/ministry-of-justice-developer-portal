@@ -1,0 +1,107 @@
+---
+owner_slack: "#modernisation-platform"
+title: Deleting an environment (AWS account)
+last_reviewed_on: 2025-10-22
+review_in: 6 month
+source_repo: ministryofjustice/modernisation-platform
+source_path: runbooks/deleting-an-environment.html.md.erb
+ingested_at: "2026-04-09T10:46:00.958Z"
+---
+
+This runbook describes the process required to delete an environment/s.
+
+> Note: This process cannot be undone. All resources in an AWS account will be deleted.
+
+> You will need to **complete the actions** below in as **short a time frame as possible** as certain workflows need to be disabled and will delay the team from merging/deploying other PRs.
+
+
+## Search for, and remove any references to the existing account in GitHub
+
+There may be references to the to-be-deleted account that were added by users & so should be removed before the account-deletion process begins. For example any custom policies using the account name in a local, such as
+
+```
+local.environment_management.account_ids["example-account-name-to-be-deleted"]
+```
+
+## Disable workflows
+
+Disable the following workflows:
+
+- [Terraform: New environment](https://github.com/ministryofjustice/modernisation-platform/blob/main/.github/workflows/new-environment.yml)
+- [Terraform: Member environments]()
+
+This is required as if these workflows are run during the deletion process it could result in the account being re-created and some steps having to be re-run.
+
+See [disabling-and-enabling-a-workflow](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-workflow-runs/disabling-and-enabling-a-workflow) for the steps to do this.
+
+> Notify the MP team that you are doing this as it will delay merging/deploying certain PRs
+
+## Running account deletion scripts locally
+
+In `modernisation-platform/scripts/account-deletion` we have a set of bash scripts that are designed to automate the process of decommissioning an AWS account. The scripts perform the following tasks, in this order:
+
+1. `delete-tf-state.sh` - Removes the AWS account from Modernisation Platform state management
+1. `update-files.sh`- Removes the environment definition in `environments/*.json`
+1. `delete-tf-resources`- Deletes Terraform resources for the environment (in the MP and MP Environments repos)
+1. `delete-tf-workspaces.sh`- Deletes Terraform workspaces for the environment in `terraform/environments/bootstrap/*`
+1. `delete-files.sh`- Removes Environment Files (only if removing all environments for an application)
+
+They are all triggered in sequence by the `delete-accounts.sh` script.
+
+> Be aware that some resources such as s3 buckets cannot be destroyed until you manually empty all the objects and versions in them.
+
+> Ensure that you have fetched the most recent updates in your local MP and MPE directories by executing a `git pull` command.
+
+> Ensure that you have deleted all local `.terraform` and `.terraform.lock.hcl` files
+
+To use the scripts, follow these steps:
+
+1. Navigate to the [account-deletion folder](https://github.com/ministryofjustice/modernisation-platform/tree/main/scripts/account-deletion) and create a `config.txt` file within it
+1. Open the [example-config.txt file](https://github.com/ministryofjustice/modernisation-platform/tree/main/scripts/account-deletion/example-config.txt), copy its contents, and paste them into your newly created `config.txt` file.
+1. Modify your `config.txt` file to include variables specific to your AWS account deletion task.
+1. Open your terminal and ensure your current working directory is `modernisation-platform/scripts/account-deletion`.
+1. If required make the script executable by running the command: `chmod +x delete-accounts.sh`
+1. Execute the script using the command: `./delete-accounts.sh`
+1. While the script is running you will need to respond to prompts to confirm your actions at various stages
+
+> The script execution logs will be written to a file called `execution_log.txt` which show the progress being made and help to debug any issues that may arise.
+
+> If the script fails at any point you can try to re-run the `account-deletion.sh` script or manually run a combination of the individual scripts that it calls using the order mentioned above.
+
+> Where the script has made changes to files in the MP/MP Environments repos it will have created them on a new branch with a unique name. You will need to merge these in at a later stage of the process.
+
+## AWS Organizational Configuration
+
+> Note that a user with root account permissions will need to do this. Contact the MP teams TA/Lead Webops Engineer.
+
+### Move the account to the root organizational unit
+
+This is to move the account out of an organizational unit where there is an SCP preventing any actions by the root user.
+
+Log into the AWS Console and navigate to AWS Organizations, find the account and move it to the `root` OU.
+
+Now the AWS account can be deleted.
+
+### Delete the actual AWS account
+
+> This process cannot be undone. Proceed carefully.
+
+Navigate to the `root` OU and find the account, select the checkbox then go `Action` and choose `Close`.
+
+### Move the account to the closed accounts organizational unit
+
+Ensure the account is selected and then move it to the `Closed accounts` OU.
+
+## Merge in your file changes
+
+Raise a PR to merge in your file changes (created by the scripts above) in both the MP and MP Environments repositories which will trigger Terraform to perform the remaining clean up needed.
+
+Check for any automated PRs that have been raised in the MP Environments repo to update the `.github/CODEOWNERS` file. Here is an [example PR](https://github.com/ministryofjustice/modernisation-platform-environments/pull/5317/files). These will need to be merged in.
+
+## Delete Github environments
+
+Navigate to [https://github.com/ministryofjustice/modernisation-platform-environments/settings/environments](https://github.com/ministryofjustice/modernisation-platform-environments/settings/environments) and delete the relevant GitHub environments.
+
+## Re-enable the disabled workflows.
+
+Refer to the github doc listed earlier and let the MP team know that the workflows are now active.

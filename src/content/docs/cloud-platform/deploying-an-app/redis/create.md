@@ -1,0 +1,58 @@
+---
+title: Creating a Redis cluster
+last_reviewed_on: 2024-12-27
+review_in: 12 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: deploying-an-app/redis/create.html.md.erb
+ingested_at: "2026-04-09T10:46:00.207Z"
+owner_slack: "#cloud-platform"
+---
+
+To create a Redis cluster in the Cloud Platform, follow the [example guidance](https://github.com/ministryofjustice/cloud-platform-terraform-elasticache-cluster/tree/main/examples) in the module.
+
+## Choosing an appropriate instance type
+
+[ElastiCache for Redis](https://aws.amazon.com/elasticache/redis/) (which manages your Redis cluster) supports a wide range of instance types. Some instance types are considered "previous generation" and must not be used.
+
+Instance types are named based on their family/purpose, generation, any additional capabilities, and size.
+
+For ElastiCache for Redis, instance types will always be prefixed with `cache`.
+
+You can read the [supported node types for ElastiCache for Redis](https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/CacheNodes.SupportedTypes.html#CacheNodes.CurrentGen) for more information.
+
+To connect to elasticache outside of the cluster please refer to the [Cloud Platform Elasticache module](https://github.com/ministryofjustice/cloud-platform-terraform-elasticache-cluster/tree/main)
+
+### Table of instance types
+
+Use the table below to pick an appropriate instance type for your corresponding Redis version. This instance type should be suitable for most applications, environments, and how users of the Cloud Platform generally use ElastiCache for Redis.
+
+You must always use the latest instance type you can. If you are using an older version of ElastiCache for Redis, you should [upgrade your Redis version](/documentation/deploying-an-app/redis/upgrade.html#upgrading-a-redis-version) so you can use newer instance types.
+
+| Redis version | Environment type | Instance type |
+|-|-|-|
+| **7.0.x** | Non-production | `cache.t4g.micro` |
+|           | Production     | `cache.t4g.small` |
+
+If you find your ElastiCache for Redis instance is running out of CPU or memory, try changing the instance size (`micro`, `small`) to a larger instance size such as `medium`.
+
+## Statistics
+
+At the time of writing, the following instance types were in use (along with how many) on the Cloud Platform. This can be useful to help you rightsize your instance type compared to other users of the Cloud Platform.
+
+<!--
+
+Below was last updated 2023-12-27.
+
+You can generate this yourself to replace by doing the following:
+
+aws elasticache describe-replication-groups --region=eu-west-2 | jq '.ReplicationGroups[].CacheNodeType' | sort | uniq -c
+
+-->
+
+```
+   2 "cache.m5.large"
+  14 "cache.t4g.medium"
+ 259 "cache.t4g.micro"
+ 113 "cache.t4g.small"
+```

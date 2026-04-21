@@ -1,0 +1,46 @@
+---
+owner_slack: "#modernisation-platform"
+title: Environments (AWS accounts) architecture
+last_reviewed_on: 2026-01-26
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: concepts/environments/architecture.html.md.erb
+ingested_at: "2026-04-09T10:46:00.934Z"
+---
+
+## Diagram
+
+![OUs and SCPs](../../images/ous-and-scps.png)
+
+## Explanation
+
+The Modernisation Platform sits within the MOJ's [AWS Organization](https://aws.amazon.com/organizations/). The MOJ's AWS Organization groups accounts by business units as AWS Organization Organization Units (OUs).
+
+For example, LAA AWS accounts sit within the `LAA` OU, and OPG AWS accounts sit within the `OPG` OU.
+
+OUs can be up to 5 levels deep within the AWS Organization.
+
+The Modernisation Platform has its own organization unit, which all applications within the Modernisation Platform sit in. Our OU sits alongside the [Cloud Platform](https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide) OU and is a child of the Platforms &amp; Architecture OU.
+
+Under the Modernisation Platform OU, we have 3 child OUs -
+
+| Organization Unit                          | Description                                                                                               |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| Modernisation Platform Core                | This contains all of our core platform AWS accounts.                                                      |
+| Modernisation Platform Member              | This contains all of our member OUs and accounts.                                                         |
+| Modernisation Platform Member Unrestricted | This is a legacy OU which will be removed as we move unrestricted AWS accounts across to member accounts. |
+
+When a [new environment is created](../../user-guide/creating-environments), the Modernisation Platform automatically creates a new OU for the application which holds all of the environments (AWS accounts), and it sits within the Modernisation Platform Member OU.
+
+For example, if you had an application, `example-application`, that required 2 environments, `production` and `development`:
+
+- we'd automatically create an OU called `modernisation-platform-example-application`
+- `example-application-production` and `example-application-development` AWS accounts would sit within the `modernisation-platform-example-application` OU, as a child of the Modernisation Platform Member OU
+
+## Benefits of using organization units
+
+We make use of OUs as they simplify the ability to use [service control policies (SCPs)](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps) and [tagging policies](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_tag-policies).
+
+This allows the Modernisation Platform team to build distinct SCPs or tagging policies that are scoped to only accounts that are part of the Modernisation Platform, or individual groups of accounts as OUs.
+
+For example, we could attach a SCP to the `modernisation-platform-example-application` to deny the usage of anything apart from the EC2 or RDS service, which will be inherited by all of the accounts for `example-application`.

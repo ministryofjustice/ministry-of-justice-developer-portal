@@ -1,0 +1,40 @@
+---
+owner_slack: "#modernisation-platform"
+title: How to import a public SSL certificate into AWS Certificate Manager
+last_reviewed_on: 2026-02-24
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: user-guide/certificate-import.html.md.erb
+ingested_at: "2026-04-09T10:46:00.982Z"
+---
+
+## Introduction
+
+This assumes you have already read how to [configure DNS](how-to-configure-dns). Public certificates are typically created in the member/application account that uses them. For example, if your application runs behind an `aws_lb_listener` in the preproduction environment and you need to configure a `certificate_arn`, you will create the certificate in the preproduction account.
+
+The domain `modernisation-platform.service.justice.gov.uk` is managed by the modernisation-platform team. All environments under this domain, such as `my-application.nomis.hmpps-test.modernisation-platform.service.justice.gov.uk` can create their own public certificates using [AWS Certificate Manager](https://docs.aws.amazon.com/acm/latest/userguide/acm-overview). For information on DNS naming conventions refer to [DNS naming](../concepts/networking/dns.html#dns).
+
+The following domains are managed by the operations-engineering team (`#ask-operations-engineering`).
+
+- justice.gov.uk
+- service.justice.gov.uk
+
+To request a public certificate under either of the above domains, refer to the corresponding section below, depending on whether you're on Linux or Windows.
+
+## Linux
+
+Refer to [Requesting a new certificate](https://cloud-optimisation-and-accountability.justice.gov.uk/documentation/operations-engineering-legacy/operations-engineering-user-guide/dns/sslcertmanage).
+
+Once you receive the public certificate, you can then import it into your environment by following the instructions in [Getting certificates ready in AWS Certificate Manager](https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-custom-domains-prerequisites).
+
+## Windows
+
+If you are on Windows, refer to [How to import a public SSL certificate into AWS Certificate Manager on Windows](certificate-import-windows)
+
+## Request process
+
+1. Submit a request with a certificate signing request to [certificates@digital.justice.gov.uk](mailto:certificates@digital.justice.gov.uk)
+2. Receive a reply from [certificates@digital.justice.gov.uk](mailto:certificates@digital.justice.gov.uk) with details of validation CNAME records.
+3. Apply the validation CNAME records to the appropriate Route53 domain.
+4. Inform [certificates@digital.justice.gov.uk](mailto:certificates@digital.justice.gov.uk) that the validation records have been created.
+5. [certificates@digital.justice.gov.uk](mailto:certificates@digital.justice.gov.uk) will respond with the certificate.

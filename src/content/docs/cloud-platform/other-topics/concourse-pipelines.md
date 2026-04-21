@@ -1,0 +1,80 @@
+---
+title: Cloud Platform Concourse Pipelines
+last_reviewed_on: 2025-08-05
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: other-topics/concourse-pipelines.html.md.erb
+ingested_at: "2026-04-09T10:46:00.228Z"
+owner_slack: "#cloud-platform"
+---
+
+## Introduction
+
+The Cloud Platform utilises a [Concourse](https://concourse-ci.org/) cluster to manage the pipelines that control deployment of user environments. This page provides an overview of the pipelines that are most relevant to service teams.
+
+## environments-live pipeline
+
+The [environments-live pipeline](https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/environments-live) is the part of Cloud Platform that continuously deploys the [environments repo](https://github.com/ministryofjustice/cloud-platform-environments) into Cloud Platform's Kubernetes cluster and AWS account. Service teams typically define their Kubernetes namespaces and AWS resources in the environments repo, and the environments-live pipeline is what gets it applied.
+
+> **Note:** This pipeline shouldn't be confused with _application pipelines_, which should execute deployment specific builds and are defined and managed by service teams within their respective CI / CD pipelines
+
+## How it operates
+
+There are two main pipelines to be aware of when raising and merging PRs for the environments repo:
+
+### plan-live
+
+The [plan-live pipeline](https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/environments-live/jobs/plan-live) is triggered when a PR is raised. This plan executes as a required GitHub PR Check, the PR is then checked using our OPA Auto Approve application if it passes then you can merge your PR if not then please submit your PR for review in the `#ask-cloud-platform` Slack channel.
+
+Details of a given PR plan are visible in the GitHub PR Web UI:
+
+![Concourse plan-live pipeline output](/images/concourse-plan.png)
+
+### apply-namespace-changes pipeline
+
+The [apply-namespace-changes pipeline](https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/environments-live/jobs/apply-namespace-changes-live) is triggered when a PR on the [environments repo](https://github.com/ministryofjustice/cloud-platform-environments) is merged to `main`. The pipeline deploys any Kubernetes manifest or Terraform resource/module changes to whichever environments were changed in the PR.
+
+Essentially it does:
+
+```sh
+kubectl -n your-namespace apply -f *.yaml
+cd resources
+terraform plan
+terraform apply
+```
+
+### Viewing the apply-namespace-changes pipeline
+
+When the pipeline starts, your PR will receive a comment containing a link to the apply job. If you follow this link, you will be able to follow the apply job as it logs out each step. This is a good habit as it allows you to verify that the resources applied correctly.
+
+`cloud-platform-concourse-bot` comment:
+
+![Concourse apply comment](/images/concourse-apply.png)
+
+
+Alternatively you can:
+
+* Sign in using your GitHub identity. (The first time, it takes you to a github.com page where you need to agree to Cloud Platform's Concourse instance being allowed to view your GitHub identity.)
+* Select the build corresponding to your PR merge (other people's changes to environments also show up here). The latest build is at the top, but you can also identify yours by the merge commit hash.
+* Select `task: apply-namespace-changes` to see the logs where terraform is applied.
+
+### apply-live pipelines
+
+Cloud Platform also has a set of pipelines that run continuously against _all namespaces_ in the environments repo. These are the `apply-live` [pipelines](https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/environments-live/jobs/apply-live-a), and their purpose is to ensure that failures or configuration drift in any namespaces are detected early.
+
+### Pipeline failures and `APPLY_PIPELINE_SKIP_THIS_NAMESPACE`
+
+In the case that an environments PR fails on apply, the Cloud Platform `concourse-bot` will notify you of the failure via a Slack message in the `#ask-cloud-platform` channel, and request an `APPLY_PIPELINE_SKIP_THIS_NAMESPACE` file to be added to your namespace.
+
+Simply add an empty file in your namespace folder like so:
+
+`namespaces/live.cloud-platform.service.justice.gov.uk/mynamespace/APPLY_PIPELINE_SKIP_THIS_NAMESPACE`
+
+This ensures that the failing namespace will be skipped in these continuous pipelines whilst you work on a fix.
+
+The presence of this file **does not** prevent the apply-namespace-changes pipeline from running, and once the failing apply has been mitigated, the file should be removed in a subsequent PR.
+
+## Questions
+
+If you have additional questions about how the environment-live pipelines run, ask the team in [#ask-cloud-platform](https://mojdt.slack.com/messages/C57UPMZLY/team/U58MLFA0M/).

@@ -1,0 +1,45 @@
+---
+owner_slack: "#analytical-platform-notifications"
+title: ADR-004 Use AWS Secrets Manager for Secrets
+last_reviewed_on: 2024-12-19
+review_in: 6 months
+source_repo: ministryofjustice/analytical-platform
+source_path: adrs/adr-004-use-aws-secrets-manager-for-secrets.html.md.erb
+ingested_at: "2026-04-09T10:46:01.562Z"
+---
+
+## Status
+
+✅ Accepted
+
+## Context
+
+The Data Platform team will need a way to store secrets securely. There are [several methods](https://security-guidance.service.justice.gov.uk/secrets-management/#application--infrastructure-secrets) currently used across the MoJ, including [Secrets Manager](https://aws.amazon.com/secrets-manager/), [Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store), [1Password](https://cloud-optimisation-and-accountability.justice.gov.uk/documentation/operations-engineering-legacy/operations-engineering-user-guide/password-management/1password), [Git-Crypt](https://github.com/AGWA/git-crypt) and [GitHub Secrets.](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
+
+We want to adhere to [MoJ Security Guidance](https://security-guidance.service.justice.gov.uk/secrets-management/#application--infrastructure-secrets) and align with other [Hosting and Platform teams.](https://technical-guidance.service.justice.gov.uk/documentation/standards/hosting)
+
+## Decision
+
+We are proposing to use [Secrets Manager](https://aws.amazon.com/secrets-manager/) for secrets management.
+
+[AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store) can be used to store non secret information e.g. environment parameters
+
+## Consequences
+
+### General consequences
+
+* All secrets will be stored in Secrets Manager
+* Secret rotation via Secrets Manager should be used where possible
+* We will need to manage mechanisms to retrieve credentials from Secrets Manager e.g. for GitHub Actions
+
+### Advantages
+
+* Cross-account access
+* Has an official AWS GitHub Action
+* Compatible with AWS services
+* Automated secret rotation possible
+* Users manage their own secrets
+
+### Disadvantages
+
+* Secrets Manager is more expensive than Parameter Store

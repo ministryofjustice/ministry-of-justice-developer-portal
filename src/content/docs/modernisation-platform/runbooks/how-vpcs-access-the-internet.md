@@ -1,0 +1,73 @@
+---
+owner_slack: "#modernisation-platform"
+title: How VPCs access the internet
+last_reviewed_on: 2025-11-25
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: runbooks/how-vpcs-access-the-internet.html.md.erb
+ingested_at: "2026-04-09T10:46:00.962Z"
+---
+
+Our [Networking Diagram](../concepts/networking/networking-diagram) shows a high level view of how shared
+VPCs are connected.
+
+Our [Networking Approach](../concepts/networking/networking-approach) discusses and
+contains a detailed view of our shared VPCs.
+
+This document discusses how these VPCs access the internet.
+
+## Traffic from the internet
+
+Our shared VPCs all have public subnets. Your application should have AWS load balancers (or an equivalent) in those
+subnets to receive traffic from the internet, and act as a reverse proxy to your service on the Modernisation Platform.
+
+Public subnets have permissive Network Access Control Lists (NACLS) allowing traffic in from the internet, and route
+tables attached with default routes to the internet via a VPC Internet Gateway.
+
+## Traffic to the internet
+
+### Shared VPCs
+
+Our shared VPCs have private subnets and data subnets. These subnets have [restrictive NACLS](../concepts/networking/networking-approach.html#nacls)
+which allow HTTP and HTTPS traffic out to the internet, and high ports in from the internet. The route tables attached
+to the private and data subnets contain a default route to the internet via a [Transit Gateway](../concepts/networking/networking-approach.html#what-we-decided-transit-gateway)
+attachment.
+
+### Transit Gateway
+
+When VPC traffic reaches the Modernisation Platform Transit Gateway it is compared against an associated route table.
+We maintain separate route tables for our `live-data` and `non-live-data` environments. Each of these route tables has a
+default route pointing to a VPC in our `core-network-services` account; we maintain separate VPCs for `live-data`
+environments and `non-live-data` environments.
+
+### Core-networking VPCs
+
+Our `core-network-services` VPCs contain [Network Firewall](../concepts/networking/network-firewall)
+endpoints, [NAT Gateways](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway), and Internet Gateways.
+
+Traffic enters from the Transit Gateway attachment, is routed through the Network Firewall where it is statefully
+inspected. HTTP traffic is permitted only where it matches a [defined list of domains](https://github.com/ministryofjustice/modernisation-platform/blob/main/terraform/environments/core-network-services/firewall-rules/fqdn_rules.json).
+Permitted traffic is then routed through a NAT gateway, and from there out to the internet via the Internet Gateway.
+
+### Core-network-services NAT Gateways - Outgoing Internet Addresses
+
+The NAT Gateways referenced above have the following EIP (Elastic IP) addresses assigned. These are sometimes used by other networks to filter for traffic originating from the Modernisation Platform via the Transit Gateway and so are included here for reference:
+
+| Gateway Name                    | EIP                |
+| ------------------------------- | ------------------ |
+| live_data-public-eu-west-2a     |  13.41.38.176      |
+| live_data-public-eu-west-2b     |  3.8.81.175        |
+| live_data-public-eu-west-2c     |  3.11.197.133      |
+| non_live_data-public-eu-west-2a |  13.43.9.198       |
+| non_live_data-public-eu-west-2b |  13.42.163.245     |
+| non_live_data-public-eu-west-2c |  18.132.208.127    |
+
+The following cli command can be run against `core-network-services` to obtain this list:
+
+```
+aws ec2 describe-nat-gateways \
+   --query 'NatGateways[*].{Name:Tags[?Key==`Name`]|[0].Value,GatewayId:NatGatewayId,ElasticIP:NatGatewayAddresses[0].PublicIp}' \
+   --output json \
+   | jq -r 'sort_by(.Name)[] | "\(.Name)\t\(.GatewayId)\t\(.ElasticIP)"' \
+   | column -t -s $'\t'
+```

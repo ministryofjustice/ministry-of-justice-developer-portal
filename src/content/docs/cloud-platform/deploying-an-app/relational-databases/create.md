@@ -1,0 +1,199 @@
+---
+title: Creating a relational database
+last_reviewed_on: 2024-09-27
+review_in: 12 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: deploying-an-app/relational-databases/create.html.md.erb
+ingested_at: "2026-04-09T10:46:00.208Z"
+owner_slack: "#cloud-platform"
+---
+
+To create a relational database using PostgreSQL, MariaDB, or MySQL in the Cloud Platform, follow the [example guidance](https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance/tree/main/examples) in the module or [use the Cloud Platform CLI](/documentation/getting-started/cloud-platform-cli.html#add-an-rds-to-your-namespace).
+
+## Choosing an appropriate database configuration
+
+### Non-production
+
+If you're creating a database in a non-production environment, you should turn off your database outside of work hours.
+
+The Cloud Platform provides a way to do this in the relational database module, which will temporarily stop your database at 10PM and restart it at 6AM UTC (11PM and 7AM BST).
+
+To enable this, add the `enable_rds_auto_start_stop` attribute to your database configuration:
+
+```hcl
+module "rds" {
+  ...
+  enable_rds_auto_start_stop = true
+  ...
+}
+```
+
+### Production
+
+If you're creating a database in a production environment, you should turn on deletion protection. To do this, update your database configuration:
+
+```hcl
+module "rds" {
+  ...
+  deletion_protection = true
+  ...
+}
+```
+
+This will stop the database from being able to be deleted without a second step.
+
+If you want to delete your database, raise a PR to set `deletion_protection` to `false` (step one), and then raise another PR to remove your database (step two).
+
+## Choosing an appropriate storage type
+Our latest RDS module uses `gp3` as the default storage type. You can change the storage type to `io2` if needed by specifying the `storage_type` and `db_iops` variable in your database configuration:
+
+```hcl
+module "rds" {
+  ...
+  storage_type = "io2"
+  db_iops      = "1000"
+  ...
+}
+```
+
+When selecting a storage type, it's important to consider AWS constraints regarding storage size, IOPS, and throughput. Different database engines have specific requirements and limitations for storage configurations. 
+
+Choose the storage type (`gp3` or `io2`) that meets your application performance and requirements and ensure that your configuration complies with these requirements to avoid deployment issues.
+
+### Storage type, storage size, and IOPS combinations
+Below are the supported combinations for gp3 and io2 storage types. Review these carefully to ensure your database configuration meets the necessary criteria.
+
+You can also refer to [AWS document](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage) for more reference.
+
+```markdown
+`gp3` Storage Type
+
+| Database Engine                 | Storage Size (GiB)   | Baseline Storage Performance    | Range of Provisioned IOPS  | Range of Provisioned Storage Throughput |
+|---------------------------------|----------------------|---------------------------------|----------------------------|-----------------------------------------|
+| Db2, MariaDB, MySQL, PostgreSQL | 20–399               | 3,000 IOPS / 125 MiB/s          | N/A                        | N/A                                     |
+| Db2, MariaDB, MySQL, PostgreSQL | 400–65,536           | 12,000 IOPS / 500 MiB/s         | 12,000–64,000 IOPS         | 500–4,000 MiB/s                         |
+| Oracle                          | 20–199               | 3,000 IOPS / 125 MiB/s          | N/A                        | N/A                                     |
+| Oracle                          | 200–65,536           | 12,000 IOPS / 500 MiB/s         | 12,000–64,000 IOPS         | 500–4,000 MiB/s                         |
+| SQL Server                      | 20–16,384            | 3,000 IOPS / 125 MiB/s          | 3,000–16,000 IOPS          | 125–1,000 MiB/s                         |
+
+`io2` Storage Type
+
+| Database Engine                 | Storage Size (GiB)   | Range of Provisioned IOPS       | Maximum Throughput         |
+|---------------------------------|----------------------|---------------------------------|----------------------------|
+| Db2, MariaDB, MySQL, PostgreSQL | 100–65,536           | 1,000–256,000 IOPS              | 16,000 MiB/s               |
+| Oracle                          | 100–199              | 1,000–199,000 IOPS              | 16,000 MiB/s               |
+| Oracle                          | 200–65,536           | 1,000–256,000 IOPS              | 16,000 MiB/s               |
+| SQL Server                      | 20–65,536            | 1,000–256,000 IOPS              | 16,000 MiB/s               |
+```
+
+### Module Preconditions and Error Messages
+
+Our latest RDS module includes [preconditions](https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance/blob/main/main.tf#L211) that automatically validate your configuration against AWS requirements.
+
+If your configuration doesn't meet the necessary criteria, Terraform will produce an error message during the plan or apply phase, indicating exactly what needs to be corrected.
+
+- How It Works
+  - Terraform `preconditions`: Built-in checks within the module that enforce AWS requirements for storage size and IOPS based on your selected storage type and database engine.
+
+  - Error Messages: Clear and specific messages that help you identify and fix configuration mistakes.
+
+### Example Error Messages
+
+Below is the example of invalid combination of `db_allocated_storage` with `gp3` storage type.
+Invalid Storage Size for gp3:
+
+```hcl
+Error: Resource precondition failed
+
+  on .terraform/modules/rds/main.tf line 224, in resource "aws_db_instance" "rds":
+ 224:       condition     = var.storage_type != "gp3" || var.db_allocated_storage >= 20
+    ├────────────────
+    │ var.db_allocated_storage is 10
+    │ var.storage_type is "gp3"
+
+When 'storage_type' is 'gp3', 'db_allocated_storage' must be at least 20 GiB.
+```
+In this example, you need to ensure that `db_allocated_storage` is set to at least 20 GiB when using gp3 storage.
+
+### What to Do When You Encounter an Error
+1. Read the Error Message Carefully: The message will indicate which precondition failed and why.
+2. Adjust Your Configuration: Modify your `db_allocated_storage`, `db_iops`, or other relevant settings according to the guidance in the error message.
+3. Re-run Terraform Plan: After making changes, push the commit to your PR. Concourse will then run `terraform plan` again and you can verify if the error is resolved.
+
+
+## Choosing an appropriate instance type
+
+[Amazon RDS](https://aws.amazon.com/rds/) (which manages your database) supports a wide range of instance types. Some instance types are considered “previous generation” and must not be used.
+
+Instance types are named based on their family/purpose, generation, any additional capabilities, and size.
+
+For Amazon RDS, instance types will always be prefixed with `db`.
+
+You can read the [supported DB engines for DB instance classes](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.Support) for more information.
+
+### Table of instance types
+
+You can use the tables below to pick an appropriate instance type for your corresponding database engine and engine version. This instance type should be suitable for most applications, environments, and how users of the Cloud Platform generally use Amazon RDS.
+
+You should always use the latest instance type you can. If you are using an older version of your database engine, you should [upgrade your database engine version](/documentation/deploying-an-app/relational-databases/upgrade.html#upgrading-to-a-new-major-database-version) so you can use newer instance types.
+
+#### PostgreSQL
+
+| PostgreSQL version | Environment type | Instance type | Maximum allocated storage (GiB) |
+|-|-|-|-|
+| **12.7 to 16.x** | Non-production | `db.t4g.micro` | `"500"` |
+|                  | Production     | `db.t4g.small` | `"10000"` |
+
+#### MariaDB
+
+| MariaDB version | Environment type | Instance type | Maximum allocated storage (GiB) |
+|-|-|-|-|
+| **10.4.x to 10.11.x** | Non-production | `db.t4g.micro` | `"500"` |
+|                       | Production     | `db.t4g.small` | `"10000"` |
+
+#### MySQL
+
+| MySQL version | Environment type | Instance type | Maximum allocated storage (GiB) |
+|-|-|-|-|
+| **8.0.25 to 8.0.x** | Non-production | `db.t4g.micro` | `"500"` |
+|                     | Production     | `db.t4g.small` | `"10000"` |
+
+If you find your Amazon RDS database is running out of CPU or memory, try changing the instance type (`micro`, `small`) to a larger instance type such as `medium`.
+
+If you find your Amazon RDS database is running out of storage, try changing your maximum allocated storage to a larger size. `micro` instance sizes are limited to a maximum of `6,114` GiB and `small` instance sizes are limited to a maximum of `16,384` GiB.
+
+## Statistics
+
+At the time of writing, the following instance types were in use (along with how many) on the Cloud Platform. This can be useful to help you rightsize your instance type compared to other users of the Cloud Platform.
+
+<!--
+  Below was last updated 2024-09-27.
+
+  You can generate this yourself to replace by doing the following:
+
+  aws rds describe-db-instances --region=eu-west-2 | jq '.DBInstances[].DBInstanceClass' | sort | uniq -c
+-->
+
+```
+4 "db.m5.large"
+1 "db.m5.xlarge"
+2 "db.m6g.2xlarge"
+4 "db.m6g.large"
+3 "db.m6g.xlarge"
+1 "db.m7g.2xlarge"
+1 "db.m7g.xlarge"
+1 "db.r6g.2xlarge"
+2 "db.r6g.large"
+12 "db.serverless"
+12 "db.t3.medium"
+3 "db.t3.micro"
+25 "db.t3.small"
+5 "db.t3.xlarge"
+1 "db.t4g.2xlarge"
+17 "db.t4g.large"
+22 "db.t4g.medium"
+165 "db.t4g.micro"
+218 "db.t4g.small"
+5 "db.t4g.xlarge"
+```

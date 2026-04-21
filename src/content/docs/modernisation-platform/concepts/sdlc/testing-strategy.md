@@ -1,0 +1,48 @@
+---
+owner_slack: "#modernisation-platform"
+title: Testing Strategy
+last_reviewed_on: 2026-01-26
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: concepts/sdlc/testing-strategy.html.md.erb
+ingested_at: "2026-04-09T10:46:00.944Z"
+---
+
+## Introduction
+
+We want to test as much of our infrastructure and code as possible. We should endevour to write a test for all new features and changes to existing features.
+
+## Core Platform vs Member testing
+
+This strategy is currently focussed on core platform testing, however members may follow the same principles and use the testing-test environment if they wish.
+
+## Testing tools
+
+We use [Terratest](https://terratest.gruntwork.io/) for testing Terraform code, as well as native [Terraform test](https://www.hashicorp.com/blog/terraform-1-6-adds-a-test-framework-for-enhanced-code-validation) since version 1.6, and [Open Policy Agent (OPA)](https://www.openpolicyagent.org/) for JSON structures.
+All other tests should be written in Go and should use the standard Go [testing library](https://pkg.go.dev/testing).
+
+## Testing environments
+
+The AWS account testing-test should be used to run Terratest code into. This account is empty but configured the same as a member account.
+
+When creating a new repo with the `module` type, empty unit tests and workflow will be present to complete.
+
+Run tests locally using the testing-test account Admin SSO credentials.
+
+Tests running in GitHub actions use the `testing-ci` user.
+
+To minimise securty risks around using static credentials, aws keys for `testing-ci` user are automatically rotated every 7 days.
+
+## Testing areas
+
+| Area to test                          | Type of test     | Testing tool | Testing environment   | Comments                                                                     |
+| ------------------------------------- | ---------------- | ------------ | --------------------- | ---------------------------------------------------------------------------- |
+| Modules in standalone repositories    | Unit test        | Terratest    | testing-test          |                                                                              |
+| Modules in the main repository        | Unit test        | Terratest    | testing-test          |                                                                              |
+| Terrafom not in modules               |                  |              |                       | Not currently tested, we should work to move this code into testable modules |
+| Environment and networking JSON files | Unit test        | OPA          | local / Github action |                                                                              |
+| Scripts                               |                  |              |                       | Not currently tested, as we rewrite this in Go we should add tests           |
+| Core platform                         | Integration test |              |                       | We currently have no such tests                                              |
+| Core platform                         | End to end test  |              |                       | We currently have no such tests                                              |
+| Core platform                         | Smoke test       |              |                       | We currently have no such tests                                              |
+| Member infrastructure                 | All              |              | testing-test          | We currently have no such tests                                              |

@@ -1,0 +1,72 @@
+---
+owner_slack: "#modernisation-platform"
+title: How to update the PagerDuty status page for the Modernisation Platform
+last_reviewed_on: 2025-11-12
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: user-guide/how-to-update-pagerduty-status-page.html.md.erb
+ingested_at: "2026-04-09T10:46:00.993Z"
+---
+
+## Introduction
+
+If there is an incident or planned maintenance affecting the Modernisation Platform, you will need to update the [external status page](https://status.modernisation-platform.service.justice.gov.uk/). This guide explains how to do that.
+
+## Creating and Updating Status Changes
+
+You can create or update incident and maintenance statuses in two ways:
+
+1. **Via Slack**:  
+   Use the PagerDuty incident creation app by typing the `/pd` command in Slack.  
+   For more details, see the [incident process documentation](../runbooks/manage-an-incident.html#2-declare-the-incident).
+
+2. **Via the PagerDuty Web Interface**:  
+   There are two steps to using PagerDuty directly:
+
+   **Step 1 – Create the incident:**
+
+   - Log in to the [PagerDuty site](https://moj-digital-tools.pagerduty.com/).
+   - Navigate to **Incidents** > **New Incident**.
+   - Complete the following fields:
+     - **Title** – A brief summary of the issue.
+     - **Service** – Select “Modernisation Platform” or the appropriate service.
+     - **Urgency** – Choose `High` or `Low` based on severity.
+     - **Assign to** – Pick the relevant escalation policy or person.
+     - **Description** – Add detailed context about the issue.
+   - Click **Create Incident**.
+
+   **Step 2 – Update the external status page:**
+
+   - Hover over the _“Status”_ menu and select _“External Status Page”_.
+   - Click on _“Ministry of Justice Modernisation Platform”_.
+   - You’ll see the newly created incident listed in the **Pending Approvals** section.
+   - Click on the incident and review the status page form:
+     - Confirm the **incident status**, **title**, and **description**.
+     - Ensure the **business service**, **impact level**, and **next update time** are correct.
+   - Click **Post** to submit for approval.
+
+3. **What happens next – Pending Approval**:  
+   After submission, the incident stays in the **Pending Approvals** area until an authorised user reviews and publishes it (dont forget this step, anyone in the team can approve if they are on PagerDuty).  
+   Once approved, it goes live on the external status page and becomes visible to subscribers.
+
+## Approving Status Changes
+
+After an incident has been submitted, it will appear in the **Pending Approvals** section of the external status page.
+
+Approvers are notified by email and must:
+
+- Log in to PagerDuty.
+- Navigate to the external status page.
+- Review the pending incident details.
+- If everything is correct, click **Publish** to make the incident live.
+
+Once published, the incident will appear publicly, and users can subscribe for updates.
+
+## Subscribing to Status Updates
+
+During an incident, users can subscribe for email updates on that specific incident. Alternatively, they can:
+
+- Subscribe to the entire status page to receive updates on all services.
+- Choose to follow specific business services of interest.
+
+This ensures stakeholders stay informed about any ongoing or future issues.

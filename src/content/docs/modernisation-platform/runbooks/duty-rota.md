@@ -1,0 +1,63 @@
+---
+owner_slack: "#modernisation-platform"
+title: Duty Rota
+last_reviewed_on: 2025-12-12
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: runbooks/duty-rota.html.md.erb
+ingested_at: "2026-04-09T10:46:00.960Z"
+---
+
+## Introduction
+
+We have a dedicated engineer to answer queries in the [#ask-modernisation-platform](https://mojdt.slack.com/archives/C01A7QK5VM1) Slack channel and to respond to high priority incidents during the day.
+
+Other engineers may also complete any of these activities at any time; all team members are encouraged to help where they can.
+
+## Overview
+
+- **Purpose**: Dedicate an engineer to answer queries and respond to high-priority incidents
+- **Channel**: [#ask-modernisation-platform](https://mojdt.slack.com/archives/C01A7QK5VM1)
+- **Support Hours**: 9am-4pm (may extend based on engineer's workday)
+
+## Rota Management
+
+- Team members self-assign rota days
+- Rota is visible [here](https://justiceuk.sharepoint.com/:x:/r/sites/msteams_480621/Shared%20Documents/General/MilkMonitor.xlsx?d=w98123f55d1904b36bde823db8dbc9a0f&csf=1&web=1&e=1foadk)
+- Avoid rota duty if day is full of meetings or other commitments
+- Maximum 3 days per sprint for any individual
+- Communicate absences for coverage
+
+## Responsibilities
+
+### Core responsibilities
+
+| Activity                                                                                                                                   | Guidance                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| Monitor [#ask-modernisation-platform](https://mojdt.slack.com/archives/C01A7QK5VM1) chanel                                                 | Respond to queries. Liaise with team members where needed. Ensure all requests are responded to.         |
+| Handle high priority incidents in the [#modernisation-platform-high-priority-alarms](https://mojdt.slack.com/archives/C03CY6451QT) channel | Use [runbooks](https://user-guide.modernisation-platform.service.justice.gov.uk/#runbooks) for guidance. |
+| Respond to Security Hub alerts raised [#modernisation-platform-sec-hub-high-alerts](https://mojdt.slack.com/archives/C0A3B5K1FR6) channel  | Follow the Security Hub Slack Alerts[runbook](https://user-guide.modernisation-platform.service.justice.gov.uk/runbooks/securityhub-slack-notification.html#security-hub-slack-notifications) for guidance. |
+| Monitor [Github Code Scanning Alerts](https://github.com/ministryofjustice/modernisation-platform/security/code-scanning)                  | Review issues raised by the Code Scanners and either resolve or raise a new issue.                       |
+| Review AWS Health issues                                                                                                                   | Monitor team inbox for emails. Create backlog issues as needed.                                          |
+
+### Optional tasks
+
+| Activity                                           | Guidance                                                                                                                                                                                                                                                           |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Review dependabot PRs                              | [Reviewing Dependabot PRs](reviewing-dependabot-prs)                                                                                                                                                                                                          |
+| Update documentation flagged by Daniel the Spaniel | Regular reviews keep documentation fresh and accurate. Review and update the documentation as needed.                                                                                                                                                              |
+| Review team PRs                                    | Review other team members PRs                                                                                                                                                                                                                                      |
+| Address hard-coded account IDs                     | Inform customers when hard-coded account IDs are detected in `modernisation-platform-environments` secret scanning alerts, then close off alert.                                                                                                                   |
+| Address SCA issues from daily scan                 | Results of the [secure code analysis](https://github.com/ministryofjustice/modernisation-platform/actions/workflows/terraform-static-analysis.yml) action are posted to the [#modernisation-platform](https://mojdt.slack.com/archives/C013RM6MFFW) Slack channel. |
+| Post "Question of the Day"                         | Post a question of the day!                                                                                                                                                                                                                                        |
+| Review and fix GitHub code scanning issues         | Regular code scans report issues into the `Security` tab in each Modernisation Platform repository. Review and fix.                                                                                                                                                |
+| Review issues in For Review state                  | Check issues on [Modernisation Platform GitHub repository](https://github.com/orgs/ministryofjustice/projects/17) and see if they meet the Definition of Done before moving them to `Done`.                                                                        |
+
+## Restrictions
+
+- No assigned ticket work to be undertaken while on rota duty
+  - Engineers should not feel under pressure to work on sprint tasks while providing support
+
+## Team Collaboration
+
+- All team members encouraged to help with these activities when possible

@@ -1,0 +1,51 @@
+---
+title: Getting Help
+weight: 50
+last_reviewed_on: 2025-04-17
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: reference/getting-help.html.md.erb
+ingested_at: "2026-04-09T10:46:00.241Z"
+owner_slack: "#cloud-platform"
+---
+
+## Slack Channel
+
+The quickest way to get help is to post a question in the [#ask-cloud-platform] Slack channel.
+
+## Hammer-bot
+
+The hammer-bot is a Slack bot that reports pull requests check state to raised pull requests in the ask-ckoud-platform channel.
+It will report the state with a reaction in slack on the comment
+
+- ✨ passed
+- ❌ failed
+- 🔁 pending
+- ⏳️ running for more 10 minutes
+
+If your check has been running for more than 10 minutes, please go to your pull request to check why, if it is concourse, this is likely due to concourse not picking up the pull request. You can trigger the check by pushing a blank commit to the pull request.
+
+## Raise a support ticket
+
+You can [raise a support ticket][support-ticket] as an issue on our GitHub repository.
+
+## Open (half) Hours
+
+If you want to discuss anything relating to the cloud platform, whether that's learning about general concepts or digging into specific questions, you can book a slot to discuss your issues with a member of the Cloud Platform team.
+
+Sessions are open to anyone, and can cover any topic related to the Cloud Platform.
+
+To book a 30 minute slot, please post to [#ask-cloud-platform]
+
+## Onboarding/Migration to the Cloud Platform
+
+We believe that everything you need to start using the Cloud Platform can be found in this user guide.
+
+However, we appreciate that this can be a daunting task, and the Cloud Platform Team is more than happy to spend time with you on planning your journey to the Cloud Platform. This will enable us to improve the onboarding process.
+
+We can also help you determine [how to host your service] and whether the Cloud Platform is the right option for you.
+
+[#ask-cloud-platform]: https://mojdt.slack.com/messages/C57UPMZLY
+[support-ticket]: https://github.com/ministryofjustice/cloud-platform/issues/new/choose
+[how to host your service]: https://technical-guidance.service.justice.gov.uk/documentation/standards/hosting.html#how-to-host-services

@@ -1,0 +1,17 @@
+---
+title: Migrating an S3 bucket
+last_reviewed_on: 2025-04-17
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: other-topics/s3-bucket-migration.html.md.erb
+ingested_at: "2026-04-09T10:46:00.237Z"
+owner_slack: "#cloud-platform"
+---
+
+If you have an S3 bucket in a different AWS account, you will need to migrate its contents
+to a new S3 bucket, which you can [create via the environments repository](/documentation/getting-started/env-create.html#creating-a-cloud-platform-environment)
+
+Here are [instructions][migrating s3] on how to migrate your bucket contents:
+
+[migrating s3]: https://github.com/ministryofjustice/cloud-platform-terraform-s3-bucket#migrate-from-existing-buckets

@@ -1,0 +1,42 @@
+---
+owner_slack: "#analytical-platform-notifications"
+title: ADR-008 Documentation
+last_reviewed_on: 2024-12-19
+review_in: 6 months
+source_repo: ministryofjustice/analytical-platform
+source_path: adrs/adr-008-documentation.html.md.erb
+ingested_at: "2026-04-09T10:46:01.563Z"
+---
+
+## Status
+
+🤔 Proposed
+
+## Context
+
+We need to document how our platform is built, and provide guidance where needed for our users.
+
+We have many places to store documents and this creates a challenge for our existing and new members of our team.
+
+Google Workspaces is being retired in favour or Office365 so we need an alternative for google docs.
+
+## Decision
+
+The following locations will be used for documenting all things related to the Data Platform.
+
+### Team and Technical
+
+>Team information, ways of working and ADRs should be stored in the open in our technical documentation [here](https://docs.analytical-platform.service.justice.gov.uk/)
+>Documentation directly relating to code should be stored in a `README.MD` next to the code in its repository
+
+### Sensitive information
+
+>Sensitive information, or information on users of the platform which should be stored in e.g. an internal repository `analytical-platform-internal-documentation`
+
+### Diagrams
+
+>_diagrams_
+
+## Consequences
+
+>Since the majority of our documentation and guidance is published in the open, we need to ensure that we do not publish any sensitive details or user data in text or screenshots.

@@ -1,0 +1,56 @@
+---
+title: Git-Crypt
+last_reviewed_on: 2025-12-01
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: other-topics/git-crypt-setup.html.md.erb
+ingested_at: "2026-04-09T10:46:00.230Z"
+owner_slack: "#cloud-platform"
+---
+
+We use `git-crypt` to ensure that application secrets are encrypted at rest in git.
+
+### Prerequisites
+
+1. Install [GPG](https://gnupg.org/)
+2. Install [git-crypt](https://www.agwa.name/projects/git-crypt/)
+3. Generate a key pair, if you don't have one already. The [GitHub documentation](https://help.github.com/articles/generating-a-new-gpg-key/) is a good reference.
+4. Add the pubkey to your GitHub account, again, following [the documentation](https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account)
+
+### Setup
+
+- If the repository has not been setup before, please follow the [git-crypt documentation](https://github.com/AGWA/git-crypt#using-git-crypt) to do so.
+
+otherwise,
+
+- Share your `PUBKEYID` with an existing member of your team. They will need to trust your key and add you to the repository (see the section below or git-crypt documentation above).
+
+### Adding gpg key to repo
+
+The user that generated the gpg will need to do the following:
+
+1. Run the following command and find the Key ID of the key you've just generated: `gpg --list-secret-keys --keyid-format=long`
+2. Export the gpg key: `gpg --armor --export --output ./<key id>.gpg <key id>`
+3. Send the exported .gpg to the existing member of the team.
+
+The existing member of your team will need to do the following steps:
+
+1. Branch the repo that you want to add the user to.
+2. Download the exported gpg key from the user.
+3. Import the key: `gpg --import <key id>.gpg`
+4. Add the user `git-crypt add-gpg-user <user email address>`
+5. `push` the changes and create a PR to merge the branch.
+
+### Usage
+
+Once the above has been setup, update your local repository clone and unlock the secrets:
+
+```
+$ git pull
+$ git-crypt unlock
+```
+
+From this point on, `git-crypt` operates transparently.
+
+You can verify the status of files by using `git-crypt status`.

@@ -1,0 +1,47 @@
+---
+title: Deprecating long-lived credentials for modules
+last_reviewed_on: 2025-04-17
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: other-topics/deprecating-long-lived-credentials.html.md.erb
+ingested_at: "2026-04-09T10:46:00.228Z"
+owner_slack: "#cloud-platform"
+---
+
+To improve the security of services running on the Cloud Platform, we are removing the ability to create and use long-lived credentials, such as IAM access keys, from our modules. These are being replaced by short-lived credentials.
+
+Long-lived credentials are typically used for checking resource configuration, running `aws` CLI commands or getting access to namespace resources like SQS or SNS. The removal of long-lived credentials does **not** impact how you connect to your relational database or Redis cluster.
+
+For modules, except [container repositories](/docs/cloud-platform/deploying-an-app/container-repositories/create), this means utilising [IAM roles for service accounts](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts) (IRSA).
+
+You should start using short-lived credentials as soon as you can. Long-lived credentials were removed from modules on the following dates:
+
+| Module | Access keys are used for | Removal date | Users as at 8th June 2023 |
+|-|-|-|-|
+| [cloud-platform-terraform-dms](https://github.com/ministryofjustice/cloud-platform-terraform-dms) | Starting replication tasks | 4th September 2023 | 1 |
+| [cloud-platform-terraform-dynamodb-cluster](https://github.com/ministryofjustice/cloud-platform-terraform-dynamodb-cluster) | Accessing the database | 4th September 2023 | 19 |
+| [cloud-platform-terraform-elasticache-cluster](https://github.com/ministryofjustice/cloud-platform-terraform-elasticache-cluster) | Rotating AUTH tokens | 4th September 2023 | 218 |
+| [cloud-platform-terraform-rds-aurora](https://github.com/ministryofjustice/cloud-platform-terraform-rds-aurora) | Taking manual backups | Removed | - |
+| [cloud-platform-terraform-rds-instance](https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance) | Taking manual backups | 4th September 2023 | 400 |
+| [cloud-platform-terraform-s3-bucket](https://github.com/ministryofjustice/cloud-platform-terraform-s3-bucket) | Accessing the bucket | 4th September 2023 | 197 |
+| [cloud-platform-terraform-sns-topic](https://github.com/ministryofjustice/cloud-platform-terraform-sns-topic) | Accessing the topic | 4th September 2023 | 24 |
+| [cloud-platform-terraform-sqs](https://github.com/ministryofjustice/cloud-platform-terraform-sqs) | Accessing the queue | 4th September 2023 | 565 |
+
+## Migrating to short-lived credentials
+
+The modules listed above all output an attribute named `irsa_policy_arn`, which has the same permissions as the long-lived credentials.
+
+You should follow the [Accessing AWS APIs and resources from your namespace](/docs/cloud-platform/other-topics/accessing-aws-apis-and-resources-from-your-namespace) guide to migrate to short-lived credentials, and use the respective module's output of `irsa_policy_arn` when configuring the IRSA module.
+
+Once you've set up IRSA in your namespace you will need to:
+
+1. Remove references to long-lived credentials (i.e. IAM access keys) from your application
+
+    This is to ensure that the AWS SDK does not fall back to using long-lived credentials when the AWS SDK is initialised.
+
+2. Redeploy and test your service to ensure your service still works correctly
+
+    The most recent versions of AWS SDKs automatically configure credentials in a way that works with IRSA.
+
+    If you use a custom credential provider with the AWS SDK, you should refer to the AWS SDK guides to implement `AssumeRoleWithWebIdentity` as a credential provider.

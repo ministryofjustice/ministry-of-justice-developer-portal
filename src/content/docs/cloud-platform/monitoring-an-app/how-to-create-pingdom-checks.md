@@ -1,0 +1,124 @@
+---
+title: Creating Pingdom checks
+last_reviewed_on: 2025-03-05
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: monitoring-an-app/how-to-create-pingdom-checks.html.md.erb
+ingested_at: "2026-04-09T10:46:00.216Z"
+owner_slack: "#cloud-platform"
+---
+
+## Overview
+[Pingdom](https://my.pingdom.com) is a global performance and availability monitor for your web application. The aim of this document is to provide you with the necessary information to create Pingdom checks via the [cloud-platform-environments](https://github.com/ministryofjustice/cloud-platform-environments) pipeline, and then send failing checks to a Slack channel of your choosing.
+
+## Prerequisites
+This guide assumes the following:
+
+* You have [created a namespace for your application][env-create]
+* You have a slack channel to send alerts to
+
+## Create a Pingdom check
+Add the below 2 files in in the resources directory of your namespace in your [cloud-platform-environments](https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk) repository. You can define the conditions of your check using the resources outlined in the [Terraform community provider](https://github.com/DrFaust92/terraform-provider-pingdom). Here's a working example of a [basic check](https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live.cloud-platform.service.justice.gov.uk/claim-criminal-injuries-compensation-uat/resources/pingdom.tf).
+
+1. Add the below code to the `required_providers` block in `versions.tf`
+
+    ```hcl
+        pingdom = {
+          source  = "DrFaust92/pingdom"
+          version = "~> 1.3.1"
+        }
+    ```
+    A working example of `versions.tf` with pingdom included will look like this.
+
+    ```hcl
+    terraform {
+      required_version = ">= 1.2.5"
+      required_providers {
+        aws = {
+          source = "hashicorp/aws"
+        }
+        kubernetes = {
+          source = "hashicorp/kubernetes"
+        }
+        pingdom = {
+          source  = "DrFaust92/pingdom"
+          version = "~> 1.3.1"
+        }
+      }
+    }
+    ```
+2. Add a `pingdom.tf` file
+
+    ```hcl
+    provider "pingdom" {
+    }
+
+    resource "pingdom_check" "claim-criminal-injuries-compensation-uat" {
+      type                     = "http"
+      name                     = "cica - uat - cloud-platform - claim"
+      host                     = "uat.claim-criminal-injuries-compensation.service.justice.gov.uk"
+      resolution               = 1
+      notifywhenbackup         = true
+      sendnotificationwhendown = 6
+      notifyagainevery         = 0
+      url                      = "/"
+      encryption               = true
+      port                     = 443
+      tags                     = "businessunit_platforms,application_prometheus,component_healthcheck,isproduction_true,environment_uat,infrastructuresupport_platforms"
+      probefilters             = "region:EU"
+    }
+
+    ```
+
+  **Note**: You'll need to include the `provider "pingdom"` and `terraform` blocks either in this file or in a `main.tf` file.
+
+
+  You can define the conditions of your check using the resources outlined in the [Terraform community provider](https://github.com/DrFaust92/terraform-provider-pingdom).
+
+  Here's a working example of a [basic check](https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live.cloud-platform.service.justice.gov.uk/claim-criminal-injuries-compensation-uat/resources/pingdom.tf).
+
+  This basic check simply checks that the host/url (in this case; uat.claim-criminal-injuries-compensation.service.justice.gov.uk) returns a 200 every minute (resolution = 1 minute).
+  When six (sendnotificationwhendown = 6) consecutive checks fail it triggers an alarm.
+
+  [This](https://github.com/DrFaust92/terraform-provider-pingdom#pingdom-check) page explains all the attributes used in the check.
+
+  All resources, including Pingdom checks **must** be tagged and adhere to the technical guidance outlined [here](https://mojdt.slack.com/archives/C514ETYJX/p1752658121564469?thread_ts=1752657438.952519&cid=C514ETYJX). Ensure your check has appropriate tags before submitting a pull request.
+
+Once reviewed and merged to main, the [Apply Pipeline](/docs/cloud-platform/other-topics/concourse-pipelines) will create your check in the MoJ Pingdom account.
+
+### Adding Slack notification
+You can enable the option to send a failing alert to Slack via a webhook by adding a Pingdom integration id to your `pingdom.tf` file.
+
+The Cloud Platform team can generate an integration id for you. Create a [user support issue](https://github.com/ministryofjustice/cloud-platform/issues/new/choose) requesting a Pingdom integration id, providing the following information in the issue description:
+
+  - team name
+  - application name
+  - the target slack channel
+
+Once this is submitted, the Cloud Platform team will respond by providing you with an integration id.
+
+You can now add `integrationids` to your `pingdom.tf`. Appending the example above, your check will now appear as follows (assuming you were given 1000 as the integration id):
+
+```hcl
+provider "pingdom" {
+}
+
+resource "pingdom_check" "claim-criminal-injuries-compensation-uat" {
+  type                     = "http"
+  name                     = "cica - uat - cloud-platform - claim"
+  host                     = "uat.claim-criminal-injuries-compensation.service.justice.gov.uk"
+  resolution               = 1
+  notifywhenbackup         = true
+  sendnotificationwhendown = 6
+  notifyagainevery         = 0
+  url                      = "/"
+  encryption               = true
+  port                     = 443
+  tags                     = "businessunit_platforms,application_prometheus,component_healthcheck,isproduction_true,environment_uat,infrastructuresupport_platforms"
+  probefilters             = "region:EU"
+  integrationids           = [1000]
+}
+```
+
+[env-create]: /documentation/getting-started/env-create.html#creating-a-cloud-platform-environment

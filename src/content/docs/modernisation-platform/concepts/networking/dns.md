@@ -1,0 +1,59 @@
+---
+owner_slack: "#modernisation-platform"
+title: DNS
+last_reviewed_on: 2025-12-09
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: concepts/networking/dns.html.md.erb
+ingested_at: "2026-04-09T10:46:00.939Z"
+---
+
+DNS is centralised in the core networking services account.
+
+We use [AWS Route 53](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome) to provide and manage DNS records.
+
+There are public and private [hosted zones](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-working-with) for the Modernisation Platform.
+
+We also cater for application-specific public hosted zones.
+
+![DNS Zones](../../images/dns.png)
+
+## DNS naming
+
+DNS entries for applications will be created in the relevant zone following the naming conventions below.
+
+### Public
+
+`<application>`.`<department>`-`<environment>`.modernisation-platform.service.justice.gov.uk
+
+#### Example
+
+`ccr.laa-preproduction.modernisation-platform.service.justice.gov.uk`
+
+### Private
+
+`<application>`.`<department>`-`<environment>`.modernisation-platform.internal
+
+#### Example
+
+`admin-console.ccr.laa-production.modernisation-platform.internal`
+
+`my-application.nomis.hmpps-test.modernisation-platform.service.justice.gov.uk`
+
+### Custom
+
+`ppud.justice.gov.uk`
+
+#### Example
+
+`www.ppud.justice.gov.uk`
+
+`wam.ppud.justice.gov.uk`
+
+### Production DNS
+
+Public facing services must have a `service.justice.gov.uk` domain name, excluding exceptional cases.
+
+See the MoJ Technical guidance on [Naming domains](https://cloud-optimisation-and-accountability.justice.gov.uk/documentation/operations-engineering-legacy/operations-engineering-user-guide/dns/domain-naming-standard) for more information.
+
+For more information on implementing DNS on the Modernisation Platform please see [How to configure DNS](../../user-guide/how-to-configure-dns)

@@ -1,0 +1,227 @@
+---
+title: Allow Ingress with duplicate hostname across namespaces
+last_reviewed_on: 2025-03-04
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: deploying-an-app/ingress-with-duplicate-hostnames.html.md.erb
+ingested_at: "2026-04-09T10:46:00.204Z"
+owner_slack: "#cloud-platform"
+---
+
+This guide explains how to deploy applications with duplicate hostnames across different namespaces.
+
+By default, duplicate hostnames across namespaces are not permitted on our platform. However, by using specific annotations on your Ingress resources, you can intentionally allow duplicate hostnames if the required annotations are present and identical on both the new and existing Ingress objects.
+
+>
+Note:
+Duplicate hostnames are already possible within a single namespace. This guide explains how to extend that capability across different namespaces.
+
+## Required Annotations
+To allow an Ingress to use a hostname that is already in use in another namespace, you **must** add the following three annotations to each Ingress resource (**both** the new and the existing ones):
+
+```
+# Indicates that you intentionally want to allow duplicate hostnames.
+allow-duplicate-host: "true"
+
+# A comma-separated list of namespaces where duplicate hostnames are permitted.
+# IMPORTANT: The value must be identical and in the same order on both Ingress objects.
+allowed-duplicate-ns: "prod-old,prod-new"
+
+# Specifies the AWS weight value used for traffic balancing.
+# This value must be non-empty.
+external-dns.alpha.kubernetes.io/aws-weight: "100"
+
+# A unique identifier for the Ingress.
+external-dns.alpha.kubernetes.io/set-identifier: "<ingress-name>-<ns>-${clusterColor}"
+```
+
+## What is Canary deployment vs Blue Green deployment?
+- Canary Deployment:
+  - In a canary deployment, a small percentage of traffic is routed to a new version while most traffic continues to go to the stable version. This allows you to monitor performance and errors before a full rollout.
+
+- Blue/Green Deployment:
+  - Blue/Green deployments run two parallel production environments. At a chosen time, traffic is switched entirely from the old version `prod-old` to the new version `prod-new`.
+
+### Weighting Considerations:
+
+There are two weight annotations available:
+
+- NGINX Ingress Level:
+    - `nginx.ingress.kubernetes.io/canary-weight` controls the percentage of traffic routed to the canary Ingress at the Ingress level.
+    - You only need to add this to the Canary Ingress (New Deployment in the `prod-new` Namespace in the below example)
+    - You may find more [info here](https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md#canary).
+
+- Route 53 Level:
+  - `external-dns.alpha.kubernetes.io/aws-weight` controls traffic balancing in Route 53 level.
+  - You may find more [info here](https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/aws.md#routing-policies).
+
+Although both annotations are available, it is often simpler to use a single weighting mechanism as your baseline for traffic splitting. Consolidating to one value reduces configuration complexity and potential confusion. You may choose to adjust one of the weight base on your requirement.
+
+For example, you might initially set the Canary Ingress `nginx.ingress.kubernetes.io/canary-weight` to `50` for a 50/50 split, and then later adjust the weight to `100` to achieve a full switch.
+
+If you would like to fully cut over to the new version and implement a "blue green" deployment strategy, a full traffic switch can be done by setting the Canary Ingress `nginx.ingress.kubernetes.io/canary-weight` to `100`.
+
+
+## Canary Deployment Example
+
+Because the NGINX Ingress Controller by default does not allow two Ingress objects to define the same host and path combination, you can enable canary deployments. To do so, add the following canary annotations:
+
+```
+# Marks the Ingress as part of a canary deployment.
+nginx.ingress.kubernetes.io/canary: "true"
+
+# Defines the traffic weight for the canary (NGINX level).
+nginx.ingress.kubernetes.io/canary-weight: "50"
+```
+
+### How It Works
+When you create or update an Ingress, Gatekeeper policies check for duplicate hostnames across namespaces. If the hostname is already in use in another namespace, then both the new Ingress and the existing Ingress must include all required annotations. In particular, the value of `allowed-duplicate-ns` must be identical and in same order on both Ingresses. If the values are different, the request will be rejected.
+
+Using the canary annotations instructs the NGINX Ingress Controller allow you to use the same host and the same path across namespaces.
+
+### Example: Using Canary Deployment with Duplicate Hostname Across Namespaces
+Below are sample YAML files for a Canary deployment scenario where duplicate hostnames across namespaces are allowed because the required annotations are present and identical.
+
+#### Stable Ingress (Existing Deployment in the “prod-old” Namespace)
+This Ingress represents your existing deployment in the `prod-old` namespace. It is configured with the required override and does not need canary annotations.
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: helloworld-prod-old
+  namespace: prod-old
+  annotations:
+    allow-duplicate-host: "true"
+    allowed-duplicate-ns: "prod-old,prod-new"
+    external-dns.alpha.kubernetes.io/aws-weight: "100"
+    external-dns.alpha.kubernetes.io/set-identifier: helloworld-prod-old-prod-old-green
+spec:
+  rules:
+  - host: helloworld.apps.live.cloud-platform.service.justice.gov.uk
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: helloworld-prod-old
+            port:
+              number: 80
+```
+
+#### Canary Ingress (New Deployment in the `prod-new` Namespace)
+This Ingress represents your new `prod-new` deployment. It uses the same hostname and same path as the stable Ingress, and its annotations must match exactly. It includes the canary annotations so you can adjust traffic distribution.
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: helloworld-prod-new
+  namespace: prod-new
+  annotations:
+    nginx.ingress.kubernetes.io/canary: "true"
+    nginx.ingress.kubernetes.io/canary-weight: "50"
+    allow-duplicate-host: "true"
+    allowed-duplicate-ns: "prod-old,prod-new"   # Must be identical on both ingresses.
+    external-dns.alpha.kubernetes.io/aws-weight: "100"
+    external-dns.alpha.kubernetes.io/set-identifier: helloworld-prod-new-prod-new-green
+spec:
+  rules:
+  - host: helloworld.apps.live.cloud-platform.service.justice.gov.uk
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/" 
+        backend:
+          service:
+            name: helloworld-prod-new
+            port:
+              number: 80
+```
+
+#### Deployment Steps
+1. Deploy the Stable Ingress:
+  - Apply the YAML for the stable Ingress in the `prod-old` namespace. This resource acts as your existing deployment.
+
+2. Deploy the Canary Ingress:
+  - Apply the YAML for the new Ingress in the `prod-new` namespace. The deployment is allowed only if both Ingresses include all required annotations and the allowed-duplicate-ns values match exactly.
+
+3. Traffic Management:
+  - Use the `nginx.ingress.kubernetes.io/canary-weight` annotation to adjust traffic distribution in nginx level between your prod-old and prod-new deployments. 
+  - If you set `nginx.ingress.kubernetes.io/canary-weight` to **0** on the Canary Ingress, then 0% of traffic will be routed to the new version, and all traffic will go to the stable deployment.
+  - Conversely, if you set the canary weight to **100**, then 100% of the traffic will be routed to the new version.
+  - You can test these scenarios by updating the annotation on the Canary Ingress accordingly.
+
+### Canary Deployment with sticky session
+
+To ensure that once a user is routed to one version they continue to see that same version, you can enable cookie-based session affinity (sticky sessions) on your Ingress.
+
+You may find more info about session affinity [here](https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md#session-affinity).
+
+Below are sample YAML examples that demonstrate a stable (prod-old) deployment and a canary (prod-new) deployment with sticky sessions enabled.
+
+#### Stable Ingress (Existing Deployment in the “prod-old” Namespace)
+This Ingress represents your existing deployment in the `prod-old` namespace for sticky session.
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: helloworld-prod-old
+  namespace: prod-old
+  annotations:
+    allow-duplicate-host: "true"
+    allowed-duplicate-ns: "prod-old,prod-new"
+    external-dns.alpha.kubernetes.io/aws-weight: "100"
+    external-dns.alpha.kubernetes.io/set-identifier: helloworld-prod-old
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+spec:
+  rules:
+  - host: helloworld.apps.live.cloud-platform.service.justice.gov.uk
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: helloworld-prod-old
+            port:
+              number: 80
+```
+
+#### Canary Ingress (New Deployment in the `prod-new` Namespace)
+This Ingress represents your new `prod-new` deployment in the `prod-new` namespace for sticky session.
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: helloworld-prod-new
+  namespace: prod-new
+  annotations:
+    nginx.ingress.kubernetes.io/canary: "true"
+    nginx.ingress.kubernetes.io/canary-weight: "50"
+    allow-duplicate-host: "true"
+    allowed-duplicate-ns: "prod-old,prod-new"   # Must be identical on both ingresses.
+    external-dns.alpha.kubernetes.io/aws-weight: "100"
+    external-dns.alpha.kubernetes.io/set-identifier: helloworld-prod-new
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+spec:
+  rules:
+  - host: helloworld.apps.live.cloud-platform.service.justice.gov.uk
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/" 
+        backend:
+          service:
+            name: helloworld-prod-new
+            port:
+              number: 80
+```
+
+If you would like to customize cookie session, you may find more info [here](https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md#cookie-affinity).
+
+For further assistance or questions, please contact us in #ask-cloud-platform.

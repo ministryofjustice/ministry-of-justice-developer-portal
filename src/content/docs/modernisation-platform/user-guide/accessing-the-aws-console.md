@@ -1,0 +1,43 @@
+---
+owner_slack: "#modernisation-platform"
+title: Accessing the AWS Console
+last_reviewed_on: 2026-03-18
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: user-guide/accessing-the-aws-console.html.md.erb
+ingested_at: "2026-04-09T10:46:00.980Z"
+---
+
+You can view your infrastructure via the AWS console, you will also need access to the AWS console to create and configure your [AWS Credentials (access keys)](getting-aws-credentials)
+
+To have access to your infrastructure you will need to be a member of the GitHub team specified when the [environment was created](./creating-environments.html#sso-group-name)
+
+## Logging in
+
+Logging in to the AWS console is done via single sign on. As part of the environment creation, you would have provided the name of a team in GitHub. Any member of this team will have access to the environment.
+
+Click on the single sign on url - [https://moj.awsapps.com/start](https://moj.awsapps.com/start)
+
+You will see the single sign on screen, click on `Continue with GitHub` and sign in with GitHub to continue.
+
+![Single sign on](../images/single-sign-on-screen.png)
+
+Next authorise GitHub
+
+![Authorise GitHub](../images/authorise-github.png)
+
+You are now logged in to the single sign on.
+
+Click on `AWS Account` to view a list of the accounts you have available to you.
+
+![SSO main menu](../images/sso-main-menu.png)
+
+![SSO account options](../images/sso-account-options.png)
+
+Expand the account you wish to access and click on the `Management console` link. You may have different levels of access, choose the one you need.
+
+![SSO Authorisation choice](../images/sso-authorisation-choice.png)
+
+### Next steps
+
+[Configure your AWS credentials](getting-aws-credentials) to get [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome) access.

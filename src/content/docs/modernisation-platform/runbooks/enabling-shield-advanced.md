@@ -1,0 +1,44 @@
+---
+owner_slack: "#modernisation-platform"
+title: Enabling AWS Shield Advanced for production applications
+last_reviewed_on: 2025-12-09
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: runbooks/enabling-shield-advanced.html.md.erb
+ingested_at: "2026-04-09T10:46:00.961Z"
+---
+
+[AWS Shield Advanced](https://aws.amazon.com/shield/features/#AWS_Shield_Advanced) provides higher levels of DDoS protection and mitigation against our services.
+
+## Enabling AWS Shield Advanced
+
+Shield advanced is enabled using [AWS Firewall Manager](https://aws.amazon.com/firewall-manager/features/) policies. This is managed in the [aws-root-account](https://github.com/ministryofjustice/aws-root-account/blob/main/organisation-security/terraform/firewall-manager.tf) Terraform.
+
+All Modernisation Platform accounts have Shield Advanced [enabled by default](https://github.com/ministryofjustice/aws-root-account/blob/main/organisation-security/terraform/locals.tf#L106) with an auto remediation policy.
+
+When this happens, any external facing EC2 Elastic IPs and Elastic Load Balancers will have a WAF automatically created for them if one does not already exist. This WAF has no rules, but is required to enable monitoring for DDoS attacks.
+
+For production accounts, AWS Shield Response Team (SRT) access, and Automatic Layer 7 DDoS Mitigation can optionally be configured.
+
+## Managing AWS Shield Advanced for your account
+
+You can complete the following tasks by implementing the [`shield_advanced`](https://github.com/ministryofjustice/modernisation-platform-environments/tree/main/terraform/modules/shield_advanced) terraform module into your environment code:
+
+- Configure DDoS alerts
+- Enable Shield Response Team (SRT) Access
+- Associate Shield Protected resources with the Shield Managed WAF ACL
+- Create alarms and notifications
+- Apply a count/block rule to the managed WAF with a simple threshold
+- Optionally apply AWS Shield automatic responses
+
+## Optional WAF Module
+
+Shield advanced is also enabled using the optional [WAF Module](https://github.com/ministryofjustice/modernisation-platform-terraform-aws-waf). If interested in using this, please reach out via the ask channel.
+
+## Route53 hosted zones
+
+Route53 hosted zones are protected and monitored by Shield Advanced with protections added through Terraform.
+
+The modernisation-platform domain and production application domains are protected [here](https://github.com/ministryofjustice/modernisation-platform/blob/main/terraform/environments/core-network-services/route53.tf#L41), and the core-vpc subdomains [here](https://github.com/ministryofjustice/modernisation-platform/blob/main/terraform/modules/dns-zone/main.tf#L78).
+
+Monitoring is enabled and alarms will go to the [#modernisation-platform-high-priority-alarms](https://mojdt.slack.com/archives/C03CY6451QT) channel for production alarms, and [#modernisation-platform-low-priority-alarms](https://mojdt.slack.com/archives/C02PFCG8M1R) for non production.

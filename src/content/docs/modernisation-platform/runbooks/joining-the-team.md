@@ -1,0 +1,124 @@
+---
+owner_slack: "#modernisation-platform"
+title: Joining the team
+last_reviewed_on: 2026-01-26
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: runbooks/joining-the-team.html.md.erb
+ingested_at: "2026-04-09T10:46:00.962Z"
+---
+
+Welcome to the team! Below is some information that you might find useful.
+
+## General information
+
+- Our standups are currently at 9.30am every morning
+- We have our sprint retrospective every fortnight on a Monday morning
+- We have our sprint planning every fornight on a Monday morning
+- We plan our sprints through [GitHub Projects](https://github.com/orgs/ministryofjustice/projects/17)
+
+### Team
+
+See our [team information](../index.html#modernisation-platform-team-information) for:
+
+- our alliance
+- our roadmap
+- our vision
+- who's in the team
+
+### Your first sprint ceremonies
+
+When you join the team, we want you to feel welcome and included. With your input, we'll collectively update our [team alliance](../team/alliance), and you'll be able to meet the team if you haven't done so already.
+
+## Team tools
+
+### Microsoft Teams, Slack, Zoom? Oh my!
+
+Our main chat platform is Slack, our fallback option is Microsoft Teams.
+
+We use Microsoft Teams for team calls, and use Slack for direct calls.
+
+We rarely use Zoom, though some all-staff meetings are held on it.
+
+For email we use the MoJ's Office365 Email.
+
+For development work any IDE can be used, but many team members choose Visual Studio Code
+
+### Slack channels to join
+
+#### #modernisation-platform
+
+The [#modernisation-platform](https://mojdt.slack.com/archives/C013RM6MFFW) channel is our team channel where we have team discussions about anything ranging from:
+
+- in-depth technical issues
+- our plans for the day
+- to request someone else from the team's help
+- when we're away for lunch
+- general musings
+
+If you can't make standup, post your standup update here.
+
+#### #ask-modernisation-platform
+
+The [#ask-modernisation-platform](https://mojdt.slack.com/archives/C01A7QK5VM1) channel is for anyone who isn't in the team to:
+
+- ask questions about the platform
+- get advice from the team
+
+#### #modernisation-platform-notifications
+
+The [#modernisation-platform-notifications](https://mojdt.slack.com/archives/C01A44RL0TC) channel is where we:
+
+- direct notifications from GitHub, such as pull requests or issues
+
+It's a noisy channel, so it's up to you whether to join it.
+
+#### #modernisation-platform-update
+
+The [#modernisation-platform-update](https://mojdt.slack.com/archives/C02L5MCJ12N) channel is where we:
+
+- let users know of any changes which may affect them
+
+This is a low noise channel, only post relevant updates in here which all teams need to hear.
+
+#### #modernisation-platform-high-priority-alarms
+
+The [#modernisation-platform-high-priority-alarms](https://mojdt.slack.com/archives/C03CY6451QT) channel is where:
+
+- high priority alarms are posted from PagerDuty, if something is posted here it will require immediate attention.
+
+#### #modernisation-platform-low-priority-alarms
+
+The [#modernisation-platform-low-priority-alarms](https://mojdt.slack.com/archives/C02PFCG8M1R) channel is where:
+
+- low priority alarms are posted from PagerDuty, if something is posted here it will not require immediate attention.
+
+#### Security Hub Related Alerts
+
+The [##modernisation-platform-sec-hub-high-alerts](https://moj.enterprise.slack.com/archives/C0A3B5K1FR6) channel is where:
+
+- Details of Critical and High status Security Hub Alerts generated from our core accounts via PagerDuty. These require immediate attention when posted.
+
+The [#modernisation-platform-security-hub-alerts](https://moj.enterprise.slack.com/archives/C07SNBJBVC6) channel is where:
+
+- A summary of security hub alerts for our core accounts is posted daily.
+
+### GitHub teams to join (optional)
+
+To add or close issues in our GitHub Project, you need to join the [modernisation-platform](https://github.com/orgs/ministryofjustice/teams/modernisation-platform) team on GitHub.
+
+The team memberships are [defined in code](https://github.com/ministryofjustice/modernisation-platform-github/blob/main/terraform/github/modules/team/main.tf#L12). If you're comfortable doing so, please add your GitHub username there.
+
+If you're not comfortable updating Terraform files, send a message in the [#modernisation-platform](https://mojdt.slack.com/archives/C013RM6MFFW) channel and someone in the team will help you.
+
+## File Storage
+
+We use Microsoft Office 365 for docs, spreadsheets etc and Sharepoint & OneDrive for file storage. Any files which we wish to keep should be stored here - https://justiceuk.sharepoint.com/sites/msteams_480621/Shared%20Documents/Forms/AllItems.aspx
+
+## Further information
+
+We're currently building our documentation to cover core concepts and general practices within the team.
+
+It's worth having a read through the user guide and concepts pages.
+
+There is a varying level of technical detail across the documentation, so if you have any questions or are interested in something in particular, feel free to reach out in [#modernisation-platform](https://mojdt.slack.com/archives/C013RM6MFFW).

@@ -1,0 +1,344 @@
+---
+title: Adding secrets to an application
+last_reviewed_on: 2025-09-23
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: deploying-an-app/add-secrets-to-deployment.html.md.erb
+ingested_at: "2026-04-09T10:46:00.200Z"
+owner_slack: "#cloud-platform"
+---
+
+Secrets required for an application at runtime can be stored in AWS Secrets Manager. The below guide explains how to
+create and store secrets in AWS Secrets Manager (in this example, `APPINSIGHTS_INSTRUMENTATIONKEY`) and how to access them from your namespace.
+
+In practice, many of the secrets you will use in your applications are created automatically (e.g. database credentials). But if you have any third party application secrets,
+you can use this guide to create, store and make them available to your application.
+
+
+## Pre-requisites
+
+This guide assumes the following:
+
+- You have a [namespace created on the Cloud Platform.](/docs/cloud-platform/getting-started/env-create)
+- You have enabled [AWS console](/docs/cloud-platform/getting-started/accessing-the-cloud-console) access to view AWS resources created in your namespace.
+- You have deployed your application. See [Deploying an application to the Cloud-Platform][deploy-hello-world]
+
+## Configuring secrets using AWS Secrets Manager
+
+1. **Create secret(s) in AWS Secrets Manager**
+
+    The Cloud Platform team have created a module called [cloud-platform-terraform-secrets-manager](https://github.com/ministryofjustice/cloud-platform-terraform-secrets-manager/) which enables users to easily create all resources required to use AWS Secrets Manager.
+    Follow the [example provided](https://github.com/ministryofjustice/cloud-platform-terraform-secrets-manager/tree/main/examples) in the module to create secret(s) in AWS Secrets Manager.
+
+    Once the PR is merged and applied, the following resources will be created:
+    * A **secret** entry per secret in AWS Secrets Manager
+    * A **SecretStore** in your namespace
+
+        This specifies the `external-secrets` provider will be used to retrieve the secret from AWS Secrets Manager.
+
+        ```
+        kubectl -n <namespace> get secretstores.external-secrets.io
+        ```
+    * An **ExternalSecret** in your namespace
+
+        There will be an external secrets entry for each Kubernetes secret managed in AWS Secrets Manager.
+
+        ```
+        kubectl -n <namespace> get externalsecrets.external-secrets.io
+        ```
+
+2. **Store the secret value using AWS console**
+
+    Login to the [AWS console](/docs/cloud-platform/getting-started/accessing-the-cloud-console), search for `Secrets Manager` and navigate to the secret created in the previous step.
+
+    Click on the secret and then click on `Retrieve secret value`. If this is your first time accessing the new secret, you will see an error `Failed to get the secret value`:
+
+    ![Failed to get secret value](/images/secrets-manager-1.png)
+
+    This is expected, since we haven't added a value just yet!
+
+    Next, click on `Set secret value`.
+
+    Secrets from `kubernetes_secret` are referred as a key-value pair inside the app. Hence use the format `{"key":"value"}` when storing the value. You will
+    need to set this as a `Plaintext` value initially:
+
+    ![Set secret value](/images/secrets-manager-2.png)
+
+    Then Click on "Save".
+
+    On subsequent viewing and editing of your secret value, you will be able to view and edit it in either the `Key/value` or `Plaintext` tab views.
+
+
+3. **List secrets in your namespace**
+
+    Once the secrets value has been entered using AWS console, you will see a kubernetes_secret generated with the name and key given for every secret created in Step 1.
+
+    You can check if the kubernetes_secret has generated using below command:
+
+
+    ```bash
+    kubectl -n <namespace> get secrets
+    NAME                                          TYPE                                  DATA      AGE
+    default-token-hz7z7                           kubernetes.io/service-account-token   3         26d
+    reference-app-secret                          Opaque                                2         64m
+    ```
+
+    Note: It takes a few minutes before the kubernetes_secret is generated after saving the secret value on the console for the first time.
+
+    You can check the secret_key by retrieving the secret using below command and looking at the `data` section:
+
+    ```
+    $ kubectl  -n yournamespace get secret reference-app-secret  -o yaml
+    apiVersion: v1
+    data:
+      APPINSIGHTS_INSTRUMENTATIONKEY: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    kind: Secret
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/last-applied-configuration: |
+          {"apiVersion":"v1","data":{"APPINSIGHTS_INSTRUMENTATIONKEY":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"},"kind":"Secret","metadata":{"annotations":{},"name":"demosecret","namespace":"yournamespace"},"type":"Opaque"}
+      creationTimestamp: "2020-04-28T14:24:27Z"
+      name:  reference-app-secret
+      namespace: yournamespace
+      resourceVersion: "239748077"
+      selfLink: /api/v1/namespaces/dstest/secrets/ reference-app-secret
+      uid: 5bd08c63-5f29-452f-a0ec-4d26404411e6
+    type: Opaque
+    ```
+
+4. **Access the secret from your namespace**
+
+    In your deployment file, you can refer the secret as:
+
+    ```yaml
+    spec:
+    containers:
+      - name: django-demo-container
+        image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/cloud-platform-reference-app:1.0.0
+        ports:
+          - containerPort: 8000
+        env:
+          - name: <ENV_VARIABLE_NAME>
+            valueFrom:
+              secretKeyRef:
+                name: <SECRET-NAME> # This is the name of the kubernetes_secret you created in Step 1 `k8s_secret_name`
+                key: <SECRET-KEY> # This is the key you have given for the secret value in the AWS Console
+    ```
+
+    For example, if you are using the secret `APPINSIGHTS_INSTRUMENTATIONKEY` in your application, you can refer it as:
+
+    ```yaml
+    spec:
+    containers:
+      - name: django-demo-container
+        image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/cloud-platform-reference-app:1.0.0
+        ports:
+          - containerPort: 8000
+        env:
+          - name: APPINSIGHTS_INSTRUMENTATIONKEY
+            valueFrom:
+              secretKeyRef:
+                name: reference-app-secret # This is the name of the kubernetes_secret you created in Step 1 `k8s_secret_name`
+                key: APPINSIGHTS_INSTRUMENTATIONKEY # This is the key you have given for the secret value in the AWS Console
+    ```
+
+### Updating the secret value
+
+  When the secret value needs updating/rotating, the value needs to be updated in the AWS Console and
+  the application needs to be restarted to use the new secret value.
+
+  Follow the below steps to perform the update:
+
+   - Login the AWS console and navigate to the secret created in Step 1.
+   - Click on `Retrieve secret value` and then click on `Edit`.
+   - Update the secret value and click on `Save`.
+   - Delete the kubernetes_secret using below command:
+
+      ```
+      kubectl -n <namespace> delete secret <kubernetes_secret_name>
+      ```
+
+   - New kubernetes_secret with the same name and with the new secret value will be generated.
+   - Restart the application to use the new secret value.
+
+### Setting up alerts for changes to a secret
+
+  The Cloud Platform team have added custom metrics to monitor AWS Secret Manager events using Prometheus. You can view the
+  metrics in the [Prometheus UI](https://prometheus.cloud-platform.service.justice.gov.uk/graph?) by searching for `secretsmanager_`
+
+  Below is the example of a PrometheusRule to alert for secretmanager events:
+
+
+  ```yaml
+    apiVersion: monitoring.coreos.com/v1
+    kind: PrometheusRule
+    metadata:
+      namespace: <YOUR_NAMESPACE>
+    labels:
+      role:
+    name: prometheus-custom-rules-secretsmanager
+    spec:
+    groups:
+      - name: application-rules
+      rules:
+      - alert: SecretsManagerPutSecretValue
+        expr: secretsmanager_put_secret_value_sum{exported_job="secretsmanager", secret_id="arn:aws:secretsmanager:eu-west-2:754256621582:secret:<your-secret-arn>"} > 0
+        for: 1m
+        labels:
+          severity: <severity>
+        annotations:
+          message: |
+            {{ $labels.secret_id }} has had {{ $value }} PutSecretValue operations recently.
+            {{ $labels.user_arn }} has had {{ $value }} PutSecretValue operations recently.
+          runbook_url: <runbook_url>
+          dashboard_url: <dashboard_url>
+
+  ```
+
+  These metrics are exported from CloudTrail to Cloudwatch logs, which are then exported to the `live` cluster by being scraped by Prometheus.
+  The scraping interval between each of these components affect the latency of the metrics being viewable in Prometheus..
+  Please use this information as a notification of a recent change to your secret and not as a real time alert.
+
+
+### FAQs
+
+**kubernetes_secret is not generated for the created AWS Secret Manager secret?**
+
+  If you do not see a kubernetes_secret generated for the any of the secret created in Stepa above, check the following:
+
+  1. Is the secret value updated in AWS console?
+  2. Is there any error in the external secret resource? You can check this by running:
+
+
+```bash
+kubectl -n <namespace> describe externalsecrets.external-secrets.io eks-external-secret-<k8s_secret_name>
+```
+
+## Configuring secrets manually using kubenetes_secret
+
+This section covers creating secrets using kubernetes_secret by encoding values into the secret objects.
+
+See [kuberenetes using secrets as environment variables](https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-environment-variables) for detailed information on providing values from kubernetes secrets to pods.
+
+Create your AWS Credentials access key (making a note of the aws_access_key_id and aws_secret_access_key)
+
+### Base64-encode your secret
+
+In this example  aws_access_key_id is 'AKIAFTKSAW15HJLOGD'. Issue the following command to base64-encode:
+
+```
+echo -n 'AKIAFTKSAW15HJLOGD' | base64
+```
+
+This will return the encoded id 'QUtJQUZUS1NBVzE1SEpMT0dE'
+
+In this example the aws_secret_access_key is 'G8HJPMHVGFHK4547GFDSHHJJ'. Issue the following command to base64-encode:
+
+```
+echo -n 'G8HJPMHVGFHK4547GFDSHHJJ' | base64
+```
+
+This will return the encoded secret 'RzhISlBNSFZHRkhLNDU0N0dGRFNISEpK'
+
+### Creating the secret
+
+Create a secrets.yaml file similar to:
+
+```Yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: demosecret
+type: Opaque
+data:
+  aws_access_key_id: QUtJQUZUS1NBVzE1SEpMT0dE
+  aws_secret_access_key: RzhISlBNSFZHRkhLNDU0N0dGRFNISEpK
+```
+issue the following command:
+
+```
+$ kubectl -n yournamespace apply -f secrets.yaml
+secret "demosecret" created
+```
+
+
+### Listing the secrets in a namespace
+
+```
+$ kubectl -n yournamespace get secrets
+NAME                                          TYPE                                  DATA      AGE
+default-token-hz7z7                           kubernetes.io/service-account-token   3         26d
+demosecret                                    Opaque                                2         5d
+```
+
+### Updating the secret
+You can update an existing secrets file by creating a secrets.yaml file, updating secret name to point to an existing secret and appending new entries to the file.
+
+### Decoding a secret
+
+Secrets can be retrieved via the kubectl get secret command. For example, to retrieve the secret you created:
+
+```
+$ kubectl  -n yournamespace get secret demosecret  -o yaml
+apiVersion: v1
+data:
+  aws_access_key_id: QUtJQUZUS1NBVzE1SEpMT0dE
+  aws_secret_access_key: RzhISlBNSFZHRkhLNDU0N0dGRFNISEpK
+kind: Secret
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"aws_access_key_id":"QUtJQUZUS1NBVzE1SEpMT0dE","aws_secret_access_key":"RzhISlBNSFZHRkhLNDU0N0dGRFNISEpK"},"kind":"Secret","metadata":{"annotations":{},"name":"demosecret","namespace":"yournamespace"},"type":"Opaque"}
+  creationTimestamp: "2020-04-28T14:24:27Z"
+  name: demosecret
+  namespace: yournamespace
+  resourceVersion: "239748077"
+  selfLink: /api/v1/namespaces/dstest/secrets/demosecret
+  uid: 5bd08c63-5f29-452f-a0ec-4d26404411e6
+type: Opaque
+```
+
+> In this case, the values will be shown Base64-encoded
+
+You can also use the `cloud-platform` CLI tool to view and Base64-decode the secret, like this:
+
+```shell
+cloud-platform decode-secret -n yournamespace -s demosecret
+```
+
+This will output the secret as JSON, with the values base64-decoded.
+
+### Using the secret in your applications
+
+To use a secret you need to tell kubernetes to put its value in an environment variable which your application container can access. You will usually specify this in your application's `deployment.yaml` file.
+
+The following example sets an `AWS_ACCESS_KEY_ID` environment variable in the environment of the `django-demo-container`.
+
+The value of `AWS_ACCESS_KEY_ID` comes from the secret called `demosecret` which is a hash with a key called `aws_access_key_id`, and the value of that key will become the value of the environment variable `AWS_ACCESS_KEY_ID`.
+
+```Yaml
+    spec:
+      containers:
+        - name: django-demo-container
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/cloud-platform-reference-app:django
+          ports:
+            - containerPort: 8000
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: demosecret
+                  key: aws_access_key_id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: demosecret
+                  key: aws_secret_access_key
+```
+
+> When you reference a secret in this way, kubernetes takes care of the base64-decoding for you - you don't need to base64-decode the value in your code.
+
+[env-create]: /documentation/getting-started/env-create.html#creating-a-cloud-platform-environment
+[deploy-hello-world]: /documentation/deploying-an-app/helloworld-app-deploy.html#deploying-a-39-hello-world-39-application-to-the-cloud-platform
+[interact-with-app]: /documentation/deploying-an-app/multicontainer-app-deploy.html#interacting-with-the-application

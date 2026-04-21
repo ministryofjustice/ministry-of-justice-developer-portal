@@ -1,0 +1,36 @@
+---
+owner_slack: "#analytical-platform-notifications"
+title: ADR-003 Use EntraID (formerly AzureAD) for Identity and Access Management
+last_reviewed_on: 2024-12-19
+review_in: 6 months
+source_repo: ministryofjustice/analytical-platform
+source_path: adrs/adr-003-use-entraid-for-identity-and-access-management.html.md.erb
+ingested_at: "2026-04-09T10:46:01.561Z"
+---
+
+## Status
+
+✅ Accepted
+
+## Context
+
+The Analytical Platform will need a way to verify users and provide access to resources.
+We want to simplify access for users by reducing the number of identities they need and places to request access to things due to that.
+
+We do not want to run an identity service.
+
+## Decision
+
+We will use [EntraID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id) (formerly AzureAD) for [Identity and Access Management](https://en.wikipedia.org/wiki/Identity_management) (IDAM).
+Our users are already using a `@justice.gov.uk` account as their primary login.
+Our users can take advantage of their existing identity to gain access to the Analytical Platform and access services.
+
+## Consequences
+
+- We will not have to run an identity service and managing logging and security of that system
+- We won't be managing our identity service, we need to work with the end user compute team to improve identity operations (version and automate changes)
+- Reduce our support requirements for joiners, movers and leavers(JML) e.g. issues with multi factor authentication and password resets
+- Guest accounts are possible, but not managed which means we will need an alternative solution
+- There is no systematic way to create and manage EntraID groups to provide authN, we will need to work with end user compute team.
+- Cross government EntraID federation is not yet formalised, but in the future we could give other departments access to resources with their existing credentials
+- We can look to unlock [SCIM](https://docs.github.com/en/enterprise-cloud@latest/admin/identity-and-access-management/provisioning-user-accounts-for-enterprise-managed-users/configuring-scim-provisioning-for-enterprise-managed-users) to create, manage, and deactivate GitHub accounts based on [EntraID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id) group membership

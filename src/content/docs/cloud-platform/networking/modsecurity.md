@@ -1,0 +1,279 @@
+---
+title: ModSecurity - Web Application Firewall
+last_reviewed_on: 2025-04-24
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: networking/modsecurity.html.md.erb
+ingested_at: "2026-04-09T10:46:00.218Z"
+owner_slack: "#cloud-platform"
+---
+
+> #### Quick Start
+> We have a dedicated ingress-controller with ModSecurity enabled (use `modsec` for production workloads and `modsec-non-prod` for non-production workloads).
+>
+> To enable a WAF, point your application to this ingress-controller, use the following annotations and ingressClassName on your ingress manifest file:
+>
+>```
+>apiVersion: networking.k8s.io/v1
+>kind: Ingress
+>metadata:
+>  name: <ingress-name>
+>  namespace: <namespace-name>
+>  annotations:
+>    nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+>    nginx.ingress.kubernetes.io/modsecurity-snippet: |
+>      SecRuleEngine On
+>      SecDefaultAction "phase:2,pass,log,tag:github_team=<my-great-team-name>"
+>spec:
+>  ingressClassName: modsec-non-prod
+>```
+
+### Introduction
+
+#### What is a Web Application Firewall (WAF)?
+
+A Web Application Firewall or WAF helps protect web applications by filtering and monitoring HTTP traffic between a web application and the Internet. A WAF is a [layer 7](https://en.wikipedia.org/wiki/OSI_model) defense and is one of the most common means of protecting against malicious web application security flaws at the application layer. However, it must be noted that a WAF is not designed and does not protect against all types of attacks. There are 5 phases of modsecurity:
+
+1. Request headers (REQUEST_HEADERS)
+1. Request body (REQUEST_BODY)
+1. Response headers (RESPONSE_HEADERS)
+1. Response body (RESPONSE_BODY)
+1. Logging (LOGGING)
+
+You can view logs for each phase by tagging as shown above. Due to a limitation in the nginx modsecurity connector when currently can't accurately provide protection and analysis on response bodies https://github.com/owasp-modsecurity/ModSecurity-nginx/issues/254
+
+#### ModSecurity
+
+[ModSecurity](https://github.com/SpiderLabs/ModSecurity) is an open source, cross-platform web application firewall (WAF) developed by Trustwave's SpiderLabs. It has a robust event-based programming language which provides protection from a range of attacks against web applications and allows for HTTP traffic monitoring and logging.
+
+For the Cloud Platform, ModSecurity has been configured as an opt-in feature. New and current applications will require a specific set of annotations to be added to their ingress manifest file.
+
+##### Upgrade strategy
+
+We have 2 modsec classes, please use the appropriate class for your workload (`modsec` for production and `modsec-non-prod` for non prod workloads). We separate classes for performance, stability and to facilitate rolling out upgrades. The rules which modsec checks requests against is constantly evolving, it's not uncommon for a new rule to block traffic which previously was allowed, for this reason we upgrade modsecurity in steps:
+
+1. Notify the [#modsecurity-community](https://moj.enterprise.slack.com/archives/C07RG27NZAP) of the upgrade
+1. Upgrade the `modsec-non-prod` class
+1. Wait 2 weeks for users to identify any issues and raise them or fix them
+1. Roll out the upgrade to production workloads on the `modsec` class
+
+### Ingress Annotations
+
+We have a dedicated ingress-controller with ModSecurity enabled separate from the default ingress-controller.
+To point your application to the ModSec ingress-controller, add the following to your ingress `spec` field:
+
+```yaml
+ingressClassName: modsec-non-prod
+```
+
+To enable ModSecurity for your application, add the following annotation to your ingress manifest file:
+
+```yaml
+nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+```
+
+If you intend to run in "DetectionOnly" mode to monitor requests, you must add the following lines to track down your requests in [opensearch]. We set `SecAuditEngine On` as by default we have it set to `RelevantOnly` which only logs warnings and errors [see here for more details](https://github.com/SpiderLabs/ModSecurity/wiki/Reference-Manual-%28v3.x%29#user-content-SecAuditEngine).
+
+```yaml
+nginx.ingress.kubernetes.io/modsecurity-snippet: |
+  SecAuditEngine On
+  SecRuleEngine DetectionOnly
+  SecDefaultAction "phase:2,pass,log,tag:github_team=<my-great-team-name>,tag:<your_random_tag_name>=<your_random_identifier>"
+```
+
+
+The above annotation enables ModSecurity for the ingress on the nginx ingress-controller in detection only mode. There is no disruptive action if a critical rule triggers, but it is logged in [opensearch]. The `SecRuleEngine` defaults to `DetectionOnly` Mode and the tags help you to find the logs in opensearch.
+
+Adding the annotation below, `SecRuleEngine On` configures ModSecurity to actively block traffic classed as malicious using Anomaly Scoring:
+
+```yaml
+nginx.ingress.kubernetes.io/modsecurity-snippet: |
+      SecRuleEngine On
+      SecDefaultAction "phase:2,pass,log,tag:github_team=<my-great-team-name>"
+```
+The `SecRuleEngine On` configures ModSecurity to actively block traffic classed as malicious using Anomaly Scoring.
+
+`SecDefaultAction` adds a tag to the modsec logs, we use this later to set up document level security in opensearch which allows you to view logs based github teams that you are a member of.
+
+```yaml
+nginx.ingress.kubernetes.io/modsecurity-transaction-id: "$request_id"
+```
+The above annotation is optional, but it can be used to pass transactionIDs from nginx.
+
+
+Example:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: <ingress-name>
+  namespace: <namespace-name>
+  annotations:
+    external-dns.alpha.kubernetes.io/set-identifier: <ingress-name>-<namespace-name>-<colour>
+    external-dns.alpha.kubernetes.io/aws-weight: "100"
+    nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+    nginx.ingress.kubernetes.io/modsecurity-snippet: |
+      SecRuleEngine On
+      SecDefaultAction "phase:2,pass,log,tag:github_team=<my-great-team-name>"
+spec:
+  ingressClassName: modsec-non-prod
+  tls:
+  - hosts:
+    - <application_url>
+  rules:
+  - host: <application_url>
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+          backend:
+            service:
+              name: app-service
+              port:
+                name: 8080
+```
+(Note - Please change the `ingress-name` and `namespace-name` values in the above example. The `colour` should be `green` for ingress in EKS `live` cluster)
+
+### Logging
+
+All disruptive actions are logged in the ModSecurity audit log file and the error log for for nginx ingress-controller.
+Fluent-bit is used to ship error logs are sent to OpenSearch and audit logs containing more details are sent to the modsec opensearch dashboard.
+
+To view your modsec ingress logs, log into [OpenSearch][opensearch-app-logs], select index `live_kubernetes_ingress*` and search for `ModSecurity`. You can then narrow down the search with `host: <your hostname>`.
+
+Error Log Example:
+
+```
+2019/01/01 11:00:00 [error] 12647#12647: *1158975 [client 12.123.1.12] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge'
+ with parameter `5' against variable `TX:ANOMALY_SCORE' (Value: `5' ) [file "/etc/nginx/owasp-modsecurity-crs/rules/
+ REQUEST-949-BLOCKING-EVALUATION.conf"] [line "01"] [id "00001"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""]
+ [severity "2"] [ver ""] [maturity "0"] [accuracy "0"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag
+ "attack-generic"] [hostname "12.123.1.12"] [uri "/"] [unique_id "1663242265"] [ref ""],
+client: 12.123.1.12, server: test-ingress.url, request: "GET /?exec=/bin/bash HTTP/2.0", host: "test-ingress.url"
+```
+
+To get the detailed modsec audit log for a malicious event transaction, do a search using the `unique_id` value from the above search result in the [modsec OpenSearch dashboard][opensearch]. An example of this [modsec unique_id search][opensearch-unique-id-example]
+
+### OWASP Rules
+
+**These rules are constantly changing and evolving to keep up with changing threats**
+
+The [OWASP ModSecurity Core Rule Set (CRS)](https://coreruleset.org/faq/) is a set of generic attack detection rules for use with ModSecurity. These rules are enabled on the ingress-controller level on the dedicated ModSec ingress-controller. The CRS aims to protect web applications from a wide range of attacks, including the OWASP Top Ten, with a minimum of false alerts. The CRS provides protection against many common attack categories, including:
+
+ - SQL Injection (SQLi)
+ - Cross Site Scripting (XSS)
+ - Local File Inclusion (LFI)
+ - Remote File Inclusion (RFI)
+ - PHP Code Injection
+ - Shellshock
+ - Unix/Windows Shell Injection
+ - Session Fixation
+ - Scripting/Scanner/Bot Detection
+ - Metadata/Error Leakages
+
+#### Paranoia Level
+
+The Paranoia Level (PL) setting allows you to choose the desired level of rule checks. For the Cloud Platform implementation, this has been set to PL1. For more information on Paranoia Levels, please go to the `What are paranoia levels, and which level should I choose?` section [here](https://coreruleset.org/faq/)
+
+#### Anomaly Scoring Mode
+
+Traditional Detection or Passive Mode is the most basic operating mode where all of the rules are run as individual entities. In this mode, no intelligence is shared between rules and each rule has no information about any previous rule matches. That is to say, in this mode, if a rule triggers, it will execute any disruptive/logging actions specified on the current rule.
+
+Anomaly scoring mode implements the concept of Collaborative Detection and Delayed Blocking. Rule logic has been set to decouple the inspection/detection from the blocking functionality. The individual rules can be run so that the detection remains, however instead of applying any disruptive action at that point, the rules will contribute to a transactional anomaly score collection. In addition, each rule will also store meta-data about each rule match (such as the Rule ID, Attack Category, Matched Location and Matched Data) for later logging.
+For more information in anomaly scoring, click [here](https://coreruleset.org/docs/2-how-crs-works/2-1-anomaly_scoring/)
+
+#### Sensitive logs
+
+Audit log is quite large as it logs everything about the request. The current Modsec ingress-controller is configured with [`SecAuditLogParts AEFHKZ`][modsec-config] to be logged in the error logs. This will log the following parts of the request:
+
+```
+A	Audit log header (mandatory)
+E	Response body
+F	Response headers
+H	Audit log trailer, which contains additional data
+K	Contains a list of all rules that matched for the transaction
+Z	Final boundary (mandatory)
+```
+
+#### False Positives
+
+OWASP Rules is a set of generic attack detection rules and cover a wide range of attacks. This means that some rules may block some legitimate requests giving false positives.
+If you believe that a rule is blocking some legitimate requests, then you can set the rule to be ignored for your ingress by setting
+the `SecRuleRemoveById` to the modsecurity-snippet annotation. For example:
+
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: <ingress-name>
+  namespace: <namespace-name>
+  annotations:
+    external-dns.alpha.kubernetes.io/set-identifier: <ingress-name>-<namespace-name>-<colour>
+    external-dns.alpha.kubernetes.io/aws-weight: "100"
+    nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+    nginx.ingress.kubernetes.io/modsecurity-snippet: |
+      SecRuleEngine On
+      SecDefaultAction "phase:2,pass,log,tag:github_team=<my-great-team-name>"
+      SecRuleRemoveById 00001
+spec:
+  tls:
+    ingressClassName: modsec-non-prod
+  - hosts:
+    - <application_url>
+  rules:
+  - host: <application_url>
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+          backend:
+            service:
+              name: app-service
+              port:
+                name: 8080
+
+```
+
+Further reading:
+
+[https://www.netnea.com/cms/apache-tutorial-7_including-modsecurity-core-rules/](https://www.netnea.com/cms/apache-tutorial-7_including-modsecurity-core-rules/)
+
+## Accessing your modsec logs
+
+Pre-requisites:
+
+1. You have tagged your ingress with your github team name [see here](#ingress-annotations)
+1. You are a member of the same github team that you are trying to access
+
+To prevent PII from leaking, we restrict the logs you can access. This access is based on the github team you tagged your ingress with and the github teams you are a member of. This information is mapped as you login from github to opensearch; you will only be able to view logs which are tagged with a github team which you are a member of.
+
+Login [to the Modsec Audit logs Opensearch](https://logs.cloud-platform.service.justice.gov.uk/_dashboards) to view your logs.
+
+#### Debugging modesec rules
+
+The modsec debug log is a useful troubleshooting tool, however there is no separation between users' logs and there can be a lot of debug logs, so only enable debug logging for a short time and it's extremely important to turn off debugging when you're finished to reduce noise for other users who may be debugging. Another reason to ensure debugging is turned off is that debug logs are very verbose and will incur a performance cost. You can expect in excess of 50 debug log messages (each message is an I/O operation) and at least 7 KB of data for an average transaction. Cloud Platform reserves the right to turn off debugging entirely if these guidelines are not being respected.
+
+With that said you can enable debugging on your service with the following snippet in your ingress:
+
+```
+nginx.ingress.kubernetes.io/modsecurity-snippet: |
+  SecRuleEngine On
+  SecDebugLogLevel 4
+```
+
+You have 9 log levels to choose from and they can be found [in the modsec handbook](https://github.com/owasp-modsecurity/ModSecurity/wiki/Reference-Manual-%28v3.x%29#secdebugloglevel). Once you've triggered some debug logs you can find them under the [`live_k8s_modsec_ingress_debug*` index in OpenSearch](https://logs.cloud-platform.service.justice.gov.uk/_dashboards/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-15m,to:now))&_a=(columns:!(_source),filters:!(),index:'360b2e80-a8ee-11ef-a584-3f38510067b9',interval:auto,query:(language:kuery,query:''),sort:!())). Use the `debug_uid` field to group all of your logs from a request together.
+
+Debug logs will be deleted after 14 days.
+
+Further modsec debug logging reading can be found in this [handbook](https://www.feistyduck.com/library/modsecurity-handbook-2ed-free/online/ch04-logging)
+
+[opensearch-app-logs]: https://app-logs.cloud-platform.service.justice.gov.uk/_dashboards/app/data-explorer/discover
+[opensearch]: https://logs.cloud-platform.service.justice.gov.uk/_dashboards
+[kibana-search-example]: https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-60m,to:now))&_a=(columns:!(_source),filters:!(),index:'8a728bc0-00eb-11ec-9062-27aa363b66a2',interval:auto,query:(language:kuery,query:'%22ModSecurity%22%20and%20%22host:%20%22'),sort:!(!('@timestamp',desc)))
+[opensearch-unique-id-example]: https://logs.cloud-platform.service.justice.gov.uk/_dashboards/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-15m,to:now))&_a=(columns:!(_source),filters:!(),index:b95d8900-dd15-11ed-87c8-170407f57c9c,interval:auto,query:(language:kuery,query:'transaction.unique_id:%20*'),sort:!())
+[modsec-config]: https://github.com/ministryofjustice/cloud-platform-terraform-ingress-controller/blob/main/templates/modsecurity.conf#L231
+[modsecurity-handbook]: https://www.feistyduck.com/library/modsecurity-handbook-free/online/ch04-logging.html
+[sensitive-info]: https://coreruleset.org/docs/concepts/false_positives_tuning/#sensitive-information-and-regulatory-compliance

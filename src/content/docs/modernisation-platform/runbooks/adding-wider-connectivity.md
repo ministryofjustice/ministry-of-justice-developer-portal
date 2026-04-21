@@ -1,0 +1,56 @@
+---
+owner_slack: "#modernisation-platform"
+title: Adding Wider Connectivity to the Modernisation Platform
+last_reviewed_on: 2026-01-23
+review_in: 6 months
+source_repo: ministryofjustice/modernisation-platform
+source_path: runbooks/adding-wider-connectivity.html.md.erb
+ingested_at: "2026-04-09T10:46:00.950Z"
+---
+
+## Introduction
+
+The Modernisation Platform connects the different core platform VPCs and core networking VPCs using [AWS Transit Gateway](https://aws.amazon.com/transit-gateway/).
+
+In order to expand connectivity beyond the Modernisation Platform, we have [peered](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-peering) the Modernisation Platform Transit Gateway (MP TGW) to the central [MoJ PTTP Transit Gateway](https://github.com/ministryofjustice/deployment-tgw) (Prison Technology Transformation Project) (PTTP TGW).
+
+Whilst we could directly connect things to our Modernisation Transit Gateway, this would end up with lots of cross networking between platforms and additional complexity. It makes sense to use the PTTP TWG as a central hub for connectivity across the MoJ.
+
+## Required Routing
+
+### Egress from the MP TGW to PTTP TGW
+
+All private traffic that is not destined for a Modernisation Platform VPC is routed through to the PTTP TGW.
+
+Additional non private IP ranges that need to be routed through to the PTTP TGW should be added [here](https://github.com/ministryofjustice/modernisation-platform/blob/main/terraform/environments/core-network-services/transit_gateway_connections.tf#L52)
+
+### From PTTP TGW to the new connectivity location
+
+A static route to the correct [TGW attachment](https://docs.aws.amazon.com/vpc/latest/tgw/working-with-transit-gateways) should be added under `attachment_static_routes` [here](https://github.com/ministryofjustice/deployment-tgw/blob/master/env/production/eu-west-2.yml).
+
+- `rtb_name` (route table name) should be `tgw-rtb-modplatform`. This is the route table associated with the MP TGW peering connection.
+- `destination` should be the CIDR range of the new connectivity location.
+- `attach_id` is the ID of the TGW attachment for the new location.
+
+The TGW attachment may be a VPC, VPN, Direct Connect or another Transit Gateway. If it is another Transit Gateway, you will need additional routes in that gateway (see the Cloud Platform example below).
+
+### From PTTP TGW back to the MP TGW
+
+A route to the MP TGW must be added in the relevant route table for the PTTP TGW attachment. This should be added under `peering_static_routes` [here](https://github.com/ministryofjustice/deployment-tgw/blob/master/env/production/eu-west-2.yml).
+
+- `rtb_name` is the name of the relevant route table. This is the route table associated with the attachment.
+- `destination` should be the CIDR range of the Modernisation live or non live CIDR ranges.
+- `peering_name` should be `PTTP-ModernisationPlatform`
+
+Most PTTP TGW attachments come in to the `tgw-rtb-security` or the `tgw-rtb-probation` route tables, the Modernisation Platform ranges have been added to these already so there is no need to add them again, but new tables may be added in the future.
+
+## Diagram
+
+A high level diagram of the wider MoJ networking can be found [here](https://drive.google.com/file/d/1w8dZs5vZOoy0dvCnRr5P6GHc3VQRdwLq/view?usp=sharing).
+
+## Other Steps
+
+Remember to do the following in addition to the above in the Modernisation Platform to allow traffic:
+
+- Add appropriate [Firewall rules](../concepts/networking/network-firewall)
+- Add allow rules to the appropriate Security Groups

@@ -1,0 +1,62 @@
+---
+title: Removing an unneeded namespace
+last_reviewed_on: 2026-02-25
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: deploying-an-app/cleaning-up.html.md.erb
+ingested_at: "2026-04-09T10:46:00.201Z"
+owner_slack: "#cloud-platform"
+---
+
+When you have finished with a namespace, please clean it up (i.e. remove it).
+
+This helps to keep the cloud platform repositories well-organised, and speeds
+up deployments and changes to the cluster (because the build process doesn't
+have to spend time managing unnecessary resources). It also deletes the
+associated AWS resources, and helps to keep our hosting costs down.
+
+## Preparation
+
+### Prepare ECR
+
+If you have any ECR resources in your namespace which still contain images,  Concourse 
+will fail when trying to delete the registry. You can either delete the images manually, 
+or prepare the ECR for deletion by doing the following:
+
+- Set the [`deletion_protection = false`](https://github.com/ministryofjustice/cloud-platform-terraform-ecr-credentials/blob/main/examples/ecr.tf)
+argument in your ECR module code.
+- Raise a PR to apply this configuration change to your ECR resource.
+- Merge the PR, and proceed with the namespace deletion process.
+
+### Prepare pipelines
+
+If you have set up a CI/CD pipeline, which deploys into your namespace,
+then this should be deleted first, so that anything you delete later is not
+immediately recreated by your build pipeline.
+
+## Namespace deletion
+
+> IMPORTANT: It is **your responsibility as namespace/PR owner** to ensure that no other
+environments depend upon access to your ECR resources.
+
+To delete a namespace and all its associated AWS resources, simply raise a
+[PR] which deletes the associated folder from the [cloud-platform-environments][envrepo].
+
+So, if your namespace is called `mynamespace`, then you need to raise a [PR]
+deleting the folder:
+
+     namespaces/live.cloud-platform.service.justice.gov.uk/mynamespace
+
+...and all its contents, from the [cloud-platform-environments][envrepo] repository.
+
+> IMPORTANT: **The PR must delete the folder, not rename it.** If the PR renames the folder
+or items in it, the destroy process will not work.
+
+Merging this [PR] will trigger the [destroy-deleted-namespaces Pipeline](/docs/cloud-platform/other-topics/concourse-pipelines),
+which will delete all of your non production (with namespace annotation "cloud-platform.justice.gov.uk/is-production = false") namespace's AWS resources, followed by the
+namespace itself. For production namespaces, the cloud-platform team will get an alert to manually delete the namespace.
+
+[envrepo]: https://github.com/ministryofjustice/cloud-platform-environments
+[PR]: https://help.github.com/en/articles/about-pull-requests
+[destroy-deleted-namespaces]: https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/environments-live/jobs/destroy-deleted-namespaces

@@ -1,0 +1,161 @@
+---
+title: Adding AWS resources to your environment
+last_reviewed_on: 2025-07-18
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: deploying-an-app/add-aws-resources.html.md.erb
+ingested_at: "2026-04-09T10:46:00.199Z"
+owner_slack: "#cloud-platform"
+---
+
+Through the [cloud-platform-environments][env-repo] repository, you can provision AWS resources for your environments. This is done using Terraform and more specifically, terraform modules the Cloud Platform team provides.
+
+The documentation for the modules lives in each module's repository.
+
+## Available modules
+
+| Name                                                                                                                   | Description                                                                                        |
+| ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| [CloudFront](https://github.com/ministryofjustice/cloud-platform-terraform-cloudfront)                                 | Creates a CloudFront distribution to serve objects from S3                                         |
+| [Database Migration Service (DMS)](https://github.com/ministryofjustice/cloud-platform-terraform-dms)                  | Creates a DMS replication instance to move data from another database to one inside Cloud Platform |
+| [DynamoDB cluster](https://github.com/ministryofjustice/cloud-platform-terraform-dynamodb-cluster)                     | Creates a non-global DynamoDB cluster                                                              |
+| [Elastic Container repository](https://github.com/ministryofjustice/cloud-platform-terraform-ecr-credentials)          | Creates a container image repository                                                               |
+| [ElastiCache for Redis cluster](https://github.com/ministryofjustice/cloud-platform-terraform-elasticache-cluster)     | Creates a Redis cluster                                                                            |
+| [Kubernetes: IAM role for service accounts (IRSA)](https://github.com/ministryofjustice/cloud-platform-terraform-irsa) | Creates an IAM role for a Kubernetes service account                                               |
+| [Kubernetes: service account](https://github.com/ministryofjustice/cloud-platform-terraform-serviceaccount)            | Creates a Kubernetes service account, role, and rolebinding within a namespace                     |
+| [Kubernetes: service pod](https://github.com/ministryofjustice/cloud-platform-terraform-service-pod)                   | Creates a pod in a namespace to access AWS services using the AWS CLI                              |
+| [OpenSearch](https://github.com/ministryofjustice/cloud-platform-terraform-opensearch)                                 | Creates an OpenSearch domain                                                                       |
+| [Pushgateway](https://github.com/ministryofjustice/cloud-platform-terraform-pushgateway)                               | Creates a [Prometheus Pushgateway](https://prometheus.io/docs/instrumenting/pushing/)              |
+| [RDS Aurora cluster](https://github.com/ministryofjustice/cloud-platform-terraform-rds-aurora)                         | Creates an RDS Aurora cluster                                                                      |
+| [RDS database instance](https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance)                    | Creates an RDS instance (Postgres, MySQL, MariaDB, MSSQL)                                          |
+| [S3 bucket](https://github.com/ministryofjustice/cloud-platform-terraform-s3-bucket)                                   | Creates an S3 bucket                                                                               |
+| [Secrets Manager](https://github.com/ministryofjustice/cloud-platform-terraform-secrets-manager)                       | Creates and manages a secret in Secrets Manager                                                    |
+| [SNS topic](https://github.com/ministryofjustice/cloud-platform-terraform-sns-topic)                                   | Creates an SNS topic                                                                               |
+| [SQS queue](https://github.com/ministryofjustice/cloud-platform-terraform-sqs)                                         | Creates an SQS queue                                                                               |
+
+## Usage
+
+There are two ways to create Terraform resources for your namespace:
+
+- Manually create a Terraform manifest.
+- Using the [cloud-platform] CLI tool.
+
+### Manually create a Terraform manifest
+
+In the [cloud-platform-environments][env-repo], `cd` into your namespace and create a new directory called `resources` (if it doesn't already exist). Inside this directory create a file with a sensible filename i.e. `rds.tf` and create a call to the module you require.
+
+For example, if you wish to create an [RDS mssql instance][rds-mssql-instance] or an [RDS mysql instance][rds-mysql-instance] or an [RDS postgresql instance][rds-postgresql-instance], go to the example in the module's repository and populate your `rds-.tf` file using the example as a guide.
+
+### Use the cloud-platform cli
+
+At time of writing, the following resources can be created by the CLI tool:
+
+* rds
+* s3
+* ecr
+* serviceaccount
+
+[Download][download-cli] the cloud-platform command line tool.
+
+In the [cloud-platform-environments][env-repo], `cd` into your namespace and run the following command. This will create an RDS manifest in the `resources` directory:
+
+```
+cloud-platform environment rds create
+```
+
+Each example will have some global terraform configuration defined, however, this should only be declared once, regardless of the number of modules used:
+
+```
+terraform {
+  backend "s3" {}
+}
+
+provider "aws" {
+  region = "eu-west-1"
+}
+```
+
+Additionally, some examples might define variables. Again, these should only be declared once per namespace:
+
+```
+variable "cluster_name" {}
+
+variable "cluster_state_bucket" {}
+```
+
+The main README file of each module repository will list all the available configuration options that can be passed to the module.
+
+### Outputs
+
+Each module will have its own outputs. These expose useful information, such as endpoints, credentials etc. The module examples all use a common approach: they employ the `kubernetes_secret` terraform resource to push the outputs straight into your namespace in the form of a `Secret` which you could then extract information from or directly reference in `Pods`.
+
+This is currently the only supported way of accessing terraform outputs.
+
+See [this article](/documentation/deploying-an-app/add-secrets-to-deployment.html#using-the-secret-in-your-applications) for instructions on how to use these secrets in your applications.
+
+### Versioning
+
+Only the latest version of a Cloud Platform terraform module may be used. A github action runs on each pr and will fail if the latest version isn't used, you can check the failed action for the latest version.
+
+The Cloud Platform team will upgrade all existing instances of a module, whenever a new version is released, as per this [architecture decision record]
+
+Please check the version badge for the module you are using (visit the web page of the module's github repository - the version badge will be just below the README heading), and make sure you are using the latest version of the module in your configuration, by specifying the `ref` attribute in the query string of the source URL:
+
+```
+module "my_module" {
+  source = "https://github.com/ministryofjustice/cloud-platform-terraform-ecr-credentials?ref=1.0"
+}
+```
+
+Refer to the [terraform documentation on modules][tf-modules-docs] for more information on usage.
+
+### Monitoring AWS Resources
+
+All resources are monitored by AWS CloudWatch by default. We use [CloudWatch Exporter](https://github.com/prometheus/cloudwatch_exporter) to export a number of the metrics for the [Terraform Modules][tf-modules-list] we provide into Prometheus.
+
+To view the current set of metrics available:
+
+* Log into [Prometheus]
+* Click on 'insert metric at cursor'
+* type 'aws_'
+
+You can view all metrics AWS make available [here](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-cloudwatch-metrics)
+
+### Adding your own terraform to create AWS resources
+
+If you need to create AWS resources that are not covered by the modules provided by the Cloud Platform team,
+you can contact us on the [#ask-cloud-platform](https://mojdt.slack.com/messages/C57UPMZLY/) Slack channel
+or [raise a support](https://github.com/ministryofjustice/cloud-platform/issues/new?template=cloud-platform-support-request.md&labels=support%20team) ticket to discuss your requirements.
+
+There are some resources that we will not allow you to create, such as
+
+- `Lambda functions` which is discussed in the [ADR](https://github.com/ministryofjustice/cloud-platform/blob/main/architecture-decision-record/037-serverless.md)
+- your own terraform module
+
+If the decision is to allow you to create your own terraform, consider the following:
+
+- all terraform code must be stored in the [cloud-platform-environments][env-repo] repository
+- iam policy permissions must be locked down to only allow access to those specific AWS resources
+- the team who created those terraform code owns it and hence that team is responsible for maintaining it
+- Cloud Platform team can provide console access if those resources support [ABAC](https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_attribute-based-access-control)
+
+Deploying the terraform code is the same as deploying the terraform modules provided by the Cloud Platform team.
+Create a PR to the [cloud-platform-environments][env-repo] repository, make sure the checks are passed.
+Once the PR is merged, the [concourse pipeline](https://concourse.cloud-platform.service.justice.gov.uk/)
+will run and deploy the terraform code.
+
+>Note: The pipeline may need permissions to create those resources. If that is the case, please contact us on
+the [#ask-cloud-platform](https://mojdt.slack.com/messages/C57UPMZLY/) Slack channel
+
+
+[env-repo]: https://github.com/ministryofjustice/cloud-platform-environments/
+[tf-modules-list]: https://github.com/ministryofjustice/cloud-platform#terraform-modules
+[tf-modules-docs]: https://www.terraform.io/language/modules/develop
+[cloud-platform]: ../getting-started/cloud-platform-cli.html
+[architecture decision record]: https://github.com/ministryofjustice/cloud-platform/blob/main/architecture-decision-record/015-Keeping-Terraform-modules-up-to-date.md#keeping-terraform-modules-up-to-date
+[Prometheus]: https://prometheus.cloud-platform.service.justice.gov.uk/graph
+[rds-mssql-instance]: https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance/blob/main/examples/rds-mssql.tf
+[rds-mysql-instance]: https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance/blob/main/examples/rds-mysql.tf
+[rds-postgresql-instance]: https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance/blob/main/examples/rds-postgresql.tf
+[download-cli]: https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html

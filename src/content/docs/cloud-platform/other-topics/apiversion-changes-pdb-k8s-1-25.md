@@ -1,0 +1,76 @@
+---
+title: Updating PodDisruptionBudget API version for Cloud Platform - removed Kubernetes v1.25
+last_reviewed_on: 2025-05-01
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: other-topics/apiversion-changes-pdb-k8s-1-25.html.md.erb
+ingested_at: "2026-04-09T10:46:00.221Z"
+owner_slack: "#cloud-platform"
+---
+
+The `policy/v1beta1` API version of PodDisruptionBudget (PDB) is deprecated as of Kubernetes release v1.21, and will no longer be served as of v1.25.
+
+Cloud Platform users must ensure any PodDisruptionBudget manifests are migrated to use the `policy/v1` API version, which is supported on our current cluster version (v1.32 as of writing).
+
+Further details can be found within the [Kubernetes deprecation guide](https://kubernetes.io/docs/reference/using-api/deprecation-guide/#poddisruptionbudget-v125)
+
+### How to check and replace the deprecated apiVersion
+
+Prerequisite: Install [pluto](https://github.com/FairwindsOps/pluto) to find out whether any of the manifest has any of the deprecated APIs.
+
+```brew install FairwindsOps/tap/pluto```
+
+To check if you are using deprecated apiVersion, run the following command:
+
+`pluto detect-all-in-cluster --namespace <your namespace>`
+
+If there is any deprecated apiVersion of PodDisruptionBudget, the output will look like this:
+
+```bash
+0928 17:32:43.721283   34578 request.go:697] Waited for 1.045015006s due to client-side throttling, not priority and fairness, request: GET:https://DF366E49809688A3B16EEC29707D8C09.gr7.eu-west-2.eks.amazonaws.com/apis/mutations.gatekeeper.sh/v1beta1?timeout=32s
+E0928 17:32:44.561983   34578 discovery_api.go:117] Failed to retrieve: /v1, Resource=bindings the server does not allow this method on the requested resource
+E0928 17:32:44.791255   34578 discovery_api.go:117] Failed to retrieve: authorization.k8s.io/v1, Resource=localsubjectaccessreviews the server does not allow this method on the requested resource
+NAME             KIND                      VERSION               REPLACEMENT      REMOVED   DEPRECATED   REPL AVAIL
+helloworld-pdp   PodDisruptionBudget       policy/v1beta1        policy/v1        true      true         true
+
+```
+
+For resources deployed using helm chart, the above list shows that the helm manifest deployed has the deprecated API version irrespective of the resource exists in the cluster.
+
+Update `apiVersion` as the following example and apply the manifest:
+
+```
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: helloworld-pdp
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: helloworld-rubyapp
+```
+
+Note: A behavioural change in switching from `policy/v1beta1` to `policy/v1` is noted in the documentation as follows:
+
+> an empty spec.selector ({}) written to a policy/v1 PodDisruptionBudget selects all pods in the namespace (in policy/v1beta1 an empty spec.selector selected no pods). An unset spec.selector selects no pods in either API version.
+
+Thus a PDB defined like follows:
+
+```
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: helloworld-pdp
+spec:
+  minAvailable: 1
+  selector: {}
+```
+will apply the configuration to all pods in your namespace.
+
+Run the following command to check if the manifest is updated:
+
+`pluto detect-all-in-cluster --namespace <your namespace>`
+
+For additional information on creating PodDisruptionBudgets see [here](/docs/cloud-platform/other-topics/pod-disruption-budgets-cluster-maintenance)

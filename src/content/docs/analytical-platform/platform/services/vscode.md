@@ -1,0 +1,27 @@
+---
+owner_slack: "#Analytical-platform-notifications"
+title: Visual Studio Code
+last_reviewed_on: 2024-12-09
+review_in: 6 months
+source_repo: ministryofjustice/analytical-platform
+source_path: platform/services/vscode.html.md.erb
+ingested_at: "2026-04-09T10:46:01.596Z"
+---
+
+🌱 _Visual Studio Code provides data scientists with powerful tools for coding, debugging, and managing data, including integrated support for Jupyter Notebooks_
+
+Visual Studio Code, also commonly referred to as VS Code, is a source-code editor developed by Microsoft for Windows, Linux, macOS and web browsers. Features include support for debugging, syntax highlighting, intelligent code completion, snippets, code refactoring, and embedded version control with Git.
+
+## Repositories
+
+| Repository | Description |
+| --- | --- |
+| [Visual Studio Code Image](https://github.com/ministryofjustice/analytical-platform-visual-studio-code) | Image for Visual Studio Code |
+| [Visual Studio Code Helm Chart](https://github.com/ministryofjustice/analytics-platform-helm-charts/tree/main/charts/vscode) | Helm Chart for Visual Studio Code |
+
+## Useful links
+
+| Link | Description |
+| --- | --- |
+| [Control Panel](https://controlpanel.services.analytical-platform.service.justice.gov.uk/) | Login page to the Analytical Platform |
+| [User Guidance Visual Studio Code](https://user-guidance.analytical-platform.service.justice.gov.uk/tools/visual-studio-code/) | Guidance on Visual Studio Code |

@@ -1,0 +1,223 @@
+---
+title: Publish prototypes on the web
+last_reviewed_on: 2025-08-05
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: getting-started/prototype-kit.html.md.erb
+ingested_at: "2026-04-09T10:46:00.213Z"
+owner_slack: "#cloud-platform"
+---
+
+You can share prototypes made with the [GOV.UK Prototype Kit] by publishing them on the web using an MoJ service called Cloud Platform.
+
+**Note - This process can only be used to deploy prototypes based on the [GOV.UK Prototype Kit]. This process will not work for any other types of apps e.g. Design History. If in any doubt please contact #ask-cloud-platform, or speak to your development team before you follow these instructions.**
+
+## Before you start
+
+To publish a prototype you'll need to:
+
+* be a member of at least one GitHub team in the [MoJ GitHub Organisation]
+* have the [Cloud Platform CLI] installed
+* have a local development environment including a terminal and a [git client]/[github desktop]
+
+### Assumptions
+
+We assume you will have:
+
+* a github repository in the [MoJ GitHub Organisation], with Gov.UK Prototype Kit code.
+* a latest prototype kit code build using Node.js.
+
+## 1. Copy (Clone) the `environments` repository
+
+To create resources on the Cloud Platform, you need to raise a pull request
+against the [cloud-platform-environments] repository.
+
+Create a copy of the [cloud-platform-environments] repository:
+
+```bash
+$ git clone git@github.com:ministryofjustice/cloud-platform-environments.git
+$ cd cloud-platform-environments
+```
+
+## 2. Create your prototype kit environment
+
+In the Cloud Platform CLI run:
+
+```bash
+$ cloud-platform environment prototype create
+```
+
+You'll now be asked to provide some information for your prototype environment. The first prompt you'll see is:
+
+```
+Please choose a hostname for your prototype.
+This must consist only of lower-case letters, digits and
+dashes.
+```
+
+>**Note:** It is crucial that the hostname you provide matches the **_name of your prototype github repository_**, and that it **_does not clash with another namespace in the [cloud-platform-environments] repository_**. 
+
+This hostname value will be used as:
+
+* the [namespace] which will be created on the Cloud Platform
+* your prototype github repository name, to push the secrets required to access Cloud Platform from your github repository
+* the domain name your prototype kit will be published to
+
+For example, if you choose `my-prototype` as the name, the CLI will create:
+
+* a namespace on the Cloud Platform called `my-prototype`
+* configure your prototype github repository to create a hostname:
+
+```
+ https://my-prototype-main.apps.live.cloud-platform.service.justice.gov.uk/
+```
+
+## 3. Raise a PR
+
+After you have answered all the questions, the cloud-platform CLI will create
+several files in a folder called:
+
+```
+namespaces/live.cloud-platform.service.justice.gov.uk/[name you chose]
+```
+
+Create a new branch and add/commit the new folder to Git:
+
+```bash
+$ git checkout -b my-prototype
+$ git add .
+$ git commit -m "Added my-prototype prototype"
+```
+
+Push this branch to GitHub:
+
+```bash
+$ git push origin my-prototype
+```
+
+> Note: Please replace `my-prototype` in the commands above with the name you chose.
+
+And then raise a pull request (PR) by following the instructions that
+will appear on GitHub in the [cloud-platform-environments](https://github.com/ministryofjustice/cloud-platform-environments)
+repository.
+
+Once a member of the Cloud Platform team has approved your PR, merge it.
+
+When you merge the PR, the [Apply Pipeline](/docs/cloud-platform/other-topics/concourse-pipelines)
+will create your namespace and push the credentials required to publish the kit as github secrets in your GitHub repository.
+
+## 4. Create your prototype kit deployment files
+
+Create a copy of your prototype kit repository:
+
+```bash
+$ git clone git@github.com:ministryofjustice/<your-prototype-repository>.git
+$ cd <your-prototype-repository>
+$ git checkout main
+$ cloud-platform prototype deploy create
+```
+
+This will create the files to build and deploy your prototype kit to the environment you created in step 2 and 3.
+
+> The deployment files work only on the **latest version** of the prototype kit which we regularly update in the [moj-prototype-template]. Your deployment
+may break if your prototype kit is not the latest version.
+
+Use the instructions to [update your prototype kit] to latest version
+
+## 5. Push these files to github
+
+```bash
+$ git add .
+$ git commit -m "Add docker build and deployment files"
+$ git push origin main
+```
+
+If you don't have permissions to push directly to the main/default branch, create a branch and raise PR to have it approved and merge.
+
+Create a new branch and add/commit the files to Git:
+
+```bash
+$git checkout -b my-branch
+$ git add .
+$ git commit -m "Add docker build and deployment files"
+$ git push origin my-branch
+```
+
+Once these files are pushed to your github repository, the prototype kit will be deployed using the github action that is run by your repository.
+
+Look under "Actions" tab on your github repository UI for the progress of the deployment.
+
+Your prototype will be deployed in the below url:
+
+```
+https://<your-prototype-repository>-<main>.apps.live.cloud-platform.service.justice.gov.uk
+```
+
+## 6. Publish prototype kit for changes on a specific branch
+
+The github action file under `./github/workflows` and the continuos deployment filenames are generated based on the git branch you are in.
+
+To generate the files for a specific branch, checkout to the branch and run the same command
+
+For example, if you branch is called `tooling`,
+
+```bash
+$ git clone git@github.com:ministryofjustice/<your-prototype-repository>.git
+$ cd <your-prototype-repository>
+$ git checkout tooling
+$ cloud-platform prototype deploy create
+```
+
+The files generated for deploying in specific branch are as below:
+
+```
+./.github/workflows/cd-tooling.yaml
+kubernetes-deploy-tooling.tpl
+Dockerfile
+.dockerignore
+start.sh
+```
+
+> The docker build files `Dockerfile,.dockerignore, start.sh` work only on the **latest version** of the prototype kit which we regularly update in the [cloud-platform prototype resources]. Your deployment
+may break if your prototype kit is not the latest version.
+
+If you want to skip the docker build files when deploying to a branch, you can add a `--skip-docker-files` flag. For example:
+
+```bash
+$ cloud-platform prototype deploy create --skip-docker-files
+```
+
+## Branch deployment and cleanup
+
+When you create the deployment files using `step 5` for a branch, they are generated to deploy on that specific branch. If the branch is merged to the
+main branch, these deployment files will get merged as well. You can do the cleanup by deleting the files specifically created for that branch.
+
+## Deleting your published prototype
+
+When you no longer need your prototype to be published:
+
+> Note - These steps are to decommission the hosting infrastructure that your prototype is running on. This will **not** delete your prototype source code.
+
+1. raise a PR removing your namespace folder from the
+`cloud-platform-environments` repository, and wait for it to be approved by a
+member of the Cloud Platform team
+
+2. **immediately before you merge the PR** use the GitHub web interface to
+delete your repository
+
+3. merge the PR
+
+Your namespace will be removed from the Cloud Platform.
+
+[GOV.UK Prototype Kit]: https://govuk-prototype-kit.herokuapp.com/docs
+[MoJ GitHub Organisation]: https://github.com/orgs/ministryofjustice/teams
+[Cloud Platform CLI]: ./cloud-platform-cli.html
+[cloud-platform-environments]: https://github.com/ministryofjustice/cloud-platform-environments
+[namespace]: ./env-create.html
+[GitHub Actions]: https://github.com/features/actions
+[branch protection]: https://docs.github.com/en/github/administering-a-repository/about-protected-branches
+[github desktop]: https://docs.github.com/en/desktop
+[git client]: https://github.com/git-guides/install-git
+[cloud-platform prototype resources]: https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespace-resources-cli-template/resources/prototype/build
+[update your prototype kit]: https://prototype-kit.service.gov.uk/docs/update-to-latest-version

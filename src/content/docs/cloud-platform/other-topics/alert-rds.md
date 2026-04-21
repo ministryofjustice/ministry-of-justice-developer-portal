@@ -1,0 +1,79 @@
+---
+title: Creating alerts for RDS
+last_reviewed_on: 2025-07-18
+review_in: 6 months
+layout: google-analytics
+source_repo: ministryofjustice/cloud-platform-user-guide
+source_path: other-topics/alert-rds.html.md.erb
+ingested_at: "2026-04-09T10:46:00.220Z"
+owner_slack: "#cloud-platform"
+---
+
+### Overview
+
+Alertmanager allows you define your own alert conditions based on the [Prometheus expression language](https://prometheus.io/docs/prometheus/latest/querying/basics) expressions.
+
+The aim of this document is to cover the specifics of setting up alerting for RDS.
+
+### Prerequisites
+
+This guide assumes the following:
+
+* You have created a namespace for your application
+* You have an RDS instance defined in that namespace
+* You are already familiar with creating custom alerts, as explained [here](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts)
+* You know the RDS database identifier you want to monitor (which can be found in the RDS kubernetes secret in your namespace)
+
+### RDS metrics
+
+Prometheus gathers and exposes a few RDS metrics. Here is the full list:
+
+```
+aws_rds_cpuutilization_average
+aws_rds_database_connections_average
+aws_rds_free_storage_space_average
+aws_rds_free_storage_space_minimum
+aws_rds_free_storage_space_maximum
+aws_rds_freeable_memory_average
+aws_rds_read_iops_average
+aws_rds_read_latency_average
+aws_rds_write_iops_average
+aws_rds_write_latency_average
+```
+
+### An example
+
+This is an example of a PrometheusRule that triggers an alert if the amount of free space of an RDS instance drops below 1Gb:
+
+```yaml
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  namespace: <namespace>
+  labels:
+    role: alert-rules
+  name: prometheus-custom-rules-<application_name>
+spec:
+  groups:
+  - name: application-rules
+    rules:
+    - alert: RDSLowStorage
+        expr: aws_rds_free_storage_space_average{dbinstance_identifier="<YOUR_DB_ID"} offset 10m < 1000000000
+        for: 5m
+        labels:
+          severity: <SEVERITY>
+        annotations:
+          message: "[{{ environment|upper }}] RDS free storage space is less than 1GB"
+```
+
+- Run
+
+After creating a YAML file containing your prometheus rule, you can apply it like this:
+
+```
+kubectl apply -f prometheus-custom-rules-<application_name>.yaml -n <namespace>
+```
+
+> We recommend keeping your prometheus rule definitions in your namespace folder in the [environments repository]. This ensures that your rules will be recreated in the event that we ever need to reinstall prometheus.
+
+[environments repository]: https://github.com/ministryofjustice/cloud-platform-environments

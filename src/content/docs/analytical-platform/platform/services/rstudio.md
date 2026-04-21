@@ -1,0 +1,27 @@
+---
+owner_slack: "#Analytical-platform-notifications"
+title: RStudio
+last_reviewed_on: 2024-12-09
+review_in: 6 months
+source_repo: ministryofjustice/analytical-platform
+source_path: platform/services/rstudio.html.md.erb
+ingested_at: "2026-04-09T10:46:01.596Z"
+---
+
+🌱 _Integrated development environment (IDE) for R which integrates with git_
+
+RStudio IDE is an integrated development environment for R, a programming language for statistical computing and graphics.
+
+## Repositories
+
+| Repository | Description |
+| --- | --- |
+| [Analytical Platform RStudio](https://github.com/ministryofjustice/analytics-platform-rstudio) | RStudio Docker image. |
+| [RStudio helm chart](https://github.com/ministryofjustice/analytics-platform-helm-charts/tree/master/charts/rstudio). | Helm chart for RStudio |
+
+## Useful links
+
+| Link | Description |
+| --- | --- |
+| [Control Panel](https://controlpanel.services.analytical-platform.service.justice.gov.uk/) | Login page to the Analytical Platform |
+| [User Guidance RStudio](https://user-guidance.analytical-platform.service.justice.gov.uk/tools/create-a-derived-table/ide-set-up/index) | Guidance on RStudio |
