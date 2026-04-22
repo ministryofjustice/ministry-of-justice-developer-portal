@@ -94,7 +94,10 @@ export default async function DocPage({ params }: { params: Promise<Params> }) {
                 label: 'Last reviewed',
                 value: page.meta.lastReviewedOn ? formatLongDate(page.meta.lastReviewedOn) : null,
               },
-              { label: 'Review status', value: reviewStatus ? <ReviewBadge status={reviewStatus as ReviewStatus} /> : null },
+              {
+                label: 'Review status',
+                value: reviewStatus ? <ReviewBadge status={reviewStatus as ReviewStatus} /> : null,
+              },
               { label: 'Owner', value: page.meta.ownerSlack || null },
               {
                 label: 'Source',

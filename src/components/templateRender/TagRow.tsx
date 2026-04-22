@@ -14,7 +14,10 @@ export function TagRow({ kicker, categoryTag, status, children }: TagRowProps) {
   }
 
   return (
-    <div className="govuk-!-margin-bottom-3" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+    <div
+      className="govuk-!-margin-bottom-3"
+      style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}
+    >
       {kicker && <span className="govuk-caption-l">{kicker}</span>}
       {categoryTag && <span className="app-card__tag">{categoryTag}</span>}
       {status && <StatusTag status={status} />}

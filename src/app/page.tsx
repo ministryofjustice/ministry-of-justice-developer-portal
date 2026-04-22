@@ -37,22 +37,26 @@ const whatsNew = [
   {
     date: '2026-02-27',
     title: 'Developer Portal launched in Alpha',
-    description: 'The Ministry of Justice Developer Portal is now available for feedback. Explore documentation from Cloud Platform, Modernisation Platform, and Analytical Platform.',
+    description:
+      'The Ministry of Justice Developer Portal is now available for feedback. Explore documentation from Cloud Platform, Modernisation Platform, and Analytical Platform.',
   },
   {
     date: '2026-02-25',
     title: 'Cloud Platform User Guide updated',
-    description: 'New guidance on deploying containerised applications with GitHub Actions CI/CD pipelines.',
+    description:
+      'New guidance on deploying containerised applications with GitHub Actions CI/CD pipelines.',
   },
   {
     date: '2026-02-20',
     title: 'Modernisation Platform networking docs refreshed',
-    description: 'Updated documentation covering VPC configuration, transit gateway, and DNS resolution.',
+    description:
+      'Updated documentation covering VPC configuration, transit gateway, and DNS resolution.',
   },
   {
     date: '2026-02-15',
     title: 'API design standards published',
-    description: 'New cross-government standards for RESTful API design, versioning, and error handling.',
+    description:
+      'New cross-government standards for RESTful API design, versioning, and error handling.',
   },
 ];
 
@@ -63,8 +67,8 @@ export default function Home() {
         <div className="govuk-width-container">
           <h1 className="govuk-heading-xl app-hero__title">Ministry of Justice Developer Portal</h1>
           <p className="app-hero__description">
-            The central place for cross-government developers to discover products,
-            read documentation, and follow best practice guidelines.
+            The central place for cross-government developers to discover products, read
+            documentation, and follow best practice guidelines.
           </p>
           <div className="app-hero__search app-search">
             <SearchWidget />

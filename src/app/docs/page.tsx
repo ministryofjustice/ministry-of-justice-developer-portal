@@ -12,8 +12,8 @@ export default function DocsIndex() {
 
       <h1 className="govuk-heading-xl">Documentation</h1>
       <p className="govuk-body-l">
-        Technical documentation for our platforms, APIs, and tools. Documentation is
-        automatically synced from source repositories and kept up to date.
+        Technical documentation for our platforms, APIs, and tools. Documentation is automatically
+        synced from source repositories and kept up to date.
       </p>
 
       {sources.length > 0 ? (
@@ -36,8 +36,8 @@ export default function DocsIndex() {
       ) : (
         <div className="govuk-inset-text">
           <p className="govuk-body">
-            No documentation sources have been ingested yet. Run the ingestion pipeline
-            to pull in documentation from source repositories:
+            No documentation sources have been ingested yet. Run the ingestion pipeline to pull in
+            documentation from source repositories:
           </p>
           <pre>
             <code>npm run ingest</code>

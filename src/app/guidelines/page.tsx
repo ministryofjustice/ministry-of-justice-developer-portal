@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { ChatBot } from '@/components/ChatBot';
 import { PageIntro } from '@/components/templateRender/PageIntro';
-import guidelines from '@/content/guidelines/guidelines.json';
+import guidelines from '../../../content/guidelines/guidelines.json';
 
 interface Phase {
   key: string;

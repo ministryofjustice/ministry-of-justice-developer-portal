@@ -8,7 +8,7 @@ import { MetaBar } from '@/components/templateRender/MetaBar';
 import { PageIntro } from '@/components/templateRender/PageIntro';
 import { ReviewBadge, type ReviewStatus } from '@/components/templateRender/ReviewBadge';
 import { TagRow } from '@/components/templateRender/TagRow';
-import guidelines from '@/content/guidelines/guidelines.json';
+import guidelines from '../../../../content/guidelines/guidelines.json';
 
 // Sample content for each guideline — in production these would be MDX files
 const guidelineContent: Record<string, string> = {

@@ -6,14 +6,18 @@ import { formatEventDateTime } from '@/lib/date';
 import { Callout } from '@/components/templateRender/Callout';
 import { PageIntro } from '@/components/templateRender/PageIntro';
 import { Section } from '@/components/templateRender/Section';
-import community from '@/content/community/community.json';
+import community from '../../../content/community/community.json';
 
 export default function CommunityPage() {
   return (
     <div className="govuk-width-container">
       <Breadcrumbs items={[{ label: 'Community' }]} />
 
-      <PageIntro title={community.title} summary={community.summary} summaryClassName="govuk-body-l" />
+      <PageIntro
+        title={community.title}
+        summary={community.summary}
+        summaryClassName="govuk-body-l"
+      />
 
       <div className="app-cards">
         {community.items.map((item) => (
@@ -38,11 +42,21 @@ export default function CommunityPage() {
       </div>
 
       {community.supportingSections.map((section) => (
-        <Section key={section.title} heading={section.title} className="govuk-!-margin-top-6 govuk-!-margin-bottom-0" contentClassName="">
+        <Section
+          key={section.title}
+          heading={section.title}
+          className="govuk-!-margin-top-6 govuk-!-margin-bottom-0"
+          contentClassName=""
+        >
           <ul className="govuk-list govuk-list--bullet">
             {section.links.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="govuk-link" rel="noopener noreferrer" target="_blank">
+                <a
+                  href={link.href}
+                  className="govuk-link"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
                   {link.label}
                 </a>
               </li>
@@ -53,12 +67,12 @@ export default function CommunityPage() {
 
       <div className="govuk-!-margin-top-6">
         <Callout title={community.contribution.title}>
-        <p className="govuk-body">{community.contribution.summary}</p>
-        <ul className="govuk-list govuk-list--bullet">
-          {community.contribution.actions.map((action) => (
-            <li key={action}>{action}</li>
-          ))}
-        </ul>
+          <p className="govuk-body">{community.contribution.summary}</p>
+          <ul className="govuk-list govuk-list--bullet">
+            {community.contribution.actions.map((action) => (
+              <li key={action}>{action}</li>
+            ))}
+          </ul>
         </Callout>
       </div>
 

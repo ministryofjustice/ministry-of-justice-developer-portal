@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ProductCard } from '@/components/ProductCard';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { ChatBot } from '@/components/ChatBot';
-import products from '@/content/products/products.json';
+import products from '../../../content/products/products.json';
 
 const categories = [
   { key: 'all', label: 'All' },
@@ -14,9 +14,7 @@ const categories = [
   { key: 'security', label: 'Security' },
 ];
 
-const excludedProductSlugs = new Set([
-  'service-auth',
-]);
+const excludedProductSlugs = new Set(['service-auth']);
 
 export default function ProductsPage() {
   const [activeCategory, setActiveCategory] = useState('all');
@@ -25,7 +23,7 @@ export default function ProductsPage() {
   const visibleProducts = products.filter((product) => !excludedProductSlugs.has(product.slug));
 
   const availableTags = Array.from(
-    new Set(visibleProducts.flatMap((product) => product.tags || []))
+    new Set(visibleProducts.flatMap((product) => product.tags || [])),
   ).sort((a, b) => a.localeCompare(b));
 
   const filtered = visibleProducts.filter((product) => {
@@ -50,7 +48,7 @@ export default function ProductsPage() {
 
   const toggleTag = (tag: string) => {
     setSelectedTags((current) =>
-      current.includes(tag) ? current.filter((item) => item !== tag) : [...current, tag]
+      current.includes(tag) ? current.filter((item) => item !== tag) : [...current, tag],
     );
   };
 
@@ -71,8 +69,8 @@ export default function ProductsPage() {
 
       <h1 className="govuk-heading-xl">Products &amp; Services</h1>
       <p className="govuk-body-l">
-        Browse the catalogue of platforms, tools, APIs, and services available to
-        developers across government.
+        Browse the catalogue of platforms, tools, APIs, and services available to developers across
+        government.
       </p>
 
       <div className="govuk-grid-row app-products-layout">
@@ -82,13 +80,16 @@ export default function ProductsPage() {
 
             <div className="govuk-form-group govuk-!-margin-bottom-0">
               <fieldset className="govuk-fieldset" aria-describedby="products-filter-hint">
-                <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">Category</legend>
+                <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
+                  Category
+                </legend>
                 <div id="products-filter-hint" className="govuk-hint">
                   Use this to narrow the product list.
                 </div>
                 <div className="govuk-radios govuk-radios--small">
                   {categories.map((cat) => {
-                    const categoryCount = cat.key === 'all' ? visibleProducts.length : (categoryCounts[cat.key] || 0);
+                    const categoryCount =
+                      cat.key === 'all' ? visibleProducts.length : categoryCounts[cat.key] || 0;
                     const inputId = `products-filter-${cat.key}`;
 
                     return (
@@ -147,7 +148,11 @@ export default function ProductsPage() {
             </div>
 
             {(activeCategory !== 'all' || selectedTags.length > 0) && (
-              <button type="button" className="app-products-clear-filters govuk-link" onClick={clearFilters}>
+              <button
+                type="button"
+                className="app-products-clear-filters govuk-link"
+                onClick={clearFilters}
+              >
                 Clear filters
               </button>
             )}

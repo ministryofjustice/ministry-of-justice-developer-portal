@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { ChatBot } from '@/components/ChatBot';
-import contactOptions from '@/content/contact/contacts.json';
 import { PageIntro } from '@/components/templateRender/PageIntro';
+import contactOptions from '../../../content/contact/contacts.json';
 
 type ContactOption = {
   slug: string;
