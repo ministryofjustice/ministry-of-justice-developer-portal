@@ -34,6 +34,14 @@ env/
 # Ingested content (generated at build time)
 content/docs/
 
+# Generated design-system assets (synced from node_modules)
+public/assets/fonts/
+public/assets/images/govuk-*
+public/assets/images/moj-*
+public/assets/images/icon-*
+public/assets/images/favicon.*
+public/assets/manifest.json
+
 # SLSA action temporary checkout (supply chain protection)
 # This directory name is hardcoded by ministryofjustice/devsecops-actions/sca/slsa
 # TODO: Request configurable directory name from devsecops-actions maintainers
