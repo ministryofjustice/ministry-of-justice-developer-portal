@@ -35,6 +35,17 @@
       "format": "tech-docs-template",
       "owner_slack": "#analytical-platform",
       "enabled": true
+    },
+    {
+      "id": "security-guidance",
+      "name": "Cyber and Technical Security Guidance",
+      "description": "Ministry of Justice cyber and technical security guidance.",
+      "category": "security",
+      "repo": "ministryofjustice/security-guidance",
+      "branch": "main",
+      "docsPath": "docs",
+      "format": "markdown",
+      "enabled": true
     }
   ]
 }

@@ -7,6 +7,7 @@ const basePath = isGitHubPages ? `/${repoName}` : '';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
+  trailingSlash: true,
   basePath,
   assetPrefix: basePath || undefined,
   sassOptions: {

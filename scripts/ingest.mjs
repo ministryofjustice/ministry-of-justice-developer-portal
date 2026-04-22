@@ -15,7 +15,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -24,6 +24,28 @@ const ROOT = path.resolve(__dirname, '..');
 const CONTENT_DIR = path.join(ROOT, 'content', 'docs');
 const SOURCES_FILE = path.join(ROOT, 'sources.json');
 const CLONE_DIR = path.join(ROOT, '.ingestion-cache');
+const ASSET_EXTENSIONS = new Set([
+  '.png',
+  '.jpg',
+  '.jpeg',
+  '.gif',
+  '.svg',
+  '.webp',
+  '.avif',
+  '.bmp',
+  '.ico',
+  '.pdf',
+  '.csv',
+  '.xlsx',
+  '.xls',
+  '.doc',
+  '.docx',
+  '.ppt',
+  '.pptx',
+  '.zip',
+  '.drawio',
+  '.excalidraw',
+]);
 
 // ── CLI args ────────────────────────────────────────────────────
 const args = process.argv.slice(2);
@@ -59,7 +81,7 @@ async function main() {
     try {
       const stats = await ingestSource(source);
       results.push({ id: source.id, ...stats });
-      console.log(`  ✅ ${stats.pages} pages ingested`);
+      console.log(`  ✅ ${stats.pages} pages ingested, ${stats.assets} assets copied`);
     } catch (err) {
       console.error(`  ❌ Failed: ${err.message}`);
       results.push({ id: source.id, pages: 0, error: err.message });
@@ -69,7 +91,7 @@ async function main() {
   // Summary
   console.log('\n─── Summary ───');
   for (const r of results) {
-    const status = r.error ? `❌ ${r.error}` : `✅ ${r.pages} pages`;
+    const status = r.error ? `❌ ${r.error}` : `✅ ${r.pages} pages, ${r.assets} assets`;
     console.log(`  ${r.id}: ${status}`);
   }
   console.log('');
@@ -95,32 +117,81 @@ async function ingestSource(source) {
   }
 
   const outputDir = path.join(CONTENT_DIR, source.id);
+  const publicAssetsDir = path.join(ROOT, 'public', 'docs', source.id);
 
   // Discover source files
   const files = discoverFiles(docsRoot, config.format);
   console.log(`  Found ${files.length} source files in ${config.docsPath}`);
 
   if (dryRun) {
+    let dryRunAssetCount = 0;
+    const dryRunAssetPaths = new Set();
+
     for (const f of files) {
       console.log(`  [dry-run] ${f.relative}`);
+      const converted = convertFile(f, source);
+      const referencedAssets = collectReferencedAssets(
+        converted.content,
+        f.absolute,
+        docsRoot,
+        config.docsPath || ''
+      );
+
+      for (const relPath of referencedAssets) {
+        if (dryRunAssetPaths.has(relPath)) continue;
+        dryRunAssetPaths.add(relPath);
+        dryRunAssetCount++;
+      }
     }
-    return { pages: files.length };
+    console.log(`  [dry-run] ${dryRunAssetCount} referenced assets to copy`);
+    return { pages: files.length, assets: dryRunAssetCount };
   }
 
   // Clean previous output and write fresh
   if (fs.existsSync(outputDir)) {
     fs.rmSync(outputDir, { recursive: true });
   }
+  if (fs.existsSync(publicAssetsDir)) {
+    fs.rmSync(publicAssetsDir, { recursive: true });
+  }
   fs.mkdirSync(outputDir, { recursive: true });
+  fs.mkdirSync(publicAssetsDir, { recursive: true });
 
   let pageCount = 0;
+  const assetPaths = new Set();
 
   for (const file of files) {
     const converted = convertFile(file, source);
     const outputPath = path.join(outputDir, converted.outputRelative);
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     fs.writeFileSync(outputPath, converted.content, 'utf-8');
+
+    const referencedAssets = collectReferencedAssets(
+      converted.content,
+      file.absolute,
+      docsRoot,
+      config.docsPath || ''
+    );
+    for (const relPath of referencedAssets) {
+      assetPaths.add(relPath);
+    }
+
     pageCount++;
+  }
+
+  let assetCount = 0;
+  for (const relPath of assetPaths) {
+    const src = path.join(docsRoot, relPath);
+    const contentDest = path.join(outputDir, relPath);
+    const publicDest = path.join(publicAssetsDir, relPath);
+
+    fs.mkdirSync(path.dirname(contentDest), { recursive: true });
+    fs.copyFileSync(src, contentDest);
+
+    fs.mkdirSync(path.dirname(publicDest), { recursive: true });
+    fs.copyFileSync(src, publicDest);
+
+    assetCount++;
   }
 
   // Write _meta.json
@@ -137,7 +208,7 @@ async function ingestSource(source) {
     'utf-8'
   );
 
-  return { pages: pageCount };
+  return { pages: pageCount, assets: assetCount };
 }
 
 // ── Git operations ──────────────────────────────────────────────
@@ -149,19 +220,19 @@ function cloneOrPull(source) {
 
   if (fs.existsSync(path.join(repoDir, '.git'))) {
     console.log(`  Pulling latest from ${source.repo}...`);
-    execSync(`git -C ${JSON.stringify(repoDir)} fetch origin ${branch} --depth=1`, {
+    execFileSync('git', ['fetch', 'origin', branch, '--depth=1'], {
+      cwd: repoDir,
       stdio: 'pipe',
     });
-    execSync(
-      `git -C ${JSON.stringify(repoDir)} reset --hard origin/${branch}`,
-      { stdio: 'pipe' }
-    );
+    execFileSync('git', ['reset', '--hard', `origin/${branch}`], {
+      cwd: repoDir,
+      stdio: 'pipe',
+    });
   } else {
     console.log(`  Cloning ${source.repo} (shallow)...`);
-    execSync(
-      `git clone --depth=1 --branch ${branch} ${repoUrl} ${JSON.stringify(repoDir)}`,
-      { stdio: 'pipe' }
-    );
+    execFileSync('git', ['clone', '--depth=1', '--branch', branch, repoUrl, repoDir], {
+      stdio: 'pipe',
+    });
   }
 
   return repoDir;
@@ -300,6 +371,113 @@ function convertTechDocsPatterns(body, source) {
   result = result.replace(/```erb\n/g, '```\n');
 
   return result;
+}
+
+function collectReferencedAssets(markdownContent, markdownSourceFile, docsRoot, docsPath) {
+  const links = extractCandidateLinks(markdownContent);
+  const relPaths = new Set();
+  const fileDir = path.dirname(markdownSourceFile);
+
+  for (const rawLink of links) {
+    const normalized = normalizeAssetLink(rawLink);
+    if (!normalized) continue;
+    if (!isLocalAssetLink(normalized)) continue;
+
+    const resolved = resolveAssetAbsolutePath(normalized, fileDir, docsRoot, docsPath);
+    if (!resolved) continue;
+
+    const relPath = path.relative(docsRoot, resolved);
+    if (!relPath || relPath.startsWith('..') || path.isAbsolute(relPath)) continue;
+    relPaths.add(relPath);
+  }
+
+  return relPaths;
+}
+
+function extractCandidateLinks(markdownContent) {
+  const links = [];
+
+  const markdownLinkRegex = /!?\[[^\]]*\]\(([^)]+)\)/g;
+  for (const match of markdownContent.matchAll(markdownLinkRegex)) {
+    links.push(match[1]);
+  }
+
+  const htmlLinkRegex = /(?:src|href)=['"]([^'"]+)['"]/g;
+  for (const match of markdownContent.matchAll(htmlLinkRegex)) {
+    links.push(match[1]);
+  }
+
+  return links;
+}
+
+function normalizeAssetLink(rawLink) {
+  if (!rawLink) return null;
+  let link = rawLink.trim();
+  if (!link) return null;
+
+  if ((link.startsWith('"') && link.endsWith('"')) || (link.startsWith("'") && link.endsWith("'"))) {
+    link = link.slice(1, -1);
+  }
+
+  // Markdown allows optional title text after URL: [x](path "title")
+  const withTitle = link.match(/^\s*<?([^>\s]+)>?\s+(?:"[^"]*"|'[^']*')\s*$/);
+  if (withTitle) {
+    return withTitle[1];
+  }
+
+  const bracketed = link.match(/^<([^>]+)>$/);
+  if (bracketed) {
+    return bracketed[1];
+  }
+
+  return link;
+}
+
+function isLocalAssetLink(link) {
+  if (!link || link.startsWith('#') || link.startsWith('mailto:') || link.startsWith('tel:')) {
+    return false;
+  }
+
+  if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(link) || link.startsWith('//')) {
+    return false;
+  }
+
+  const [pathOnly] = link.split(/[?#]/);
+  if (!pathOnly) return false;
+
+  const ext = path.extname(pathOnly).toLowerCase();
+  return ASSET_EXTENSIONS.has(ext);
+}
+
+function resolveAssetAbsolutePath(link, markdownFileDir, docsRoot, docsPath) {
+  const [pathOnly] = link.split(/[?#]/);
+  if (!pathOnly) return null;
+
+  const docsPrefix = docsPath.replace(/^\/+|\/+$/g, '');
+  let candidates = [];
+
+  if (pathOnly.startsWith('/')) {
+    const withoutLeadingSlash = pathOnly.replace(/^\/+/, '');
+    const withoutDocsPrefix = docsPrefix && withoutLeadingSlash.startsWith(`${docsPrefix}/`)
+      ? withoutLeadingSlash.slice(docsPrefix.length + 1)
+      : withoutLeadingSlash;
+
+    candidates = [
+      path.join(docsRoot, withoutDocsPrefix),
+      path.join(docsRoot, withoutLeadingSlash),
+    ];
+  } else {
+    candidates = [path.resolve(markdownFileDir, pathOnly)];
+  }
+
+  for (const candidate of candidates) {
+    if (!candidate.startsWith(docsRoot)) continue;
+    if (!fs.existsSync(candidate)) continue;
+    if (!fs.statSync(candidate).isFile()) continue;
+    return candidate;
+  }
+
+  return null;
 }
 
 // ── Simple YAML parser (no dependency) ──────────────────────────

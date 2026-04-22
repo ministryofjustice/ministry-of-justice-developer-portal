@@ -22,16 +22,22 @@
         "name": "next"
       }
     ],
+    "types": [
+      "vitest/globals"
+    ],
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "paths": {
       "@/*": [
-        "./*"
+        "src/*"
       ]
     }
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "tests/**/*.test.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
