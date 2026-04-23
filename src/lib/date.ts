@@ -2,6 +2,7 @@ const LONG_DATE_FORMAT: Intl.DateTimeFormatOptions = {
   day: 'numeric',
   month: 'long',
   year: 'numeric',
+  timeZone: 'UTC', // introduced for consistency
 };
 
 const EVENT_DATE_TIME_FORMAT: Intl.DateTimeFormatOptions = {
@@ -14,10 +15,21 @@ const EVENT_DATE_TIME_FORMAT: Intl.DateTimeFormatOptions = {
   timeZoneName: 'short',
 };
 
+function parseDate(value: string): Date | null {
+  const date = new Date(value);
+  return isNaN(date.getTime()) ? null : date;
+}
+
 export function formatLongDate(value: string) {
-  return new Date(value).toLocaleDateString('en-GB', LONG_DATE_FORMAT);
+  const date = parseDate(value);
+  if (!date) return '';
+
+  return date.toLocaleDateString('en-GB', LONG_DATE_FORMAT);
 }
 
 export function formatEventDateTime(value: string) {
-  return new Date(value).toLocaleString('en-GB', EVENT_DATE_TIME_FORMAT);
+  const date = parseDate(value);
+  if (!date) return '';
+
+  return date.toLocaleString('en-GB', EVENT_DATE_TIME_FORMAT);
 }

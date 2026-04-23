@@ -33,6 +33,7 @@ env/
 
 # Ingested content (generated at build time)
 content/docs/
+public/docs
 
 # Generated design-system assets (synced from node_modules)
 public/assets/fonts/

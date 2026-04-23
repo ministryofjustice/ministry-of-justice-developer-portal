@@ -1,0 +1,27 @@
+import { defineConfig } from 'vitest/config';
+import * as path from 'path';
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+  test: {
+    globals: true,
+    environment: 'node', // override with 'jsdom' for React components (file level)
+    include: ['tests/**/*.test.{ts,tsx}'],
+    setupFiles: ['tests/setup.ts'],
+
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html'],
+      reportsDirectory: './coverage',
+
+      all: true,
+
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['tests/**', 'src/types/types.ts'],
+    },
+  },
+});

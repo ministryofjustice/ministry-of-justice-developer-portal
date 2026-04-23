@@ -9,7 +9,7 @@ import { PageIntro } from '@/components/templateRender/PageIntro';
 import { ReviewBadge, type ReviewStatus } from '@/components/templateRender/ReviewBadge';
 import { TagRow } from '@/components/templateRender/TagRow';
 import guidelines from '../../../../content/guidelines/guidelines.json';
-import { markdownToHtml } from '@/lib/markdown';
+import { markdownToHtml } from '@/lib/markdown/markdownToHtml';
 import { getGuidelinePage } from '@/lib/docs';
 
 const phaseLabels: Record<string, string> = {
