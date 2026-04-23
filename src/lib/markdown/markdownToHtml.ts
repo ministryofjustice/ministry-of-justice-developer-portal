@@ -60,8 +60,10 @@ function extractText(fragment: string): string {
 }
 
 function decodeHtmlEntities(value: string): string {
-  return value.replace(/&(?:amp|lt|gt|quot|#39|#x27);/gi, (entity) => {
-    switch (entity.toLowerCase()) {
+  return value.replace(/&(#x?[0-9a-f]+|amp|lt|gt|quot|#39|#x27);/gi, (entity) => {
+    const lower = entity.toLowerCase();
+
+    switch (lower) {
       case '&amp;':
         return '&';
       case '&lt;':
@@ -73,9 +75,16 @@ function decodeHtmlEntities(value: string): string {
       case '&#39;':
       case '&#x27;':
         return "'";
-      default:
-        return entity;
     }
+
+    const numericMatch = lower.match(/^&#(x?)([0-9a-f]+);$/);
+    if (numericMatch) {
+      const [, isHex, num] = numericMatch;
+      const code = parseInt(num, isHex ? 16 : 10);
+      return String.fromCharCode(code);
+    }
+
+    return entity;
   });
 }
 

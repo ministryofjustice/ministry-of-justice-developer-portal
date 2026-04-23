@@ -37,6 +37,7 @@ export function resolveDocPathSegments(
   if (pathname.startsWith('/')) {
     const cleaned = pathname
       .replace(/^\/+/, '')
+      .replace(/^docs\/[^/]+\//, '')
       .replace(/^source\/documentation\//, '')
       .replace(/^documentation\//, '')
       .replace(new RegExp(`^${escapeRegExp(ctx.sourceSlug)}\/`), '');
