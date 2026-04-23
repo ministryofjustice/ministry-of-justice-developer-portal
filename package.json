@@ -18,7 +18,8 @@
     "spellcheck": "cspell '**/*' --no-progress --show-suggestions",
     "test": "vitest",
     "test:watch": "vitest --watch",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui"
   },
   "repository": {
     "type": "git",
@@ -47,6 +48,7 @@
     "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
     "@vitest/coverage-v8": "4.1.4",
+    "@vitest/ui": "^4.1.4",
     "cspell": "^10.0.0",
     "markdownlint-cli": "^0.48.0",
     "pagefind": "^1.5.0",
