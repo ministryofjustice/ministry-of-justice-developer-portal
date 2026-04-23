@@ -14,9 +14,9 @@ export const COMMUNITY_CATEGORY_LABELS: Record<string, string> = {
 };
 
 export function getProductCategoryLabel(category: string) {
-  return PRODUCT_CATEGORY_LABELS[category] || category;
+  return PRODUCT_CATEGORY_LABELS[category] ?? category;
 }
 
 export function getCommunityCategoryLabel(category: string) {
-  return COMMUNITY_CATEGORY_LABELS[category] || category;
+  return COMMUNITY_CATEGORY_LABELS[category] ?? category;
 }

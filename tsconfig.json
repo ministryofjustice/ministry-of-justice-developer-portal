@@ -38,6 +38,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "tests/**/*.test.ts",
+    "tests/setup.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],

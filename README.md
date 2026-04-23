@@ -72,6 +72,55 @@ npm run build
 
 This runs `next build` followed by Pagefind indexing. Output is in `out/`.
 
+### Testing
+
+The portal employs Vitest for lightweight, fast unit testing. Tests should be named under the convention `*.test.ts`.
+
+The following scripts are vital to know:
+
+```bash
+# Run all unit tests located in the test directory.
+npm run test
+
+# Run all unit tests and generate a coverage report
+npm run test:coverage
+
+# Run all unit tests via a clickable web browser for interactive reporting
+npm run test:ui
+
+# # Run all unit tests with the runner remaining open and running continuously as files change.
+npm run test:watch
+
+# # Run all unit tests with coverage, the runner remaining open and running continuously as files change. 
+# # NOTE: only coverage for changed files generate in this mode
+npm run test:coverageWatch
+```
+
+## Project structure
+
+The project is structured with source code and tests in parallel (as in the example below).
+
+```
+root/
+├── src/                    
+│   ├── app/
+│   │   ├── community      
+│   │   ├── contact-us
+│   │   ├── docs
+│   │   └── ...
+│   ├── components/
+│   └── lib/
+├── tests/                    
+│   ├── app/
+│   │   ├── community      
+│   │   ├── contact-us
+│   │   ├── docs
+│   │   └── ...
+│   ├── components/
+│   └── lib/
+
+```
+
 ## Content structure
 
 ```
