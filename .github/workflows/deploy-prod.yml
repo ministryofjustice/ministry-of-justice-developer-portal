@@ -72,15 +72,4 @@ jobs:
       - name: Smoke test
         shell: bash
         run: |
-          set -euo pipefail
-          HTTP_CODE=$(curl -sS -o /tmp/prod-smoke.out -w "%{http_code}" https://developer-portal.service.justice.gov.uk/healthz)
-          if [ "${HTTP_CODE}" != "200" ]; then
-            echo "Expected HTTP 200 from prod smoke test, got ${HTTP_CODE}"
-            cat /tmp/prod-smoke.out
-            exit 1
-          fi
-          if ! grep -Eq '^ok$' /tmp/prod-smoke.out; then
-            echo "Unexpected prod smoke response body"
-            cat /tmp/prod-smoke.out
-            exit 1
-          fi
+          bash scripts/smoke-test.sh prod https://developer-portal.service.justice.gov.uk/healthz

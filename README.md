@@ -221,6 +221,16 @@ Set these in GitHub Actions variables at repository level, or as environment var
 - Dev deployment runs automatically on push to `main` and can also be run manually via `.github/workflows/deploy-dev.yml`.
 - Prod deployment is manual-only via `.github/workflows/deploy-prod.yml`.
 
+#### Runtime hardening
+
+Both Kubernetes deployments apply a baseline container hardening profile:
+
+- Pod-level `runAsNonRoot` with explicit UID/GID (`101`), and `seccompProfile: RuntimeDefault`
+- `automountServiceAccountToken: false` for workloads that do not call the Kubernetes API
+- Container-level `allowPrivilegeEscalation: false` and Linux capability drop (`ALL`)
+
+This keeps the runtime aligned with Cloud Platform security expectations while remaining compatible with the current NGINX-based image.
+
 #### Target domains
 
 - Dev: `https://dev.developer-portal.service.justice.gov.uk`
