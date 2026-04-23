@@ -10,6 +10,15 @@ export type DocsLinkContext = {
   currentSlug: string[];
 };
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+const alertClassLookup: Record<string, [string, string?]> = {
+  NOTE: ['moj-alert--information', 'icon-alert-information.svg'],
+  TIP: ['moj-alert--success', 'icon-alert-success.svg'],
+  IMPORTANT: ['moj-alert--warning', 'icon-alert-warning.svg'],
+  WARNING: ['moj-alert--warning', 'icon-alert-warning.svg'],
+  CAUTION: ['moj-alert--error', 'icon-alert-warning.svg'],
+};
+
 export async function markdownToHtml(markdown: string, ctx?: DocsLinkContext): Promise<string> {
   const html = await renderMarkdown(markdown);
 
@@ -19,31 +28,32 @@ export async function markdownToHtml(markdown: string, ctx?: DocsLinkContext): P
 }
 
 function processCallouts(htmlContent: string): string {
-  const alertClassLookup: Record<string, string> = {
-    NOTE: 'moj-alert--information',
-    TIP: 'moj-alert--success',
-    IMPORTANT: 'moj-alert--warning',
-    WARNING: 'moj-alert--warning',
-    CAUTION: 'moj-alert--error',
-  };
-  // Handle multi-paragraph callouts: > [!TYPE]\n> content
-  let result = htmlContent.replace(/<blockquote>\s*<p>\[!([A-Z]+)\]<\/p>\s*([\s\S]*?)<\/blockquote>/g, (match, type, content) => {
-    console.log('Matched multi callout:', match, 'type:', type, 'content:', content);
-    const alertClass = alertClassLookup[type] || 'moj-alert--information';
-    // Wrap in proper alert structure
-    return `<div class="moj-alert ${alertClass}"><div class="moj-alert__content">${content}</div></div>`;
+  const calloutRegex = /<blockquote>\s*<p>\[!([A-Z]+)\](?:\s*<\/p>)?\s*([\s\S]*?)<\/blockquote>/g;
+
+  const result = htmlContent.replace(calloutRegex, (match, type, content) => {
+    return generateCalloutHtml(type, content.trim());
   });
-  // Handle single-paragraph callouts: > [!TYPE] content
-  result = result.replace(/<blockquote>\s*<p>\[!([A-Z]+)\]\s*([\s\S]*?)<\/p>\s*<\/blockquote>/g, (match, type, content) => {
-    console.log('Matched single callout:', match, 'type:', type, 'content:', content);
-    const alertClass = alertClassLookup[type] || 'moj-alert--information';
-    return `<div class="moj-alert ${alertClass}"><div class="moj-alert__content"><p>${content}</p></div></div>`;
-  });
+
   if (result !== htmlContent) {
     console.log('Callouts processed');
   }
+
   return result;
 }
+
+function generateCalloutHtml(type: string, content: string): string {
+    const [alertClass, icon] = alertClassLookup[type] || ['moj-alert--information', 'icon-alert-information.svg'];
+    return `<div class="moj-alert ${alertClass}">
+              <div>
+                <svg class="moj-alert__icon" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" height="30" width="30">
+                  <use href="${basePath}/assets/images/${icon}"></use>
+                </svg>
+              </div>
+              <div class="moj-alert__content">
+                ${content}
+              </div>
+            </div>`;
+  }
 
 async function renderMarkdown(markdown: string): Promise<string> {
   const result = await remark().use(remarkGfm).use(html).process(markdown);
