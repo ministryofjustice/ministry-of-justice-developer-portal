@@ -1,40 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { DocPage, DocSource, NavItem } from '@/types/types';
 
 const DOCS_DIR = path.join(process.cwd(), 'content', 'docs');
-
-export interface DocMeta {
-  slug: string[];
-  title: string;
-  lastReviewedOn?: string;
-  reviewIn?: string;
-  ownerSlack?: string;
-  sourceRepo?: string;
-  sourcePath?: string;
-  ingestedAt?: string;
-  weight?: number;
-}
-
-export interface DocPage {
-  meta: DocMeta;
-  content: string;
-}
-
-export interface NavItem {
-  title: string;
-  slug: string[];
-  children?: NavItem[];
-  weight?: number;
-}
-
-export interface DocSource {
-  slug: string;
-  name: string;
-  description: string;
-  category: string;
-  items: NavItem[];
-}
 
 /**
  * Get all doc sources (top-level folders under content/docs/)
@@ -82,7 +51,7 @@ export function getDocSources(): DocSource[] {
 export function getDocPage(slugPath: string[]): DocPage | null {
   const filePath = path.join(DOCS_DIR, ...slugPath) + '.md';
   const indexPath = path.join(DOCS_DIR, ...slugPath, 'index.md');
-  
+
   let actualPath: string | null = null;
   if (fs.existsSync(filePath)) {
     actualPath = filePath;
@@ -97,7 +66,9 @@ export function getDocPage(slugPath: string[]): DocPage | null {
     return {
       meta: {
         slug: slugPath,
-        title: data.title || slugPath[slugPath.length - 1].replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+        title:
+          data.title ||
+          slugPath[slugPath.length - 1].replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
         lastReviewedOn: data.lastReviewedOn || data.last_reviewed_on,
         reviewIn: data.reviewIn || data.review_in,
         ownerSlack: data.ownerSlack || data.owner_slack,
@@ -113,7 +84,9 @@ export function getDocPage(slugPath: string[]): DocPage | null {
   // Generate a synthetic landing page for directories without index.md
   const dirPath = path.join(DOCS_DIR, ...slugPath);
   if (fs.existsSync(dirPath) && fs.statSync(dirPath).isDirectory()) {
-    const title = slugPath[slugPath.length - 1].replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    const title = slugPath[slugPath.length - 1]
+      .replace(/-/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase());
     const metaPath = path.join(dirPath, '_meta.json');
     let metaTitle = title;
     let description = '';
@@ -125,13 +98,12 @@ export function getDocPage(slugPath: string[]): DocPage | null {
 
     // Build list of child pages
     const children = buildNavFromDir(dirPath, slugPath);
-    const childLinks = children.map((c) =>
-      `- [${c.title}](/docs/${c.slug.join('/')})`
-    ).join('\n');
+    const childLinks = children.map((c) => `- [${c.title}](/docs/${c.slug.join('/')})`).join('\n');
 
     return {
       meta: { slug: slugPath, title: metaTitle },
-      content: (description ? description + '\n\n' : '') +
+      content:
+        (description ? description + '\n\n' : '') +
         (childLinks ? '## Pages in this section\n\n' + childLinks : ''),
     };
   }

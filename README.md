@@ -90,6 +90,10 @@ npm run test:ui
 
 # # Run all unit tests with the runner remaining open and running continuously as files change.
 npm run test:watch
+
+# # Run all unit tests with coverage, the runner remaining open and running continuously as files change. 
+# # NOTE: only coverage for changed files generate in this mode
+npm run test:coverageWatch
 ```
 
 ## Project structure

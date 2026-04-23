@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getDocPage, getDocSources, getAllDocSlugs } from '@/lib/docs';
-import type { NavItem } from '@/lib/docs';
-import { markdownToHtml } from '@/lib/markdown';
+
+import { markdownToHtml } from '@/lib/markdown/markdownToHtml';
 import { formatLongDate } from '@/lib/date';
 import { getReviewStatus } from '@/lib/review';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
@@ -10,6 +10,7 @@ import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
 import { MetaBar } from '@/components/templateRender/MetaBar';
 import { ReviewBadge, type ReviewStatus } from '@/components/templateRender/ReviewBadge';
+import { NavItem } from '@/types/types';
 
 export function generateStaticParams() {
   const slugs = getAllDocSlugs();

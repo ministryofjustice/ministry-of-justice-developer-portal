@@ -21,7 +21,7 @@ export default defineConfig({
       all: true,
 
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['tests/**'],
+      exclude: ['tests/**', 'src/types/types.ts'],
     },
   },
 });
