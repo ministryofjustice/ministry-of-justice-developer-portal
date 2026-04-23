@@ -1,5 +1,5 @@
-import { defineConfig } from 'vitest/config'
-import * as path from 'path'
+import { defineConfig } from 'vitest/config';
+import * as path from 'path';
 
 export default defineConfig({
   resolve: {
@@ -10,13 +10,18 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node', // override with 'jsdom' for React components (file level)
-    include: ['tests/**/*.test.ts'],
+    include: ['tests/**/*.test.{ts,tsx}'],
     setupFiles: ['tests/setup.ts'],
 
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
       reportsDirectory: './coverage',
+
+      all: true,
+
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['tests/**'],
     },
   },
-})
+});
