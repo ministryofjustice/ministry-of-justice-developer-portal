@@ -30,8 +30,6 @@ function transformHtml(html: string, ctx: DocsLinkContext): string {
   );
 }
 
-/* ------------------ Heading IDs ------------------ */
-
 function addHeadingIds(html: string): string {
   return html.replace(/<(h[1-6])>([\s\S]*?)<\/\1>/g, (_full, tag: string, inner: string) => {
     const text = extractText(inner);
