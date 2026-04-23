@@ -23,7 +23,7 @@ describe('markdownToHtml', () => {
       expect(result).toContain('<h1 id="hello-world">Hello World</h1>');
     });
 
-    it('slugifies complex headings', async () => {
+    it('can slugify complex headings', async () => {
       const result = await markdownToHtml('# Hello & World!');
 
       expect(result).toContain('id="hello-world"');
