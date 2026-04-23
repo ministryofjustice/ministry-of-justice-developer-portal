@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="govuk-template">
-      <body className="govuk-template__body">
+      <body className="govuk-template__body" suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{
     __html: `document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '')`
   }} />
