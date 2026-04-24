@@ -74,6 +74,14 @@ jobs:
         run: |
           set -euo pipefail
           # Use Cloud Platform-provisioned DEV_* GitHub secrets.
+          
+          # Validate that secrets are not empty
+          if [[ -z "${{ secrets.DEV_KUBE_CLUSTER }}" ]]; then
+            echo "ERROR: DEV_KUBE_CLUSTER secret is empty or not set"
+            echo "This should be configured in Settings → Environments → dev → Secrets"
+            exit 1
+          fi
+          
           echo "${{ secrets.DEV_KUBE_CERT }}" > ca.crt
           kubectl config set-cluster cp-cluster --server="${{ secrets.DEV_KUBE_CLUSTER }}" --certificate-authority=ca.crt
           kubectl config set-credentials github-actions --token="${{ secrets.DEV_KUBE_TOKEN }}"
@@ -85,7 +93,7 @@ jobs:
           kubectl config current-context
           echo "Kubectl config view:"
           kubectl config view --minify
-          echo "Kubeconfig location: $KUBECONFIG"
+          echo "Kubeconfig location: ${KUBECONFIG:-$HOME/.kube/config}"
           
           # Make kubeconfig location available to subsequent steps
           echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
