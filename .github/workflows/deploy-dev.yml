@@ -79,6 +79,12 @@ jobs:
           kubectl config set-credentials github-actions --token="${{ secrets.DEV_KUBE_TOKEN }}"
           kubectl config set-context dev --cluster=cp-cluster --user=github-actions --namespace="${{ secrets.DEV_KUBE_NAMESPACE }}"
           kubectl config use-context dev
+          
+          # Debug: verify configuration
+          echo "Current kubectl context:"
+          kubectl config current-context
+          echo "Kubectl config view:"
+          kubectl config view --minify
 
       - name: Deploy manifests
         shell: bash
@@ -87,8 +93,8 @@ jobs:
           sed \
             -e "s|IMAGE_PLACEHOLDER|${{ steps.build-push.outputs.image_uri }}|g" \
             -e "s|^\([[:space:]]*namespace:\)[[:space:]]*.*$|\1 ${{ secrets.DEV_KUBE_NAMESPACE }}|" \
-            k8s/dev/deployment.yaml | kubectl apply -f -
-          kubectl rollout status deployment/developer-portal --namespace "${{ secrets.DEV_KUBE_NAMESPACE }}" --timeout=180s
+            k8s/dev/deployment.yaml | kubectl --context=dev apply -f -
+          kubectl --context=dev rollout status deployment/developer-portal --namespace "${{ secrets.DEV_KUBE_NAMESPACE }}" --timeout=180s
 
       - name: Smoke test
         shell: bash

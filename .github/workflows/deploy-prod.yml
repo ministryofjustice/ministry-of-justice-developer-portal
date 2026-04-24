@@ -83,8 +83,8 @@ jobs:
           sed \
             -e "s|IMAGE_PLACEHOLDER|${{ steps.build-push.outputs.image_uri }}|g" \
             -e "s|^\([[:space:]]*namespace:\)[[:space:]]*.*$|\1 ${{ secrets.PROD_KUBE_NAMESPACE }}|" \
-            k8s/prod/deployment.yaml | kubectl apply -f -
-          kubectl rollout status deployment/developer-portal --namespace "${{ secrets.PROD_KUBE_NAMESPACE }}" --timeout=180s
+            k8s/prod/deployment.yaml | kubectl --context=prod apply -f -
+          kubectl --context=prod rollout status deployment/developer-portal --namespace "${{ secrets.PROD_KUBE_NAMESPACE }}" --timeout=180s
 
       - name: Smoke test
         shell: bash
