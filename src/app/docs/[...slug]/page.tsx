@@ -17,7 +17,7 @@ type Params = { slug: string[] };
 export const dynamic = 'force-static';
 export const dynamicParams = false;
 
-export function generateStaticParams(): Params[] {
+export function generateStaticParams() {
   const slugs = getAllDocSlugs();
   return slugs.map((slug) => ({ slug }));
 }
