@@ -74,7 +74,7 @@ jobs:
         run: |
           set -euo pipefail
           # Use Cloud Platform-provisioned DEV_* GitHub secrets.
-          echo "${{ secrets.DEV_KUBE_CERT }}" | tr -d '\n' | base64 --decode > ca.crt
+          printf '%s' "${{ secrets.DEV_KUBE_CERT }}" | base64 -d > ca.crt
           kubectl config set-cluster cp-cluster --server="${{ secrets.DEV_KUBE_CLUSTER }}" --certificate-authority=ca.crt
           kubectl config set-credentials github-actions --token="${{ secrets.DEV_KUBE_TOKEN }}"
           kubectl config set-context dev --cluster=cp-cluster --user=github-actions --namespace="${{ secrets.DEV_KUBE_NAMESPACE }}"
