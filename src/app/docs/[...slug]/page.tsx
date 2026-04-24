@@ -17,9 +17,18 @@ type Params = { slug: string[] };
 export const dynamic = 'force-static';
 export const dynamicParams = false;
 
-export function generateStaticParams() {
-  const slugs = getAllDocSlugs();
-  return slugs.map((slug) => ({ slug }));
+export async function generateStaticParams() {
+  try {
+    const slugs = getAllDocSlugs();
+    if (!slugs || slugs.length === 0) {
+      console.error('getAllDocSlugs returned empty array');
+      return [];
+    }
+    return slugs.map((slug) => ({ slug }));
+  } catch (error) {
+    console.error('Error in generateStaticParams:', error);
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }) {
