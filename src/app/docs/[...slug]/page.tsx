@@ -12,15 +12,17 @@ import { MetaBar } from '@/components/templateRender/MetaBar';
 import { ReviewBadge, type ReviewStatus } from '@/components/templateRender/ReviewBadge';
 import { NavItem } from '@/types/types';
 
-export function generateStaticParams() {
+type Params = { slug: string[] };
+
+export const dynamicParams = false;
+
+export async function generateStaticParams(): Promise<Params[]> {
   const slugs = getAllDocSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
-type Params = { slug: string[] };
-
-export async function generateMetadata({ params }: { params: Promise<Params> }) {
-  const { slug } = await params;
+export async function generateMetadata({ params }: { params: Params }) {
+  const { slug } = params;
   const page = getDocPage(slug);
   if (!page) return {};
   return { title: page.meta.title };
@@ -54,8 +56,8 @@ function SidebarNav({ items, currentSlug }: { items: NavItem[]; currentSlug: str
   );
 }
 
-export default async function DocPage({ params }: { params: Promise<Params> }) {
-  const { slug } = await params;
+export default async function DocPage({ params }: { params: Params }) {
+  const { slug } = params;
   const page = getDocPage(slug);
   if (!page) notFound();
 
