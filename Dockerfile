@@ -1,6 +1,9 @@
 FROM node:24-bookworm-slim AS build
 WORKDIR /app
 
+# Install git for content ingestion
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
 COPY package*.json ./
 RUN npm ci
 
