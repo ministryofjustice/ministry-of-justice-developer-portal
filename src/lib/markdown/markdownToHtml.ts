@@ -1,6 +1,8 @@
 import { remark } from 'remark';
-import html from 'remark-html';
 import remarkGfm from 'remark-gfm';
+import remarkRehype from 'remark-rehype';
+import rehypeSlug from 'rehype-slug';
+import rehypeStringify from 'rehype-stringify';
 
 import { rewriteDocAnchorLinks, rewriteDocAssetSources } from './processLinks';
 import { normalizeMalformedDocsPathsInHtml } from './paths';
@@ -30,15 +32,9 @@ export async function markdownToHtml(markdown: string, ctx?: DocsLinkContext): P
 function processCallouts(htmlContent: string): string {
   const calloutRegex = /<blockquote>\s*<p>\[!([A-Z]+)\](?:\s*<\/p>)?\s*([\s\S]*?)<\/blockquote>/g;
 
-  const result = htmlContent.replace(calloutRegex, (match, type, content) => {
+  return htmlContent.replace(calloutRegex, (match, type, content) => {
     return generateCalloutHtml(type, content.trim());
   });
-
-  if (result !== htmlContent) {
-    console.log('Callouts processed');
-  }
-
-  return result;
 }
 
 function generateCalloutHtml(type: string, content: string): string {
@@ -56,9 +52,14 @@ function generateCalloutHtml(type: string, content: string): string {
   }
 
 async function renderMarkdown(markdown: string): Promise<string> {
-  const result = await remark().use(remarkGfm).use(html).process(markdown);
+    const result = await remark()
+    .use(remarkGfm)
+    .use(remarkRehype)
+    .use(rehypeSlug)
+    .use(rehypeStringify)
+    .process(markdown);
 
-  return processCallouts(addHeadingIds(result.toString()));
+  return processCallouts(result.toString());
 
 }
 
@@ -68,60 +69,3 @@ function transformHtml(html: string, ctx: DocsLinkContext): string {
   );
 }
 
-function addHeadingIds(html: string): string {
-  return html.replace(/<(h[1-6])>([\s\S]*?)<\/\1>/g, (_full, tag: string, inner: string) => {
-    const text = extractText(inner);
-    const id = slugify(text);
-
-    if (!id) return `<${tag}>${inner}</${tag}>`;
-    return `<${tag} id="${id}">${inner}</${tag}>`;
-  });
-}
-
-function extractText(fragment: string): string {
-  let output = '';
-  let inTag = false;
-
-  for (const char of fragment) {
-    if (char === '<') {
-      inTag = true;
-      continue;
-    }
-    if (char === '>') {
-      inTag = false;
-      continue;
-    }
-    if (!inTag) output += char;
-  }
-
-  return decodeHtmlEntities(output).trim();
-}
-
-function decodeHtmlEntities(value: string): string {
-  return value.replace(/&(?:amp|lt|gt|quot|#39|#x27);/gi, (entity) => {
-    switch (entity.toLowerCase()) {
-      case '&amp;':
-        return '&';
-      case '&lt;':
-        return '<';
-      case '&gt;':
-        return '>';
-      case '&quot;':
-        return '"';
-      case '&#39;':
-      case '&#x27;':
-        return "'";
-      default:
-        return entity;
-    }
-  });
-}
-
-function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-}
