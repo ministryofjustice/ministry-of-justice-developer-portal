@@ -1,0 +1,73 @@
+name: Ingest Content
+run-name: Ingest Content
+
+on:
+  workflow_dispatch:
+    inputs:
+      source:
+        description: "Source ID to ingest (leave empty for all)"
+        required: false
+        type: string
+
+  schedule:
+    - cron: "0 */6 * * *"
+
+  repository_dispatch:
+    types: [docs-update]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ingest-content
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    name: Ingest and Commit Content
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.1.0
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          cache: npm
+
+      - name: SLSA supply chain protection
+        uses: ministryofjustice/devsecops-actions/sca/slsa@1cee8e5dce2be99328b2ea9074c7e0acdfd69907
+
+      - name: Install dependencies
+        shell: bash
+        run: npm ci
+
+      - name: Run ingestion
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "${{ github.event.inputs.source || '' }}" ]; then
+            node scripts/ingest.mjs "${{ github.event.inputs.source }}"
+          elif [ -n "${{ github.event.client_payload.source_id || '' }}" ]; then
+            node scripts/ingest.mjs "${{ github.event.client_payload.source_id }}"
+          else
+            node scripts/ingest.mjs
+          fi
+
+      - name: Commit and push content updates
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No ingestion changes to commit"
+            exit 0
+          fi
+          git commit -m "chore(ingest): refresh external documentation"
+          git push

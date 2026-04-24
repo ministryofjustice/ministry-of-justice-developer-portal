@@ -33,7 +33,7 @@ env/
 
 # Ingested content (generated at build time)
 content/docs/
-public/docs
+public/docs/
 
 # SLSA action temporary checkout (supply chain protection)
 # This directory name is hardcoded by ministryofjustice/devsecops-actions/sca/slsa

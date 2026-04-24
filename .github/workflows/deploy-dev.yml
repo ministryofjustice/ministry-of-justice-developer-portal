@@ -1,0 +1,79 @@
+name: Deploy to Dev
+run-name: Deploy to Dev
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  IMAGE_TAG: ${{ github.sha }}
+
+concurrency:
+  group: deploy-dev
+  cancel-in-progress: false
+
+jobs:
+  deploy-dev:
+    name: Build, Push, Deploy (Dev)
+    runs-on: ubuntu-latest
+    environment: dev
+    if: github.actor != 'github-actions[bot]'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Configure AWS credentials for ECR
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
+        with:
+          role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.ECR_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@376925c9d111252e87ae59691e5a442dd100ef6a # v2
+
+      - name: Build and push image
+        id: build-push
+        shell: bash
+        run: |
+          set -euo pipefail
+          IMAGE_URI="${{ steps.ecr-login.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${IMAGE_TAG}"
+          docker build -t "${IMAGE_URI}" .
+          docker push "${IMAGE_URI}"
+          echo "image_uri=${IMAGE_URI}" >> "$GITHUB_OUTPUT"
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@776406bce94f63e41d621b960d78ee25c8b76ede # v4
+
+      - name: Configure Kubernetes access
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Use Cloud Platform-provisioned DEV_* GitHub secrets.
+          echo "${{ secrets.DEV_KUBE_CERT }}" | base64 --decode > ca.crt
+          kubectl config set-cluster cp-cluster --server="${{ secrets.DEV_KUBE_CLUSTER }}" --certificate-authority=ca.crt
+          kubectl config set-credentials github-actions --token="${{ secrets.DEV_KUBE_TOKEN }}"
+          kubectl config set-context dev --cluster=cp-cluster --user=github-actions --namespace="${{ secrets.DEV_KUBE_NAMESPACE }}"
+          kubectl config use-context dev
+
+      - name: Deploy manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          sed \
+            -e "s|IMAGE_PLACEHOLDER|${{ steps.build-push.outputs.image_uri }}|g" \
+            -e "s|^\([[:space:]]*namespace:\)[[:space:]]*.*$|\1 ${{ secrets.DEV_KUBE_NAMESPACE }}|" \
+            k8s/dev/deployment.yaml | kubectl apply -f -
+          kubectl rollout status deployment/developer-portal --namespace "${{ secrets.DEV_KUBE_NAMESPACE }}" --timeout=180s
+
+      - name: Smoke test
+        shell: bash
+        run: |
+          bash scripts/smoke-test.sh dev https://dev.developer-portal.service.justice.gov.uk/healthz

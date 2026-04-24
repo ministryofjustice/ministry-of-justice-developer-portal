@@ -33,7 +33,8 @@
     "WCAG",
     "scrying",
     "katex",
-    "SLSA"
+    "SLSA",
+    "healthz"
   ],
   "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
   "languageSettings": [
