@@ -4,7 +4,6 @@
 
 - Last reviewed: 2026-04-24
 
-
 ## Scope
 
 This runbook covers deployment of `ministryofjustice/ministry-of-justice-developer-portal` to Cloud Platform Kubernetes namespaces:
@@ -16,19 +15,19 @@ It documents required GitHub configuration, deployment flow, and operational kub
 
 ## Canonical Repository and Workflow Links
 
-- Repository: https://github.com/ministryofjustice/ministry-of-justice-developer-portal
-- Dev deploy workflow file: https://github.com/ministryofjustice/ministry-of-justice-developer-portal/blob/main/.github/workflows/deploy-dev.yml
-- Prod deploy workflow file: https://github.com/ministryofjustice/ministry-of-justice-developer-portal/blob/main/.github/workflows/deploy-prod.yml
-- Smoke test script: https://github.com/ministryofjustice/ministry-of-justice-developer-portal/blob/main/scripts/smoke-test.sh
-- Dev k8s manifest: https://github.com/ministryofjustice/ministry-of-justice-developer-portal/blob/main/k8s/dev/deployment.yaml
-- Prod k8s manifest: https://github.com/ministryofjustice/ministry-of-justice-developer-portal/blob/main/k8s/prod/deployment.yaml
+- Repository: <https://github.com/ministryofjustice/ministry-of-justice-developer-portal>
+- Dev deploy workflow file: <https://github.com/ministryofjustice/ministry-of-justice-developer-portal/blob/main/.github/workflows/deploy-dev.yml>
+- Prod deploy workflow file: <https://github.com/ministryofjustice/ministry-of-justice-developer-portal/blob/main/.github/workflows/deploy-prod.yml>
+- Smoke test script: <https://github.com/ministryofjustice/ministry-of-justice-developer-portal/blob/main/scripts/smoke-test.sh>
+- Dev k8s manifest: <https://github.com/ministryofjustice/ministry-of-justice-developer-portal/blob/main/k8s/dev/deployment.yaml>
+- Prod k8s manifest: <https://github.com/ministryofjustice/ministry-of-justice-developer-portal/blob/main/k8s/prod/deployment.yaml>
 
 ## GitHub Actions Configuration
 
 ### Repository Variables (Actions)
 
 Set these at:
-https://github.com/ministryofjustice/ministry-of-justice-developer-portal/settings/variables/actions
+<https://github.com/ministryofjustice/ministry-of-justice-developer-portal/settings/variables/actions>
 
 Required:
 
@@ -38,7 +37,7 @@ Required:
 ### Environment Secrets: Dev
 
 Set these at:
-https://github.com/ministryofjustice/ministry-of-justice-developer-portal/settings/environments/dev
+<https://github.com/ministryofjustice/ministry-of-justice-developer-portal/settings/environments/dev>
 
 Required:
 
@@ -57,7 +56,7 @@ Expected values:
 ### Environment Secrets: Prod
 
 Set these at:
-https://github.com/ministryofjustice/ministry-of-justice-developer-portal/settings/environments/prod
+<https://github.com/ministryofjustice/ministry-of-justice-developer-portal/settings/environments/prod>
 
 Required:
 
@@ -78,39 +77,45 @@ Expected values:
 Use this process for a new environment such as `staging`.
 
 1. Provision namespace access in Cloud Platform for the new namespace (for example `developer-portal-staging`) and obtain:
+
 - cluster API URL
 - cluster CA cert
 - service account token with namespace-scoped deploy permissions
 
-2. Create a GitHub Environment (for example `staging`) at:
-https://github.com/ministryofjustice/ministry-of-justice-developer-portal/settings/environments
+1. Create a GitHub Environment (for example `staging`) at:
 
-3. Add environment secrets following existing naming conventions:
+<https://github.com/ministryofjustice/ministry-of-justice-developer-portal/settings/environments>
+
+1. Add environment secrets following existing naming conventions:
+
 - `<ENV>_ECR_ROLE_TO_ASSUME`
 - `<ENV>_KUBE_CLUSTER`
 - `<ENV>_KUBE_NAMESPACE`
 - `<ENV>_KUBE_CERT`
 - `<ENV>_KUBE_TOKEN`
 
-4. Add namespace manifests under `k8s/<env>/deployment.yaml` by copying an existing manifest and updating:
+1. Add namespace manifests under `k8s/<env>/deployment.yaml` by copying an existing manifest and updating:
+
 - namespace
 - ingress host
 - ingress class
 - external-dns annotations (`aws-weight`, `set-identifier`)
 - TLS secret name
 
-5. Add a deploy workflow (for example `.github/workflows/deploy-<env>.yml`) by copying `deploy-dev.yml` or `deploy-prod.yml` and updating:
+1. Add a deploy workflow (for example `.github/workflows/deploy-<env>.yml`) by copying `deploy-dev.yml` or `deploy-prod.yml` and updating:
+
 - `environment: <env>`
 - secret names to `<ENV>_*`
 - manifest path `k8s/<env>/deployment.yaml`
 - smoke test hostname
 
-6. Run workflow_dispatch for the new workflow and validate:
+1. Run workflow_dispatch for the new workflow and validate:
+
 - rollout success in new namespace
 - ingress created and synced
 - smoke test returns `200` with body `ok`
 
-7. Add operational commands for the new namespace in this runbook once verified.
+1. Add operational commands for the new namespace in this runbook once verified.
 
 ## Deployment Flow
 
@@ -119,7 +124,7 @@ https://github.com/ministryofjustice/ministry-of-justice-developer-portal/settin
 Trigger options:
 
 - Automatic on push to `main`
-- Manual dispatch at: https://github.com/ministryofjustice/ministry-of-justice-developer-portal/actions/workflows/deploy-dev.yml
+- Manual dispatch at: <https://github.com/ministryofjustice/ministry-of-justice-developer-portal/actions/workflows/deploy-dev.yml>
 
 Execution sequence:
 
@@ -138,7 +143,7 @@ Note: smoke test uses `curl --resolve` internally to avoid transient DNS failure
 
 Trigger:
 
-- Manual dispatch at: https://github.com/ministryofjustice/ministry-of-justice-developer-portal/actions/workflows/deploy-prod.yml
+- Manual dispatch at: <https://github.com/ministryofjustice/ministry-of-justice-developer-portal/actions/workflows/deploy-prod.yml>
 
 Execution sequence:
 

@@ -6,7 +6,9 @@
 
 ## Purpose
 
-This runbook defines a reusable ingestion process for any repository that pulls documentation from external sources and publishes normalized content into the portal/site repository.
+This runbook defines a reusable ingestion process for any repository that
+pulls documentation from external sources and publishes normalized content into
+the portal/site repository.
 
 ## Where To Update This Template
 
@@ -71,6 +73,7 @@ Define each source under a list (for example `sources[]`) with fields like:
 ## How To Add A New Source
 
 1. Add a new object under `sources[]` in `<SOURCES_CONFIG_PATH>` with at least:
+
 - `id` (kebab-case, unique)
 - `name`
 - `repo` (`owner/repo`)
@@ -79,36 +82,38 @@ Define each source under a list (for example `sources[]`) with fields like:
 - `format` (`tech-docs-template` or `markdown`)
 - `enabled` (`true`)
 
-2. Validate source path and format assumptions in the source repo:
+1. Validate source path and format assumptions in the source repo:
+
 - `docsPath` exists on the target branch
 - files under `docsPath` match expected format (`.md`, `.mdx`, or `.html.md.erb` for tech-docs-template)
 
-3. Run a dry run for the new source only:
+1. Run a dry run for the new source only:
 
 ```bash
 node <INGEST_SCRIPT_PATH> <new-source-id> --dry-run
 ```
 
-4. Run a real ingestion for the new source only:
+1. Run a real ingestion for the new source only:
 
 ```bash
 node <INGEST_SCRIPT_PATH> <new-source-id>
 ```
 
-5. Validate generated output:
+1. Validate generated output:
+
 - `<CONTENT_OUTPUT_DIR>/<new-source-id>/` exists
 - metadata file exists (for example `_meta.json`)
 - referenced assets are copied as expected
 
-6. Run build validation:
+1. Run build validation:
 
 ```bash
 npm run build
 ```
 
-7. Commit the source config and generated content changes in one PR.
+1. Commit the source config and generated content changes in one PR.
 
-8. Optionally trigger workflow dispatch with `<SOURCE_INPUT_NAME>=<new-source-id>` to validate CI ingestion path.
+1. Optionally trigger workflow dispatch with `<SOURCE_INPUT_NAME>=<new-source-id>` to validate CI ingestion path.
 
 ## Running Ingestion
 
@@ -187,15 +192,15 @@ Suggested commit message:
 After each ingestion run:
 
 1. Confirm Actions run success.
-2. Verify changed files under `<CONTENT_OUTPUT_DIR>` and `<PUBLIC_ASSET_DIR>`.
-3. Verify metadata file exists for each ingested source.
-4. Run build locally:
+1. Verify changed files under `<CONTENT_OUTPUT_DIR>` and `<PUBLIC_ASSET_DIR>`.
+1. Verify metadata file exists for each ingested source.
+1. Run build locally:
 
 ```bash
 npm run build
 ```
 
-5. Spot-check representative pages for each source.
+1. Spot-check representative pages for each source.
 
 ## Troubleshooting Guide
 
@@ -265,5 +270,5 @@ rg "<%|%>" <CONTENT_OUTPUT_DIR>
 If ingestion introduces bad content:
 
 1. Revert ingestion commit(s).
-2. Re-run build checks.
-3. Re-run ingestion only for corrected source after config/script fix.
+1. Re-run build checks.
+1. Re-run ingestion only for corrected source after config/script fix.
