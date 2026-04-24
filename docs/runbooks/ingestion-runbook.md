@@ -1,69 +1,136 @@
 # Documentation Ingestion Runbook
 
-## Scope
+## Review Dates
 
-This runbook covers how documentation ingestion works for the Developer Portal, how to trigger it, how to troubleshoot failures, and how to validate outputs.
+- Last reviewed: 2026-04-24
+
+## Purpose
+
+This runbook defines a reusable ingestion process for any repository that
+pulls documentation from external sources and publishes normalized content into
+the portal/site repository.
+
+## Where To Update This Template
+
+Update this file in:
+
+- `docs/runbooks/ingestion-runbook.md`
+
+Add or modify repository-specific values under the section **Repository-Specific Values To Fill**.
+
+## Repository-Specific Values To Fill
+
+Replace placeholders below for your target repository:
+
+- `<ORG>/<REPO>`: GitHub repository slug
+- `<DEFAULT_BRANCH>`: default branch (usually `main`)
+- `<INGEST_WORKFLOW_PATH>`: path to workflow file (for example `.github/workflows/ingest.yml`)
+- `<INGEST_SCRIPT_PATH>`: path to ingestion script (for example `scripts/ingest.mjs`)
+- `<SOURCES_CONFIG_PATH>`: source configuration file (for example `sources.json`)
+- `<CONTENT_OUTPUT_DIR>`: output folder (for example `content/docs`)
+- `<PUBLIC_ASSET_DIR>`: public assets folder (for example `public/docs`)
+- `<NODE_VERSION_VAR>`: Actions variable used by workflow (for example `NODE_VERSION`)
+- `<DISPATCH_EVENT_TYPE>`: repository dispatch type (for example `docs-update`)
+- `<SOURCE_INPUT_NAME>`: manual workflow input name (for example `source`)
+
+Absolute links pattern:
+
+- Repository: `https://github.com/<ORG>/<REPO>`
+- Workflow: `https://github.com/<ORG>/<REPO>/blob/<DEFAULT_BRANCH>/<INGEST_WORKFLOW_PATH>`
+- Script: `https://github.com/<ORG>/<REPO>/blob/<DEFAULT_BRANCH>/<INGEST_SCRIPT_PATH>`
+- Sources config: `https://github.com/<ORG>/<REPO>/blob/<DEFAULT_BRANCH>/<SOURCES_CONFIG_PATH>`
+- Output directory: `https://github.com/<ORG>/<REPO>/tree/<DEFAULT_BRANCH>/<CONTENT_OUTPUT_DIR>`
 
 ## Canonical Links
 
-- Repository: https://github.com/ministryofjustice/ministry-of-justice-developer-portal
-- Ingestion workflow: https://github.com/ministryofjustice/ministry-of-justice-developer-portal/blob/main/.github/workflows/ingest.yml
-- Ingestion script: https://github.com/ministryofjustice/ministry-of-justice-developer-portal/blob/main/scripts/ingest.mjs
-- Sources config: https://github.com/ministryofjustice/ministry-of-justice-developer-portal/blob/main/sources.json
-- Documentation output directory: https://github.com/ministryofjustice/ministry-of-justice-developer-portal/tree/main/content/docs
+- Repository: `https://github.com/<ORG>/<REPO>`
+- Ingestion workflow: `https://github.com/<ORG>/<REPO>/blob/<DEFAULT_BRANCH>/<INGEST_WORKFLOW_PATH>`
+- Ingestion script: `https://github.com/<ORG>/<REPO>/blob/<DEFAULT_BRANCH>/<INGEST_SCRIPT_PATH>`
+- Sources config: `https://github.com/<ORG>/<REPO>/blob/<DEFAULT_BRANCH>/<SOURCES_CONFIG_PATH>`
+- Output directory: `https://github.com/<ORG>/<REPO>/tree/<DEFAULT_BRANCH>/<CONTENT_OUTPUT_DIR>`
 
-## What Ingestion Does
+## What Ingestion Should Do
 
-The ingestion pipeline:
+1. Read enabled source definitions from source config.
+2. Clone/pull source repositories into a cache directory.
+3. Convert source docs into normalized markdown/content format.
+4. Write converted docs to `<CONTENT_OUTPUT_DIR>/<source-id>`.
+5. Copy referenced assets to both content and public asset directories.
+6. Write metadata file per source (for example `_meta.json`).
 
-1. Reads enabled sources from `sources.json`.
-2. Clones/pulls source repositories into `.ingestion-cache`.
-3. Converts source docs (including `tech-docs-template` `.html.md.erb` files) into Markdown.
-4. Writes converted docs into `content/docs/<source-id>`.
-5. Copies referenced assets into:
-   - `content/docs/<source-id>/...`
-   - `public/docs/<source-id>/...`
-6. Writes `_meta.json` per source with provenance metadata.
+## Source Configuration Contract
 
-## Configuring Sources
+Define each source under a list (for example `sources[]`) with fields like:
 
-Sources are defined in `sources.json` under `sources[]`.
+- `id`: output folder name
+- `repo`: source repo slug (`owner/repo`)
+- `branch`: source branch
+- `docsPath`: docs root path in source repo
+- `format`: converter type (`tech-docs-template`, `markdown`, etc.)
+- `enabled`: include/exclude source
+- `owner_slack` or equivalent owner metadata (optional)
 
-Fields used by ingestion:
+## How To Add A New Source
 
-- `id`: output folder name in `content/docs/`
-- `repo`: GitHub repo slug (`owner/repo`)
-- `branch`: branch to ingest from
-- `docsPath`: path in source repo to ingest from
-- `format`: `tech-docs-template` or `markdown`
-- `enabled`: true/false
-- `owner_slack`: optional fallback metadata
+1. Add a new object under `sources[]` in `<SOURCES_CONFIG_PATH>` with at least:
 
-Current source IDs:
+- `id` (kebab-case, unique)
+- `name`
+- `repo` (`owner/repo`)
+- `branch`
+- `docsPath`
+- `format` (`tech-docs-template` or `markdown`)
+- `enabled` (`true`)
 
-- `cloud-platform`
-- `modernisation-platform`
-- `analytical-platform`
-- `security-guidance`
+1. Validate source path and format assumptions in the source repo:
 
-## How To Run Ingestion
+- `docsPath` exists on the target branch
+- files under `docsPath` match expected format (`.md`, `.mdx`, or `.html.md.erb` for tech-docs-template)
+
+1. Run a dry run for the new source only:
+
+```bash
+node <INGEST_SCRIPT_PATH> <new-source-id> --dry-run
+```
+
+1. Run a real ingestion for the new source only:
+
+```bash
+node <INGEST_SCRIPT_PATH> <new-source-id>
+```
+
+1. Validate generated output:
+
+- `<CONTENT_OUTPUT_DIR>/<new-source-id>/` exists
+- metadata file exists (for example `_meta.json`)
+- referenced assets are copied as expected
+
+1. Run build validation:
+
+```bash
+npm run build
+```
+
+1. Commit the source config and generated content changes in one PR.
+
+1. Optionally trigger workflow dispatch with `<SOURCE_INPUT_NAME>=<new-source-id>` to validate CI ingestion path.
+
+## Running Ingestion
 
 ### Local
 
-From repository root:
-
 ```bash
 # Ingest all enabled sources
-node scripts/ingest.mjs
+node <INGEST_SCRIPT_PATH>
 
-# Ingest one source
-node scripts/ingest.mjs cloud-platform
+# Ingest a single source
+node <INGEST_SCRIPT_PATH> <source-id>
 
-# Dry run (no files written)
-node scripts/ingest.mjs --dry-run
+# Dry run
+node <INGEST_SCRIPT_PATH> --dry-run
 ```
 
-Equivalent npm scripts:
+### Package Scripts (Optional)
 
 ```bash
 npm run ingest
@@ -71,146 +138,137 @@ npm run ingest:dry-run
 npm run ingest:build
 ```
 
-## GitHub Actions Triggers
+## GitHub Actions Trigger Model
 
-Workflow: `Ingest Content`
+Recommended trigger modes:
 
-Trigger modes:
+1. `workflow_dispatch` for manual runs
+2. `schedule` for periodic sync
+3. `repository_dispatch` for source-driven updates
 
-1. Manual (`workflow_dispatch`)
-2. Scheduled every 6 hours (`0 */6 * * *`)
-3. `repository_dispatch` with type `docs-update`
+Manual run URL pattern:
 
-Manual run link:
-
-https://github.com/ministryofjustice/ministry-of-justice-developer-portal/actions/workflows/ingest.yml
+`https://github.com/<ORG>/<REPO>/actions/workflows/<INGEST_WORKFLOW_FILE_NAME>`
 
 ### Manual Input
 
-Optional input:
+Optional input example:
 
-- `source`: source ID to ingest (leave empty to ingest all)
+- `<SOURCE_INPUT_NAME>`: source ID (empty means all)
 
-## Repository Dispatch Contract
+### Repository Dispatch Payload
 
-The workflow reads source ID from `github.event.client_payload.source_id`.
-
-Example dispatch payload body:
+If workflow expects `client_payload.source_id`:
 
 ```json
 {
-  "event_type": "docs-update",
+  "event_type": "<DISPATCH_EVENT_TYPE>",
   "client_payload": {
-    "source_id": "cloud-platform"
+    "source_id": "<source-id>"
   }
 }
 ```
 
 ## Workflow Runtime Requirements
 
-The ingestion workflow expects:
+- Node version variable configured (for example `vars.<NODE_VERSION_VAR>`)
+- Workflow permissions to commit content changes (`contents: write`) when auto-commit is enabled
+- Network access from runner to source repositories
 
-- `vars.NODE_VERSION` configured in repository/environment variables
-- GitHub token permissions to push commits (`contents: write`)
+## Commit Strategy
 
-## Commit Behavior
-
-After ingestion, workflow does:
+Typical post-ingestion behavior:
 
 1. `git add -A`
-2. If no changes: exits successfully
-3. If changes exist: commits and pushes with message:
-   - `chore(ingest): refresh external documentation`
+2. Exit success if no changes
+3. Commit and push if changes exist
+
+Suggested commit message:
+
+- `chore(ingest): refresh external documentation`
 
 ## Validation Checklist
 
-After any ingestion run:
+After each ingestion run:
 
-1. Check workflow status in Actions.
-2. Confirm changed files under `content/docs/` and `public/docs/`.
-3. Confirm each source still has `_meta.json`.
-4. Run local build and search index generation:
+1. Confirm Actions run success.
+1. Verify changed files under `<CONTENT_OUTPUT_DIR>` and `<PUBLIC_ASSET_DIR>`.
+1. Verify metadata file exists for each ingested source.
+1. Run build locally:
 
 ```bash
 npm run build
 ```
 
-5. Spot-check key pages:
+1. Spot-check representative pages for each source.
 
-- `content/docs/cloud-platform/index.md`
-- `content/docs/modernisation-platform/index.md`
-- `content/docs/analytical-platform/index.md`
-- `content/docs/security-guidance/index.md` (or equivalent root page)
+## Troubleshooting Guide
 
-## Troubleshooting
-
-### No matching sources found
+### No matching sources
 
 Cause:
 
-- Invalid source ID passed to script, or all sources disabled.
+- Invalid source ID or all sources disabled.
 
-Fix:
+Resolution:
 
-- Validate source ID against `sources.json`.
-- Ensure `enabled: true` for desired source.
+- Validate source ID exists in config.
+- Ensure target source has `enabled: true`.
 
 ### Docs path not found
 
 Cause:
 
-- `docsPath` mismatch in `sources.json` or source repo structure changed.
+- Source docs path changed in upstream repo.
 
-Fix:
+Resolution:
 
-- Update `docsPath` in `sources.json`.
-- Re-run ingestion for that source.
+- Update `docsPath` in source config.
+- Re-run ingestion for the affected source.
 
-### Source clone/pull failure
+### Clone/pull failures
 
 Cause:
 
-- Invalid repo slug/branch or transient GitHub availability issue.
+- Invalid repo/branch or temporary network failure.
 
-Fix:
+Resolution:
 
-- Verify `repo` and `branch` in `sources.json`.
-- Re-run workflow.
+- Validate `repo` and `branch` values.
+- Retry workflow run.
 
 ### Build fails after ingestion
 
 Cause:
 
-- Ingested markdown/content incompatible with current build assumptions.
+- Converted markdown/content incompatible with local renderer/build.
 
-Fix:
+Resolution:
 
-- Run `npm run build` locally.
-- Identify failing file from stack trace.
-- Patch converter logic in `scripts/ingest.mjs` or update source-specific handling.
+- Run build locally and inspect failure path.
+- Update conversion logic in ingestion script.
 
-## Operational Commands
-
-Useful local inspection commands:
+## Useful Operational Commands
 
 ```bash
-# Show changed ingested docs
-git status --short content/docs public/docs
+# Show staged/unstaged ingestion output
+git status --short <CONTENT_OUTPUT_DIR> <PUBLIC_ASSET_DIR>
 
-# See per-source output dirs
-ls -1 content/docs
 
-# Inspect latest metadata
-cat content/docs/cloud-platform/_meta.json
+# List source output directories
+ls -1 <CONTENT_OUTPUT_DIR>
 
-# Quick grep for unresolved erb markers (should be none)
-rg "<%|%>" content/docs
+# Check metadata files
+find <CONTENT_OUTPUT_DIR> -name "_meta.json"
+
+# Check unresolved ERB markers after conversion
+rg "<%|%>" <CONTENT_OUTPUT_DIR>
 ```
 
 ## Rollback
 
-If an ingestion update introduces bad content:
+If ingestion introduces bad content:
 
-1. Revert the ingestion commit on branch/main.
-2. Re-run build checks.
-3. Re-trigger ingestion only for corrected source once fixed.
+1. Revert ingestion commit(s).
+1. Re-run build checks.
+1. Re-run ingestion only for corrected source after config/script fix.
