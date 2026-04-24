@@ -5,7 +5,7 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
-RUN ls -la content/docs/ || echo "content/docs does not exist"
+RUN npm run ingest
 RUN npm run build
 
 FROM nginx:1.29-alpine
