@@ -70,6 +70,32 @@ Define each source under a list (for example `sources[]`) with fields like:
 - `enabled`: include/exclude source
 - `owner_slack` or equivalent owner metadata (optional)
 
+## Optional portal.yaml In Source Repos
+
+If a source repository includes `portal.yaml` at repository root, ingestion can
+read values from it.
+
+Currently supported keys:
+
+- `docs.path` -> overrides `docsPath`
+- `owner_slack` -> sets fallback owner metadata
+
+Example:
+
+```yaml
+docs:
+  path: docs
+owner_slack: "#security-guidance"
+```
+
+Notes:
+
+- Keep the file simple YAML key/value format.
+- Use spaces, not tabs.
+- Use two-space indentation for nested keys (for example under `docs:`).
+- Keep `sources.json` as the source of truth for fields such as `id`, `name`,
+  `description`, `category`, `repo`, `branch`, `format`, and `enabled`.
+
 ## How To Add A New Source
 
 1. Add a new object under `sources[]` in `<SOURCES_CONFIG_PATH>` with at least:
