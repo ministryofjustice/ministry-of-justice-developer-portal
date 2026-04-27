@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import RootLayout from '../../src/app/layout';
+import { LayoutShell } from '@/app/layoutShell';
 
 /*This test is set up to demonstrate how the mocks work in this methodology.
 The following mocks override the actual components and give us clear returns to assert against (test-ids).
@@ -19,12 +19,12 @@ vi.mock('@/components/PhaseBanner', () => ({
   PhaseBanner: () => <div data-testid="phase-banner" />,
 }));
 
-describe('RootLayout', () => {
+describe('LayoutShell', () => {
   it('renders layout structure', () => {
     render(
-      <RootLayout>
+      <LayoutShell>
         <div data-testid="content">Hello</div>
-      </RootLayout>,
+      </LayoutShell>,
     );
 
     expect(screen.getByTestId('header')).toBeInTheDocument();
@@ -34,37 +34,34 @@ describe('RootLayout', () => {
 
   it('renders children inside main', () => {
     render(
-      <RootLayout>
+      <LayoutShell>
         <div data-testid="content">Hello</div>
-      </RootLayout>,
+      </LayoutShell>,
     );
 
-    const main = screen.getByRole('main');
-
-    expect(main).toContainElement(screen.getByTestId('content'));
+    expect(screen.getByRole('main')).toContainElement(screen.getByTestId('content'));
   });
 
   it('includes skip link for accessibility', () => {
     render(
-      <RootLayout>
+      <LayoutShell>
         <div />
-      </RootLayout>,
+      </LayoutShell>,
     );
 
-    const skipLink = screen.getByText(/skip to main content/i);
-
-    expect(skipLink).toHaveAttribute('href', '#main-content');
+    expect(screen.getByRole('link', { name: /skip to main content/i })).toHaveAttribute(
+      'href',
+      '#main-content',
+    );
   });
 
   it('has main landmark with correct id', () => {
     render(
-      <RootLayout>
+      <LayoutShell>
         <div />
-      </RootLayout>,
+      </LayoutShell>,
     );
 
-    const main = screen.getByRole('main');
-
-    expect(main).toHaveAttribute('id', 'main-content');
+    expect(screen.getByRole('main')).toHaveAttribute('id', 'main-content');
   });
 });
