@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { LayoutShell } from '@/app/layout';
+import { LayoutShell } from '@/app/layoutShell';
 
 /*This test is set up to demonstrate how the mocks work in this methodology.
 The following mocks override the actual components and give us clear returns to assert against (test-ids).
