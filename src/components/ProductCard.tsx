@@ -1,14 +1,6 @@
 import Link from 'next/link';
 import { getProductCategoryLabel } from '@/lib/categoryLabels';
-
-interface ProductCardProps {
-  slug: string;
-  name: string;
-  category: string;
-  description: string;
-  status: string;
-  tags: string[];
-}
+import { ProductCardProps } from '@/types/types';
 
 export function ProductCard({ slug, name, category, description, status, tags }: ProductCardProps) {
   return (

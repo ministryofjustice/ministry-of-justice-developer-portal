@@ -1,36 +1,28 @@
 import { vi } from 'vitest';
 
-export function nextMock() {
-  vi.mock('next/link', () => ({
-    default: ({ href, children }: any) => <a href={href}>{children}</a>,
-  }));
-}
+// To be used when functionality is not a concern i.e. layout tests/rendering tests.
 
-export function searchWidgetMock() {
-  vi.mock('@/components/SearchWidget', () => ({
-    default: () => <div data-testid="search-widget" />,
-  }));
-}
+vi.mock('next/link', () => ({
+  default: ({ href, children }: any) => <a href={href}>{children}</a>,
+}));
 
-export function chatbotMock() {
-  vi.mock('@/components/ChatBot', () => ({
-    ChatBot: () => <div data-testid="chatbot-button" />,
-  }));
-}
+vi.mock('@/components/SearchWidget', () => ({
+  default: () => <div data-testid="search-widget" />,
+}));
 
-export function breadcrumbsMock() {
-  vi.mock('@/components/Breadcrumbs', () => ({
-    Breadcrumbs: () => <div data-testid="breadcrumbs" />,
-  }));
-}
+vi.mock('@/components/ChatBot', () => ({
+  ChatBot: () => <div data-testid="chatbot-button" />,
+}));
 
-export function sectionMock() {
-  vi.mock('@/components/templateRender/Section', () => ({
-    Section: ({ heading, children }: any) => (
-      <section>
-        <h2>{heading}</h2>
-        {children}
-      </section>
-    ),
-  }));
-}
+vi.mock('@/components/Breadcrumbs', () => ({
+  Breadcrumbs: () => <div data-testid="breadcrumbs" />,
+}));
+
+vi.mock('@/components/templateRender/Section', () => ({
+  Section: ({ heading, children }: any) => (
+    <section>
+      <h2>{heading}</h2>
+      {children}
+    </section>
+  ),
+}));

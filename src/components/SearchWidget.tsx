@@ -1,16 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-
-interface SearchResult {
-  url: string;
-  title: string;
-  excerpt: string;
-}
+import { SearchWidgetResult } from '@/types/types';
 
 export default function SearchWidget() {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<SearchResult[]>([]);
+  const [results, setResults] = useState<SearchWidgetResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [pagefind, setPagefind] = useState<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -65,7 +60,7 @@ export default function SearchWidget() {
         return;
       }
       const search = await pagefind.search(query);
-      const items: SearchResult[] = [];
+      const items: SearchWidgetResult[] = [];
       for (const r of search.results.slice(0, 8)) {
         const data = await r.data();
         const rawUrl = data.url || '/';

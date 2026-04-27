@@ -29,3 +29,23 @@ export interface DocSource {
   category: string;
   items: NavItem[];
 }
+
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+export interface ProductCardProps {
+  slug: string;
+  name: string;
+  category: string;
+  description: string;
+  status: string;
+  tags: string[];
+}
+
+export interface SearchWidgetResult {
+  url: string;
+  title: string;
+  excerpt: string;
+}

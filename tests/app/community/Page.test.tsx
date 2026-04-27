@@ -1,11 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import { chatbotMock, nextMock, breadcrumbsMock, sectionMock } from '@tests/mocks/reusableUiMocks';
+import '@tests/mocks/reusableUiMocks';
 import CommunityPage from '@/app/community/page';
-
-nextMock();
-chatbotMock();
-breadcrumbsMock();
-sectionMock();
 
 vi.mock('@/components/templateRender/Callout', () => ({
   Callout: ({ title, children }: any) => (
