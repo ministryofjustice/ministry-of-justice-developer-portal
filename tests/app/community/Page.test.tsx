@@ -1,15 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import '@tests/mocks/reusableUiMocks';
+import '@tests/mocks/AllMocks';
 import CommunityPage from '@/app/community/page';
-
-vi.mock('@/components/templateRender/Callout', () => ({
-  Callout: ({ title, children }: any) => (
-    <div>
-      <h2>{title}</h2>
-      {children}
-    </div>
-  ),
-}));
 
 vi.mock('@/components/templateRender/PageIntro', () => ({
   PageIntro: ({ title, summary }: any) => (
@@ -22,10 +13,6 @@ vi.mock('@/components/templateRender/PageIntro', () => ({
 
 vi.mock('@/lib/categoryLabels', () => ({
   getCommunityCategoryLabel: (cat: string) => `label-${cat}`,
-}));
-
-vi.mock('@/lib/date', () => ({
-  formatEventDateTime: (date: string) => `formatted-${date}`,
 }));
 
 vi.mock('../../../content/community/community.json', () => ({

@@ -8,6 +8,7 @@ export function FeedbackWidget() {
   const handleFeedback = (value: 'yes' | 'no') => {
     setFeedback(value);
     // In production, send to analytics backend
+    console.log(`Page feedback: ${value}`, { page: typeof window !== 'undefined' ? window.location.pathname : '' });
   };
 
   return (

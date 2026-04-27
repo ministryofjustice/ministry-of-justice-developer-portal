@@ -1,10 +1,8 @@
 import '../../styles/globals.scss';
 import '@ministryofjustice/frontend/moj/moj-frontend.min.css';
 import type { Metadata } from 'next';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
-import { PhaseBanner } from '@/components/PhaseBanner';
-import { MojFrontendInit } from '@/components/MojFrontendInit';
+import { LayoutShell } from '@/app/layoutShell';
+
 
 export const metadata: Metadata = {
   title: {
@@ -22,16 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{
     __html: `document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '')`
   }} />
-        <a href="#main-content" className="govuk-skip-link" data-module="govuk-skip-link">
-          Skip to main content
-        </a>
-        <Header />
-        <PhaseBanner />
-        <main className="govuk-main-wrapper" id="main-content" role="main">
-          {children}
-        </main>
-        <Footer />
-        <MojFrontendInit />
+        <LayoutShell>{children}</LayoutShell>
       </body>
     </html>
   );
