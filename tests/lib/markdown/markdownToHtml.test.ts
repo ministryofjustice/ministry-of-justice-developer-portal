@@ -97,10 +97,11 @@ describe('markdownToHtml', () => {
       expect(result).toContain('Second paragraph');
     });
 
-    it('falls back to information style for unknown callout type', async () => {
+    it('does not convert an unknown callout type', async () => {
       const result = await markdownToHtml('> [!UNKNOWN]\n> Some text');
 
-      expect(result).toContain('moj-alert--information');
+      expect(result).toContain('<blockquote>');
+      expect(result).not.toContain('moj-alert');
     });
 
     it('does not convert a regular blockquote', async () => {
