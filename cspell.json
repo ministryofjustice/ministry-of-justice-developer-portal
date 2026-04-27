@@ -35,7 +35,14 @@
     "katex",
     "SLSA",
     "gomod",
-    "textsf"
+    "textsf",
+    "healthz",
+    "uwsgi",
+    "scgi",
+    "buildx",
+    "kubeconfig",
+    "kdev",
+    "kprod"
   ],
   "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
   "languageSettings": [

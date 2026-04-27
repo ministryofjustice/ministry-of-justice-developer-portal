@@ -1,0 +1,11 @@
+.git
+.github/*
+!.github/nginx/
+!.github/nginx/default.conf
+.next
+out
+node_modules
+.tmp
+.ingestion-cache
+coverage
+npm-debug.log*

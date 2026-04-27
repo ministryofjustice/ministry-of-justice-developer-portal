@@ -23,7 +23,7 @@ A cross-government developer portal inspired by [Singapore's Government Develope
 | Content | Markdown with YAML frontmatter |
 | Search | [Pagefind](https://pagefind.app/) (client-side, zero-dependency) |
 | Ingestion | Node.js script that clones repos and converts `.html.md.erb` → `.md` |
-| Hosting | GitHub Pages (static), containerisable for Cloud Platform |
+| Hosting | Cloud Platform (containerised, Kubernetes) |
 
 ## Getting started
 
@@ -119,6 +119,17 @@ root/
 │   ├── components/
 │   └── lib/
 
+### Common local commands
+
+You can use the `Makefile` for common tasks:
+
+```bash
+make install
+make ingest
+make build
+make docker-build IMAGE_URI=local/ministry-of-justice-developer-portal:dev
+make k8s-apply-dev IMAGE_URI=<your-ecr-image-uri>
+make smoke-dev
 ```
 
 ## Content structure
@@ -174,19 +185,71 @@ Source repos can trigger re-ingestion automatically using `repository_dispatch`.
 
 | Workflow | Trigger | Purpose |
 |---|---|---|
-| [`deploy.yml`](.github/workflows/deploy.yml) | Push to main, schedule (6h), manual, webhook | Ingest, build, deploy to GitHub Pages |
+| [`ingest.yml`](.github/workflows/ingest.yml) | Schedule (6h), manual, webhook | Ingest external docs and commit updates |
+| [`deploy-dev.yml`](.github/workflows/deploy-dev.yml) | Push to main, manual | Build image, push to ECR, deploy to dev namespace |
+| [`deploy-prod.yml`](.github/workflows/deploy-prod.yml) | Manual | Build image, push to ECR, deploy to prod namespace |
 | [`preview.yml`](.github/workflows/preview.yml) | Pull request | Dry-run ingest + build check |
 
 ## Deployment
 
-### GitHub Pages (default)
-
-1. Enable GitHub Pages in the repo settings (source: GitHub Actions)
-2. Push to `main` — the deploy workflow handles the rest
-
 ### Cloud Platform (containerised)
 
-A `Dockerfile` can be added to serve the `out/` directory with nginx. The static export is fully compatible with container hosting.
+This repository deploys to Cloud Platform via dedicated dev and prod GitHub workflows. The container image is built from the included `Dockerfile`, pushed to ECR, and deployed to Kubernetes using environment-scoped credentials.
+
+#### Required GitHub Actions secrets
+
+The deploy workflows expect separate Kubernetes credentials for dev and prod:
+
+| Environment | Required secrets |
+|---|---|
+| Dev | `ECR_ROLE_TO_ASSUME`, `DEV_KUBE_CLUSTER`, `DEV_KUBE_NAMESPACE`, `DEV_KUBE_CERT`, `DEV_KUBE_TOKEN` |
+| Prod | `PROD_ECR_ROLE_TO_ASSUME`, `PROD_KUBE_CLUSTER`, `PROD_KUBE_NAMESPACE`, `PROD_KUBE_CERT`, `PROD_KUBE_TOKEN` |
+
+These are provided by Cloud Platform module configuration (for this repository) once the relevant Cloud Platform PRs are merged.
+
+#### Required GitHub Actions variables
+
+The workflows also require:
+
+- `ECR_REGION`
+- `ECR_REPOSITORY`
+
+Set these in GitHub Actions variables at repository level, or as environment variables in `dev` and `prod` if you need them to differ between environments.
+
+#### Deployment workflows
+
+- Dev deployment runs automatically on push to `main` and can also be run manually via `.github/workflows/deploy-dev.yml`.
+- Prod deployment is manual-only via `.github/workflows/deploy-prod.yml`.
+
+#### Runbooks
+
+- [Cloud Platform deployment runbook](docs/runbooks/cloud-platform-deployment-runbook.md)
+- [Documentation ingestion runbook](docs/runbooks/ingestion-runbook.md)
+
+#### Runtime hardening
+
+Both Kubernetes deployments apply a baseline container hardening profile:
+
+- Pod-level `runAsNonRoot` with explicit UID/GID (`101`), and `seccompProfile: RuntimeDefault`
+- `automountServiceAccountToken: false` for workloads that do not call the Kubernetes API
+- Container-level `allowPrivilegeEscalation: false` and Linux capability drop (`ALL`)
+
+This keeps the runtime aligned with Cloud Platform security expectations while remaining compatible with the current NGINX-based image.
+
+#### Target domains
+
+- Dev: `https://dev.developer-portal.service.justice.gov.uk`
+- Prod: `https://developer-portal.service.justice.gov.uk`
+
+#### Cutover from GitHub Pages
+
+1. Merge Cloud Platform PRs that provision domains and GitHub secrets.
+2. Merge this deployment branch to `main`.
+3. Trigger/confirm successful dev deployment and smoke test (`/healthz` returns `ok`).
+4. Trigger/confirm successful prod deployment and smoke test (`/healthz` returns `ok`).
+5. After prod is serving from Cloud Platform, disable GitHub Pages in repository settings.
+
+Keeping Pages enabled until prod verification avoids downtime during migration.
 
 ## Licence
 
