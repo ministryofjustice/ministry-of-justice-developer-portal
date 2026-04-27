@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
@@ -26,7 +27,14 @@ export function generateStaticParams() {
   return guidelines.items.filter((g) => !g.externalUrl).map((g) => ({ slug: g.slug }));
 }
 
-export default async function generateMetadata({ params }: { params: Promise<Params> }) {
+export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
+  const { slug } = await params;
+  const guideline = guidelines.items.find((g) => g.slug === slug);
+  if (!guideline) return {};
+  return { title: guideline.title };
+}
+
+export default async function GuidelineDetailPage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
   const guideline = guidelines.items.find((g) => g.slug === slug);
 
