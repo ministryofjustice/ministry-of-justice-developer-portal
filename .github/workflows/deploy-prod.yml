@@ -58,7 +58,7 @@ jobs:
         run: |
           set -euo pipefail
           IMAGE_URI="${{ steps.ecr-login.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${IMAGE_TAG}"
-          docker build -t "${IMAGE_URI}" .
+          docker buildx build --platform linux/amd64 --load -t "${IMAGE_URI}" .
           docker push "${IMAGE_URI}"
           echo "image_uri=${IMAGE_URI}" >> "$GITHUB_OUTPUT"
 
@@ -70,11 +70,14 @@ jobs:
         run: |
           set -euo pipefail
           # Use Cloud Platform-provisioned PROD_* GitHub secrets.
-          echo "${{ secrets.PROD_KUBE_CERT }}" | base64 --decode > ca.crt
+          echo "${{ secrets.PROD_KUBE_CERT }}" > ca.crt
           kubectl config set-cluster cp-cluster --server="${{ secrets.PROD_KUBE_CLUSTER }}" --certificate-authority=ca.crt
           kubectl config set-credentials github-actions --token="${{ secrets.PROD_KUBE_TOKEN }}"
           kubectl config set-context prod --cluster=cp-cluster --user=github-actions --namespace="${{ secrets.PROD_KUBE_NAMESPACE }}"
           kubectl config use-context prod
+          
+          # Make kubeconfig location available to subsequent steps
+          echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
 
       - name: Deploy manifests
         shell: bash
@@ -86,7 +89,22 @@ jobs:
             k8s/prod/deployment.yaml | kubectl apply -f -
           kubectl rollout status deployment/developer-portal --namespace "${{ secrets.PROD_KUBE_NAMESPACE }}" --timeout=180s
 
+      - name: Resolve smoke test target
+        id: smoke-target
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Resolve the ingress load balancer host to an IP so smoke tests are
+          # resilient when runner DNS cannot resolve the app hostname yet.
+          APP_HOST="developer-portal.service.justice.gov.uk"
+          INGRESS_LB_HOST=$(kubectl get ingress developer-portal --namespace "${{ secrets.PROD_KUBE_NAMESPACE }}" -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          RESOLVE_IP=$(getent ahostsv4 "${INGRESS_LB_HOST}" | awk 'NR==1{print $1}')
+
+          echo "health_url=https://${APP_HOST}/healthz" >> "$GITHUB_OUTPUT"
+          echo "resolve_ip=${RESOLVE_IP}" >> "$GITHUB_OUTPUT"
+
       - name: Smoke test
         shell: bash
         run: |
-          bash scripts/smoke-test.sh prod https://developer-portal.service.justice.gov.uk/healthz
+          # scripts/smoke-test.sh uses curl --resolve when resolve_ip is provided.
+          bash scripts/smoke-test.sh prod "${{ steps.smoke-target.outputs.health_url }}" "${{ steps.smoke-target.outputs.resolve_ip }}"

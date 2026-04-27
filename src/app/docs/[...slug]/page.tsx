@@ -12,12 +12,15 @@ import { MetaBar } from '@/components/templateRender/MetaBar';
 import { ReviewBadge, type ReviewStatus } from '@/components/templateRender/ReviewBadge';
 import { NavItem } from '@/types/types';
 
-export function generateStaticParams() {
+type Params = { slug: string[] };
+
+export const dynamic = 'force-static';
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
   const slugs = getAllDocSlugs();
   return slugs.map((slug) => ({ slug }));
 }
-
-type Params = { slug: string[] };
 
 export async function generateMetadata({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
