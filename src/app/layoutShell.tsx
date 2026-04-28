@@ -10,8 +10,8 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
         Skip to main content
       </a>
       <Header />
-      <PhaseBanner />
       <main className="govuk-main-wrapper" id="main-content" role="main">
+        <PhaseBanner />
         {children}
       </main>
       <Footer />
