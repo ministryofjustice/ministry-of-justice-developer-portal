@@ -81,7 +81,7 @@ jobs:
       - name: Node
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.1.0
         with:
-          node-version: 24
+          node-version:  ${{ vars.NODE_VERSION }}
 
       - name: SLSA supply chain protection
         uses: ministryofjustice/devsecops-actions/sca/slsa@1cee8e5dce2be99328b2ea9074c7e0acdfd69907
