@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import '@tests/mocks/AllMocks'; // NOTE - this MUST be BEFORE the component import.
+import '@tests/unit/mocks/AllMocks'; // NOTE - this MUST be BEFORE the component import.
 import Home from '@/app/page';
 
 /* This test is set up to demonstrate how to use the reusable mocks.

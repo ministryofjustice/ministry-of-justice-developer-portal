@@ -72,14 +72,14 @@ npm run build
 
 This runs `next build` followed by Pagefind indexing. Output is in `out/`.
 
-### Testing
+### Unit Testing
 
 The portal employs Vitest for lightweight, fast unit testing. Tests should be named under the convention `*.test.ts`.
 
 The following scripts are vital to know:
 
 ```bash
-# Run all unit tests located in the test directory.
+# Run all unit tests located in the unit directory.
 npm run test
 
 # Run all unit tests and generate a coverage report
@@ -90,10 +90,29 @@ npm run test:ui
 
 # # Run all unit tests with the runner remaining open and running continuously as files change.
 npm run test:watch
+```
 
-# # Run all unit tests with coverage, the runner remaining open and running continuously as files change. 
-# # NOTE: only coverage for changed files generate in this mode
-npm run test:coverageWatch
+### E2E Testing
+
+The portal employs Playwright for E2E testing. Tests should be named under the convention `*.spec.ts`.
+
+The following scripts are vital to know:
+
+```bash
+# Run all E2E tests located in the E2E directory in headless mode. Use case: local test runs
+npm run test:e2e
+
+# Run all E2E tests located in the E2E directory in Playwright UI mode. Use case: running individual tests, debugging tests,
+# and re-running quickly.
+npm run test:e2e-ui
+
+# Run all E2E tests located in the E2E directory in headed mode. Use case: allows you to observe the test run.
+npm run test:e2e-headed
+
+# Run all E2E tests located in the E2E directory in debug mode. Use case: allows you to step through the tests, pause actions,
+# inspect selectors, and debug in finer detail.
+npm run test:e2e-debug
+
 ```
 
 ## Project structure
@@ -111,13 +130,25 @@ root/
 │   ├── components/
 │   └── lib/
 ├── tests/                    
-│   ├── app/
-│   │   ├── community      
-│   │   ├── contact-us
-│   │   ├── docs
-│   │   └── ...
-│   ├── components/
-│   └── lib/
+│   ├── unit/
+│   │   ├── app/      
+│   │   │   ├── community
+│   │   │   └── ...
+│   │   ├── components/  
+│   │   │   ├── breadcrumbs
+│   │   │   └── ...
+│   │   └── ../  
+│   ├── e2e/
+│   │   ├── smoke/      
+│   │   │   ├── home
+│   │   │   └── navigation
+│   │   ├── a11y/  
+│   │   │   ├── home
+│   │   │   └── ...
+│   │   ├── pages/  
+│   │   │   ├── home
+│   │   │   └── ...
+
 
 ### Common local commands
 

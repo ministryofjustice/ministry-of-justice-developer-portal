@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import '@tests/mocks/AllMocks';
+import '@tests/unit/mocks/AllMocks';
 import { LayoutShell } from '@/app/layoutShell';
 
 describe('LayoutShell', () => {
