@@ -1,14 +1,11 @@
 import { render, screen } from '@testing-library/react';
-import { searchWidgetMock, nextMock, chatbotMock } from '@tests/mocks/reusableUiMocks'; // NOTE - this MUST be BEFORE the component import.
+import '@tests/mocks/AllMocks'; // NOTE - this MUST be BEFORE the component import.
 import Home from '@/app/page';
 
-/* Unlike layout.test.tsx, this test is set up to demonstrate how to use the reusable mocks.
-The mocks still override the actual components but are set up in a central location.
-Simply import what is needed for your page */
-
-searchWidgetMock();
-nextMock();
-chatbotMock();
+/* This test is set up to demonstrate how to use the reusable mocks.
+The mocks still override the actual components but are set up in a central location. This test uses
+ all the base mocks (every component) but you can also import only what is needed which can then allow
+ flexibility for overriding. */
 
 describe('Home page', () => {
   it('renders hero content', () => {

@@ -1,9 +1,5 @@
+import { BreadcrumbItem } from '@/types/types';
 import Link from 'next/link';
-
-interface BreadcrumbItem {
-  label: string;
-  href?: string;
-}
 
 export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
   return (

@@ -221,6 +221,11 @@ Set these in GitHub Actions variables at repository level, or as environment var
 - Dev deployment runs automatically on push to `main` and can also be run manually via `.github/workflows/deploy-dev.yml`.
 - Prod deployment is manual-only via `.github/workflows/deploy-prod.yml`.
 
+#### Runbooks
+
+- [Cloud Platform deployment runbook](docs/runbooks/cloud-platform-deployment-runbook.md)
+- [Documentation ingestion runbook](docs/runbooks/ingestion-runbook.md)
+
 #### Runtime hardening
 
 Both Kubernetes deployments apply a baseline container hardening profile:

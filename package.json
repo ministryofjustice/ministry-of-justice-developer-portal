@@ -5,12 +5,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && npx pagefind --site out",
+    "build": "next build --webpack && npx pagefind --site out",
     "start": "next start",
     "lint": "npm run validate:ts",
     "ingest": "node scripts/ingest.mjs",
     "ingest:dry-run": "node scripts/ingest.mjs --dry-run",
-    "ingest:build": "node scripts/ingest.mjs && next build && npx pagefind --site out",
+    "ingest:build": "node scripts/ingest.mjs && next build --webpack && npx pagefind --site out",
     "validate:all": "npm run validate:md && npm run validate:yml && npm run validate:ts",
     "validate:md": "markdownlint '**/*.md' --ignore node_modules --ignore dist --ignore out --config .markdownlint.json --ignore .markdownlintignore",
     "validate:yml": "if command -v yamllint >/dev/null 2>&1 && [ -f .yamllint.yml ]; then yamllint -c .yamllint.yml '**/*.{yml,yaml}'; else echo 'yamllint not installed or .yamllint.yml missing; skipping YAML validation'; fi",
@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/user-event": "^14.6.1",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
