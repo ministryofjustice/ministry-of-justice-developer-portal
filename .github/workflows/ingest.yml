@@ -52,7 +52,7 @@ jobs:
 
       - name: Register self-service source
         id: register-self-service
-        if: github.event_name == 'repository_dispatch' && github.event.client_payload.repo != ''
+        if: github.event_name == 'repository_dispatch' && github.event.client_payload.repo != null && github.event.client_payload.repo != ''
         shell: bash
         run: |
           set -euo pipefail

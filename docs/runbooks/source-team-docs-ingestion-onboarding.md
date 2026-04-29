@@ -85,7 +85,7 @@ Notes:
 Add this workflow file in your source repo:
 
 - `.github/workflows/notify-portal.yml`
-- Based on [`docs/runbooks/notify-portal.yml.example`](docs/runbooks/notify-portal.yml.example)
+- Based on [`notify-portal.yml.example`](notify-portal.yml.example)
 
 Use this template:
 
@@ -227,7 +227,7 @@ Test with an invalid `source_id` (manual run in portal ingest workflow):
 
 ## References
 
-- [Documentation ingestion runbook](docs/runbooks/ingestion-runbook.md)
-- [Source notification workflow example](docs/runbooks/notify-portal.yml.example)
-- [Source `portal.yaml` example](docs/runbooks/portal.yaml.example)
-- [Documentation template contract](docs/templates/spec-documentation.md)
+- [Documentation ingestion runbook](ingestion-runbook.md)
+- [Source notification workflow example](notify-portal.yml.example)
+- [Source `portal.yaml` example](portal.yaml.example)
+- [Documentation template contract](../templates/spec-documentation.md)

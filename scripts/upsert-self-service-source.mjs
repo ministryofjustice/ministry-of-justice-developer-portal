@@ -33,9 +33,10 @@ const current = readJsonFile(SOURCES_FILE, null, { sources: [] });
 
 const existing = Array.isArray(current.sources) ? current.sources : [];
 const existingEntry = existing.find((entry) => entry.id === source.id);
+const existingOnboardingMode = existingEntry?.onboardingMode || 'manual';
 
 // Guardrail: self-service must not overwrite manually governed entries.
-if (existingEntry?.onboardingMode === 'manual') {
+if (existingOnboardingMode === 'manual') {
   fail(
     `source_id '${source.id}' is managed manually in sources.json and cannot be updated by self-service`,
   );
