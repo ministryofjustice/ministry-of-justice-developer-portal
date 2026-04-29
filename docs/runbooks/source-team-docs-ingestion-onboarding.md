@@ -2,7 +2,7 @@
 
 ## Review Dates
 
-- Last reviewed: 2026-04-27
+- Last reviewed: 2026-04-29
 
 ## Audience
 
@@ -18,30 +18,35 @@ will update content without manual intervention.
 ## Prerequisites
 
 - You own or maintain a source repository in GitHub.
-- You can add workflows and secrets to that source repository.
-- You have a confirmed `source_id` that exactly matches the entry in the Developer Portal `sources.json`.
+- You can add workflows and consume secrets to that source repository.
+- Manual mode only: you have a confirmed `source_id` that exactly matches the entry in the Developer Portal `sources.json`.
+- Self-service mode: choose a unique kebab-case `source_id`; it can be created via payload.
 
 ## Contract You Must Follow
 
-- `sources.json` in the Developer Portal is the source of truth for:
+- Managed mode uses `sources.json` in the Developer Portal for:
   - `id`
   - `repo`
   - `branch`
   - `format`
   - `enabled`
+- Self-service mode writes to the same `sources.json` with `onboardingMode: automated`
 - Source repo `portal.yaml` supports only these ingestion overrides:
   - `docs.path`
   - `owner_slack`
 - Notification event must be:
   - `event-type: docs-update`
 - Notification payload must include:
-  - `client_payload.source_id` exactly matching your `sources.json` `id`
+  - `client_payload.source_id` for targeted ingestion
+  - source metadata fields when self-service creating/updating a source
 
 ## Step 1: Confirm Your `source_id`
 
-Confirm your source entry exists in the Developer Portal `sources.json` and note the exact `id` value.
+Confirm your `source_id` and choose onboarding mode.
 
-If your source does not exist yet, request onboarding in the Developer Portal repo with:
+### Manual Mode (PR path)
+
+Request onboarding in the Developer Portal repo with:
 
 - repository slug (`owner/repo`)
 - default branch
@@ -49,10 +54,17 @@ If your source does not exist yet, request onboarding in the Developer Portal re
 - format (`tech-docs-template` or `markdown`)
 - owner Slack channel
 - proposed `id` (kebab-case)
+- raise a PR in the Developer Portal repository
+- notify `#developer-experience-team` with the PR link
+
+### Self-service Mode (no manual portal intervention)
+
+Use a `repository_dispatch` payload with source metadata as shown in this runbook.
 
 ## Step 2: Add `portal.yaml` at Source Repo Root
 
 Create `portal.yaml` in your source repository root.
+Use the example in [`docs/runbooks/portal.yaml.example`](docs/runbooks/portal.yaml.example).
 
 Use this minimal example:
 
@@ -73,6 +85,7 @@ Notes:
 Add this workflow file in your source repo:
 
 - `.github/workflows/notify-portal.yml`
+- Based on [`docs/runbooks/notify-portal.yml.example`](docs/runbooks/notify-portal.yml.example)
 
 Use this template:
 
@@ -91,10 +104,19 @@ jobs:
     env:
       SOURCE_ID: your-source-id
     steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2
+        with:
+          app-id: ${{ secrets.MOJ_DEV_PORTAL_ONBOARDING_APP_ID }}
+          private-key: ${{ secrets.MOJ_DEV_PORTAL_ONBOARDING_APP_PRIVATE_KEY }}
+          owner: ministryofjustice
+          repositories: ministry-of-justice-developer-portal
+
       - name: Trigger portal ingestion
         uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0 # v3
         with:
-          token: ${{ secrets.PORTAL_DISPATCH_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           repository: ministryofjustice/ministry-of-justice-developer-portal
           event-type: docs-update
           client-payload: '{"source_id": "${{ env.SOURCE_ID }}"}'
@@ -102,27 +124,60 @@ jobs:
 
 Replace:
 
-- `SOURCE_ID` with your exact `sources.json` id
+- `SOURCE_ID`:
+  - Manual mode: set to the exact `id` already present in `sources.json`
+  - Self-service mode: set to the same `source_id` you send in registration payload
 - `paths` glob if your docs path differs
 
-## Step 4: Add Required Secret in Source Repo
+Optional self-service registration payload (first run or updates):
 
-Create this repository secret in your source repo:
+```json
+{
+  "event_type": "docs-update",
+  "client_payload": {
+    "source_id": "my-team-docs",
+    "repo": "ministryofjustice/my-team-repo",
+    "branch": "main",
+    "docsPath": "docs",
+    "format": "markdown",
+    "owner_slack": "#my-team"
+  }
+}
+```
 
-- `PORTAL_DISPATCH_TOKEN`
+When this payload is sent, the portal workflow registers or updates the source in
+`sources.json` (with `onboardingMode: automated`) and ingests only that source.
 
-Token requirements:
+## Step 4: Consume Required Org Secrets
 
-- Fine-grained PAT
-- Access to `ministryofjustice/ministry-of-justice-developer-portal`
-- Permission required to dispatch workflow events to the portal repository
+Consume the org-level secrets directly in workflows via `secrets.*`:
+
+- `MOJ_DEV_PORTAL_ONBOARDING_APP_ID`
+- `MOJ_DEV_PORTAL_ONBOARDING_APP_PRIVATE_KEY`
+
+App requirements:
+
+- GitHub App installed on the target portal repo (`ministry-of-justice-developer-portal`)
+- Minimum repository permissions:
+  - Contents: Write
+  - Metadata: Read
 
 ## Step 5: Validate End-to-End
+
+### Manual Mode Validation
 
 1. Commit a small docs change in your source repo under the configured path.
 2. Confirm source workflow `Notify Developer Portal` runs successfully.
 3. Confirm Developer Portal ingest workflow runs.
-4. Confirm only your source is ingested when `source_id` is provided.
+4. Confirm only your configured source is ingested.
+5. Confirm no commit is created in the portal repo when ingestion yields no content changes.
+
+### Self-service Mode Validation
+
+1. Send self-service registration payload with source metadata.
+2. Confirm Developer Portal ingest workflow registers/updates source in `sources.json`.
+3. Confirm only that `source_id` is ingested.
+4. Commit a docs change and confirm subsequent notify runs ingest correctly.
 5. Confirm no commit is created in the portal repo when ingestion yields no content changes.
 
 ## Step 6: Validate Failure Behavior
@@ -134,18 +189,28 @@ Test with an invalid `source_id` (manual run in portal ingest workflow):
 
 ## Operational Checklist (Quick)
 
-- `source_id` matches `sources.json`
-- `portal.yaml` present with valid `docs.path`
-- Source workflow uses `event-type: docs-update`
-- Source workflow sends `client_payload.source_id`
-- `PORTAL_DISPATCH_TOKEN` configured
+- Shared (both modes):
+  - `portal.yaml` present with valid `docs.path`
+  - Source workflow uses `event-type: docs-update`
+  - Source workflow sends `client_payload.source_id`
+  - `MOJ_DEV_PORTAL_ONBOARDING_APP_ID` configured
+  - `MOJ_DEV_PORTAL_ONBOARDING_APP_PRIVATE_KEY` configured
+- Manual mode:
+  - `source_id` already exists in `sources.json`
+- Self-service mode:
+  - `source_id` is unique and kebab-case
+  - registration payload includes required source metadata fields
 
 ## Troubleshooting
 
 ### Portal workflow says "No matching sources found"
 
-- Check `SOURCE_ID` in source workflow matches `sources.json` exactly.
-- Check source entry is `enabled: true`.
+- Manual mode:
+  - Check `SOURCE_ID` in source workflow matches `sources.json` exactly.
+  - Check source entry is `enabled: true`.
+- Self-service mode:
+  - Check registration payload was sent (includes `source_id`, `repo`, `branch`, `docsPath`, `format`).
+  - Check `SOURCE_ID` matches the payload `source_id`.
 
 ### Portal workflow says "Docs path not found"
 
@@ -154,8 +219,10 @@ Test with an invalid `source_id` (manual run in portal ingest workflow):
 
 ### Source workflow succeeds but portal workflow does not trigger
 
-- Verify `PORTAL_DISPATCH_TOKEN` is valid and not expired.
-- Verify token permissions and target repository are correct.
+- Verify app secrets are present and non-empty:
+  - `MOJ_DEV_PORTAL_ONBOARDING_APP_ID`
+  - `MOJ_DEV_PORTAL_ONBOARDING_APP_PRIVATE_KEY`
+- Verify app installation and permissions on target repository are correct.
 - Verify `event-type` is `docs-update`.
 
 ## References

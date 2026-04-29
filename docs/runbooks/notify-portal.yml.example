@@ -4,12 +4,17 @@
 # to the Ministry of Justice Developer Portal. When docs change on the default branch,
 # it fires a repository_dispatch event to trigger re-ingestion.
 #
-# IMPORTANT: SOURCE_ID must exactly match the `id` value in
-# ministry-of-justice-developer-portal/sources.json.
+# IMPORTANT:
+# - Managed mode: SOURCE_ID must exactly match `sources.json`.
+# - Self-service mode: provide source metadata in client_payload to upsert
+#   `sources.json` automatically with onboardingMode=automated.
 #
 # Requirements:
-#   - A fine-grained PAT with `contents: write` on the portal repo,
-#     stored as a secret named PORTAL_DISPATCH_TOKEN.
+#   - GitHub App credentials available to the source repo workflow.
+#     These can be org-level secrets shared to the repo (recommended),
+#     so they do not need to be created separately in each source repo:
+#     - MOJ_DEV_PORTAL_ONBOARDING_APP_ID
+#     - MOJ_DEV_PORTAL_ONBOARDING_APP_PRIVATE_KEY
 
 name: Notify Developer Portal
 
@@ -25,10 +30,22 @@ jobs:
     env:
       SOURCE_ID: cloud-platform
     steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2
+        with:
+          app-id: ${{ secrets.MOJ_DEV_PORTAL_ONBOARDING_APP_ID }}
+          private-key: ${{ secrets.MOJ_DEV_PORTAL_ONBOARDING_APP_PRIVATE_KEY }}
+          owner: ministryofjustice
+          repositories: ministry-of-justice-developer-portal
+
       - name: Trigger portal ingestion
         uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0 # v3
         with:
-          token: ${{ secrets.PORTAL_DISPATCH_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           repository: ministryofjustice/ministry-of-justice-developer-portal
           event-type: docs-update
           client-payload: '{"source_id": "${{ env.SOURCE_ID }}"}'
+
+# Self-service registration payload example:
+# client-payload: '{"source_id":"my-team-docs","repo":"ministryofjustice/my-team-repo","branch":"main","docsPath":"docs","format":"markdown","owner_slack":"#my-team"}'

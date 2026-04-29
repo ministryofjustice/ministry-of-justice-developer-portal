@@ -62,11 +62,16 @@ node scripts/ingest.mjs cloud-platform
 npm run ingest:build
 ```
 
-Source repos are configured in [`sources.json`](sources.json).
+Source repos are configured in a single registry: [`sources.json`](sources.json).
+Each source has an `onboardingMode` flag:
+
+- `manual` for PR-managed entries
+- `automated` for self-service registered entries
 
 #### `portal.yaml` override contract
 
 `sources.json` remains the source of truth for `id`, `repo`, `branch`, `format`, and `enabled`.
+Self-service registrations write to this same file with `onboardingMode: automated`.
 
 The ingestion script supports only these overrides from source repository `portal.yaml`:
 
@@ -221,13 +226,15 @@ Detailed documentation source setup and ingestion workflow are described in [doc
 
 ### Webhook-driven updates
 
-Source repos can trigger re-ingestion automatically using `repository_dispatch`. See [`.github/workflows/notify-portal.yml.example`](.github/workflows/notify-portal.yml.example) for a workflow to add to source repos.
+Source repos can trigger re-ingestion automatically using `repository_dispatch`. See [`docs/runbooks/notify-portal.yml.example`](docs/runbooks/notify-portal.yml.example) for a workflow to add to source repos.
 
 Required notification contract:
 
 - `event-type` must be `docs-update`
-- `client_payload.source_id` must exactly match the `id` in [`sources.json`](sources.json)
-- source repo must provide `PORTAL_DISPATCH_TOKEN` secret with access to dispatch to this repository
+- `client_payload.source_id` must match an `id` in [`sources.json`](sources.json), or include registration fields for self-service creation
+- source repo must provide GitHub App secrets:
+    - `MOJ_DEV_PORTAL_ONBOARDING_APP_ID`
+    - `MOJ_DEV_PORTAL_ONBOARDING_APP_PRIVATE_KEY`
 
 Example payload:
 
@@ -240,12 +247,34 @@ Example payload:
 }
 ```
 
+Self-service onboarding payload (register or update source automatically):
+
+```json
+{
+    "event_type": "docs-update",
+    "client_payload": {
+        "source_id": "my-team-docs",
+        "repo": "ministryofjustice/my-team-repo",
+        "branch": "main",
+        "docsPath": "docs",
+        "format": "markdown",
+        "owner_slack": "#my-team",
+        "enabled": true
+    }
+}
+```
+
+When this payload is sent, the portal workflow creates or updates the source in [`sources.json`](sources.json)
+with `onboardingMode: automated` and ingests only that source.
+
 ### Onboarding checklist for a new documentation source
 
-1. Add source metadata in [`sources.json`](sources.json): `id`, `repo`, `branch`, `docsPath`, `format`, `enabled`.
+1. Choose onboarding mode:
+    - Managed: add source metadata in [`sources.json`](sources.json)
+    - Self-service: send registration payload via `repository_dispatch`
 2. Add source `portal.yaml` in upstream repository root (optional but recommended) for `docs.path`/`owner_slack` overrides.
-3. Add notification workflow in source repo based on [`.github/workflows/notify-portal.yml.example`](.github/workflows/notify-portal.yml.example).
-4. Set `PORTAL_DISPATCH_TOKEN` in source repo secrets.
+3. Add notification workflow in source repo based on [`docs/runbooks/notify-portal.yml.example`](docs/runbooks/notify-portal.yml.example).
+4. Set `MOJ_DEV_PORTAL_ONBOARDING_APP_ID` and `MOJ_DEV_PORTAL_ONBOARDING_APP_PRIVATE_KEY` as org-level secrets shared to source repos (or as repo secrets where needed).
 5. Validate with a targeted manual run via ingest workflow using `source_id`.
 6. Validate failure behavior with an invalid `source_id` (expect `No matching sources found`).
 7. Confirm no-op behavior when ingestion content is unchanged (workflow should not commit).

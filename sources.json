@@ -1,6 +1,19 @@
 {
   "sources": [
     {
+      "id": "analytical-platform",
+      "name": "Analytical Platform",
+      "description": "Documentation for the Analytical Platform — data analysis and tooling.",
+      "category": "platform",
+      "repo": "ministryofjustice/analytical-platform",
+      "branch": "main",
+      "docsPath": "source/documentation",
+      "format": "tech-docs-template",
+      "owner_slack": "#analytical-platform",
+      "onboardingMode": "manual",
+      "enabled": true
+    },
+    {
       "id": "cloud-platform",
       "name": "Cloud Platform User Guide",
       "description": "User guide for the Cloud Platform — Kubernetes-based hosting on AWS.",
@@ -10,6 +23,7 @@
       "docsPath": "source/documentation",
       "format": "tech-docs-template",
       "owner_slack": "#cloud-platform",
+      "onboardingMode": "manual",
       "enabled": true
     },
     {
@@ -22,18 +36,7 @@
       "docsPath": "source",
       "format": "tech-docs-template",
       "owner_slack": "#modernisation-platform",
-      "enabled": true
-    },
-    {
-      "id": "analytical-platform",
-      "name": "Analytical Platform",
-      "description": "Documentation for the Analytical Platform — data analysis and tooling.",
-      "category": "platform",
-      "repo": "ministryofjustice/analytical-platform",
-      "branch": "main",
-      "docsPath": "source/documentation",
-      "format": "tech-docs-template",
-      "owner_slack": "#analytical-platform",
+      "onboardingMode": "manual",
       "enabled": true
     },
     {
@@ -45,6 +48,7 @@
       "branch": "main",
       "docsPath": "docs",
       "format": "markdown",
+      "onboardingMode": "manual",
       "enabled": true
     }
   ]

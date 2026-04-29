@@ -50,11 +50,21 @@ jobs:
         shell: bash
         run: npm ci
 
+      - name: Register self-service source
+        id: register-self-service
+        if: github.event_name == 'repository_dispatch' && github.event.client_payload.repo != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_ID=$(node scripts/upsert-self-service-source.mjs "$GITHUB_EVENT_PATH")
+          echo "source_id=${SOURCE_ID}" >> "$GITHUB_OUTPUT"
+          echo "Registered/updated self-service source: ${SOURCE_ID}"
+
       - name: Run ingestion
         shell: bash
         run: |
           set -euo pipefail
-          SOURCE_ID="${{ github.event.inputs.source_id || github.event.inputs.source || github.event.client_payload.source_id || '' }}"
+          SOURCE_ID="${{ steps.register-self-service.outputs.source_id || github.event.inputs.source_id || github.event.inputs.source || github.event.client_payload.source_id || '' }}"
           if [ -n "$SOURCE_ID" ]; then
             node scripts/ingest.mjs "$SOURCE_ID"
           else

@@ -53,7 +53,7 @@ const dryRun = args.includes('--dry-run');
 const targetId = args.find((a) => !a.startsWith('--'));
 
 // ── Load sources ────────────────────────────────────────────────
-const { sources } = JSON.parse(fs.readFileSync(SOURCES_FILE, 'utf-8'));
+const sources = loadSources();
 
 // ── Main ────────────────────────────────────────────────────────
 async function main() {
@@ -97,13 +97,23 @@ async function main() {
   console.log('');
 }
 
+function loadSources() {
+  const configured = JSON.parse(fs.readFileSync(SOURCES_FILE, 'utf-8')).sources || [];
+
+  // Keep backward compatibility with existing source entries.
+  return configured.map((source) => ({
+    ...source,
+    onboardingMode: source.onboardingMode || 'manual',
+  }));
+}
+
 // ── Ingest a single source ──────────────────────────────────────
 async function ingestSource(source) {
   const repoDir = cloneOrPull(source);
   const portalYamlPath = path.join(repoDir, 'portal.yaml');
   let config = { ...source };
 
-  // If repo has a portal.yaml, merge it
+  // Source repo owners can override only selected fields via portal.yaml.
   if (fs.existsSync(portalYamlPath)) {
     console.log('  Found portal.yaml — merging config');
     const yaml = parseSimpleYaml(fs.readFileSync(portalYamlPath, 'utf-8'));
@@ -166,6 +176,7 @@ async function ingestSource(source) {
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     fs.writeFileSync(outputPath, converted.content, 'utf-8');
 
+    // Assets are discovered from rewritten markdown so copied files match final links.
     const referencedAssets = collectReferencedAssets(
       converted.content,
       file.absolute,
@@ -379,6 +390,8 @@ function collectReferencedAssets(markdownContent, markdownSourceFile, docsRoot, 
   const fileDir = path.dirname(markdownSourceFile);
 
   for (const rawLink of links) {
+    // 1) Normalize markdown/html link syntax, 2) keep only local asset links,
+    // 3) resolve absolute path safely under docsRoot.
     const normalized = normalizeAssetLink(rawLink);
     if (!normalized) continue;
     if (!isLocalAssetLink(normalized)) continue;
@@ -457,6 +470,7 @@ function resolveAssetAbsolutePath(link, markdownFileDir, docsRoot, docsPath) {
   let candidates = [];
 
   if (pathOnly.startsWith('/')) {
+    // Absolute links may include the docs.path prefix; try both prefixed and stripped forms.
     const withoutLeadingSlash = pathOnly.replace(/^\/+/, '');
     const withoutDocsPrefix = docsPrefix && withoutLeadingSlash.startsWith(`${docsPrefix}/`)
       ? withoutLeadingSlash.slice(docsPrefix.length + 1)
