@@ -1,30 +1,19 @@
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
 import { getProductCategoryLabel } from '@/lib/categoryLabels';
-import { ActionLinks, type ActionLink } from '@/components/templateRender/ActionLinks';
+import { ActionLinks} from '@/components/templateRender/ActionLinks';
 import { MetaBar } from '@/components/templateRender/MetaBar';
 import { PageIntro } from '@/components/templateRender/PageIntro';
-import { StatusTag, type StatusTagValue } from '@/components/templateRender/StatusTag';
+import { StatusTag} from '@/components/templateRender/StatusTag';
 import { TagRow } from '@/components/templateRender/TagRow';
 import { TagList } from '@/components/templateRender/TagList';
 import products from '../../../../content/products/products.json';
 import sources from '../../../../sources.json';
+import { ActionLink, Product } from '@/types/types';
 
-interface Product {
-  slug: string;
-  name: string;
-  category: string;
-  description: string;
-  owner: string;
-  slackChannel?: string;
-  docsUrl?: string;
-  externalUrl?: string;
-  status: StatusTagValue;
-  tags: string[];
-}
+
 
 type Params = { slug: string };
 

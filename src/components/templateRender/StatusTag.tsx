@@ -1,4 +1,4 @@
-import { StatusTagProps, StatusTagValue } from '@/types/types';
+import { StatusTagProps, StatusTagValue, } from '@/types/types';
 
 
 const statusConfig: Record<StatusTagValue, { label: string; className: string }> = {
