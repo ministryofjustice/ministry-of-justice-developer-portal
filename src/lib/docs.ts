@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { DocPage, DocSource, NavItem } from '@/types/types';
+import { normaliseDateValue } from '@/lib/date';
 
 const GUIDELINES_DIR = path.join(process.cwd(), 'content', 'guidelines');
 
@@ -94,7 +95,7 @@ export function getDocPage(slugPath: string[]): DocPage | null {
         title:
           data.title ||
           slugPath[slugPath.length - 1].replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
-        lastReviewedOn: data.lastReviewedOn || data.last_reviewed_on,
+        lastReviewedOn: normaliseDateValue(data.lastReviewedOn || data.last_reviewed_on),
         reviewIn: data.reviewIn || data.review_in,
         ownerSlack: data.ownerSlack || data.owner_slack,
         sourceRepo: data.sourceRepo || data.source_repo,
@@ -169,7 +170,7 @@ function walkDir(dir: string, currentPath: string[], slugs: string[][]) {
   }
 }
 
-function buildNavFromDir(dir: string, basePath: string[]): NavItem[] {
+export function buildNavFromDir(dir: string, basePath: string[]): NavItem[] {
   if (!fs.existsSync(dir)) return [];
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   const itemsBySlug = new Map<string, NavItem>();

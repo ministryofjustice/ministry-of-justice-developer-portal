@@ -1,9 +1,5 @@
 import type { ReviewStatus } from '@/components/templateRender/ReviewBadge';
-
-function parseLocalDate(date: string): Date {
-  const [year, month, day] = date.split('-').map(Number);
-  return new Date(year, month - 1, day);
-}
+import { parseDate } from './date';
 
 export function getReviewStatus(
   lastReviewedOn?: string,
@@ -12,9 +8,9 @@ export function getReviewStatus(
 ): ReviewStatus | null {
   if (!lastReviewedOn || !reviewIn) return null;
 
-  const lastReviewed = parseLocalDate(lastReviewedOn);
+  const lastReviewed = parseDate(lastReviewedOn);
 
-  if (Number.isNaN(lastReviewed.getTime())) return null;
+  if (!lastReviewed) return null;
 
   const months = parseInt(reviewIn, 10) || 6;
 

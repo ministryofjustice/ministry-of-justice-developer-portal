@@ -1,5 +1,21 @@
 import { describe, it, expect } from 'vitest';
-import { formatLongDate, formatEventDateTime } from '@/lib/date';
+import { formatLongDate, formatEventDateTime, parseDate } from '@/lib/date';
+
+describe('parseDate', () => {
+  it('returns a Date for a valid date string', () => {
+    expect(parseDate('2024-01-15')).toBeInstanceOf(Date);
+  });
+
+  it('returns null for an invalid date string', () => {
+    expect(parseDate('not-a-date')).toBeNull();
+  });
+
+  it('returns the same Date when passed a Date object', () => {
+    const date = new Date(2024, 0, 15);
+
+    expect(parseDate(date)).toBe(date);
+  });
+});
 
 describe('formatLongDate', () => {
   it('formats a valid ISO date', () => {
