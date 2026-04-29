@@ -13,8 +13,8 @@ updates:
       interval: "daily"
     cooldown:
       default-days: 3
-      semver-major-days: 14
-      semver-minor-days: 7
+      semver-major-days: 8
+      semver-minor-days: 4
       semver-patch-days: 3
   - package-ecosystem: "terraform"
     directory: "/terraform"
@@ -22,8 +22,8 @@ updates:
       interval: "daily"
     cooldown:
       default-days: 3
-      semver-major-days: 14
-      semver-minor-days: 7
+      semver-major-days: 8
+      semver-minor-days: 4
       semver-patch-days: 3
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -31,8 +31,8 @@ updates:
       interval: "daily"
     cooldown:
       default-days: 3
-      semver-major-days: 14
-      semver-minor-days: 7
+      semver-major-days: 8
+      semver-minor-days: 4
       semver-patch-days: 3
   - package-ecosystem: "pip"
     directory: "/"
@@ -40,8 +40,8 @@ updates:
       interval: "daily"
     cooldown:
       default-days: 3
-      semver-major-days: 14
-      semver-minor-days: 7
+      semver-major-days: 8
+      semver-minor-days: 4
       semver-patch-days: 3
   - package-ecosystem: "npm"
     directory: "/"
@@ -49,8 +49,8 @@ updates:
       interval: "daily"
     cooldown:
       default-days: 3
-      semver-major-days: 14
-      semver-minor-days: 7
+      semver-major-days: 8
+      semver-minor-days: 4
       semver-patch-days: 3
   - package-ecosystem: "gomod"
     directory: "/"
@@ -58,8 +58,8 @@ updates:
       interval: "daily"
     cooldown:
       default-days: 3
-      semver-major-days: 14
-      semver-minor-days: 7
+      semver-major-days: 8
+      semver-minor-days: 4
       semver-patch-days: 3
   - package-ecosystem: "docker"
     directory: "/"
@@ -67,6 +67,6 @@ updates:
       interval: "daily"
     cooldown:
       default-days: 3
-      semver-major-days: 14
-      semver-minor-days: 7
+      semver-major-days: 8
+      semver-minor-days: 4
       semver-patch-days: 3
