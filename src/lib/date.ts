@@ -15,7 +15,9 @@ const EVENT_DATE_TIME_FORMAT: Intl.DateTimeFormatOptions = {
   timeZoneName: 'short',
 };
 
-function parseDate(value: string): Date | null {
+export function parseDate(value: string | Date): Date | null {
+  if (value instanceof Date) return value;
+
   const date = new Date(value);
   return isNaN(date.getTime()) ? null : date;
 }
@@ -32,4 +34,13 @@ export function formatEventDateTime(value: string) {
   if (!date) return '';
 
   return date.toLocaleString('en-GB', EVENT_DATE_TIME_FORMAT);
+}
+
+export function normaliseDateValue(value: unknown): string | undefined {
+  const date =
+    typeof value === 'string' || value instanceof Date
+      ? parseDate(value)
+      : null;
+
+  return date?.toISOString().slice(0, 10);
 }

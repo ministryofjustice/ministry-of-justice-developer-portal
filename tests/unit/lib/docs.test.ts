@@ -1,7 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import fs from 'fs';
 import path from 'path';
-import { getGuidelinePage, getDocSources, getDocPage, getAllDocSlugs } from '@/lib/docs';
+import { getGuidelinePage, getDocSources, getDocPage, getAllDocSlugs, buildNavFromDir } from '@/lib/docs';
+
+
+// TODO: Refactor the following file to tidy up. Divide the file by testing concerns to simplify
 
 vi.mock('fs', () => ({
   default: {
@@ -31,10 +34,6 @@ function makeDirent(name: string, isDirectory: boolean): fs.Dirent {
 const DOCS_DIR = path.join(process.cwd(), 'content', 'docs');
 
 describe('getGuidelinePage', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
-
   it('returns content when .mdx file exists', () => {
     vi.mocked(fs.existsSync).mockImplementation((p) => String(p).endsWith('.mdx'));
     vi.mocked(fs.readFileSync).mockReturnValue('---\ntitle: Test\n---\nHello world');
@@ -66,10 +65,6 @@ describe('getGuidelinePage', () => {
 });
 
 describe('getDocSources', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
-
   it('returns empty array when docs directory does not exist', () => {
     vi.mocked(fs.existsSync).mockReturnValue(false);
 
@@ -156,9 +151,6 @@ describe('getDocSources', () => {
 });
 
 describe('getDocPage', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
 
   it('returns page content when .md file exists', () => {
     const filePath = path.join(DOCS_DIR, 'cloud-platform', 'overview.md');
@@ -265,10 +257,6 @@ describe('getDocPage', () => {
 });
 
 describe('getAllDocSlugs', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
-
   it('returns empty array when docs directory does not exist', () => {
     vi.mocked(fs.existsSync).mockReturnValue(false);
 
@@ -332,5 +320,66 @@ describe('getAllDocSlugs', () => {
 
     expect(slugs).toContainEqual(['cloud-platform']);
     expect(slugs).toContainEqual(['cloud-platform', 'index']);
+  });
+});
+
+describe('buildNavFromDir', () => {
+  it('returns empty array when directory does not exist', () => {
+    vi.mocked(fs.existsSync).mockReturnValue(false);
+
+    expect(buildNavFromDir('/missing', ['docs'])).toEqual([]);
+  });
+
+  it('uses index.md title and weight for directory nav items', () => {
+    const dir = path.join(DOCS_DIR, 'cloud-platform');
+    const childDir = path.join(dir, 'getting-started');
+    const indexPath = path.join(childDir, 'index.md');
+
+    vi.mocked(fs.existsSync).mockImplementation((p) => {
+      const ps = String(p);
+      return ps === dir || ps === childDir || ps === indexPath;
+    });
+
+    vi.mocked(fs.readdirSync)
+      .mockImplementationOnce(() => [makeDirent('getting-started', true)] as any)
+      .mockImplementationOnce(() => [] as any);
+
+    vi.mocked(fs.readFileSync).mockReturnValue(
+      '---\ntitle: Getting Started Custom\nweight: 2\n---\nContent',
+    );
+
+    const result = buildNavFromDir(dir, ['cloud-platform']);
+
+    expect(result).toEqual([
+      {
+        title: 'Getting Started Custom',
+        slug: ['cloud-platform', 'getting-started'],
+        children: [],
+        weight: 2,
+      },
+    ]);
+  });
+
+  it('sorts nav items by weight', () => {
+    const dir = path.join(DOCS_DIR, 'cloud-platform');
+
+    vi.mocked(fs.existsSync).mockImplementation((p) => String(p) === dir);
+
+    vi.mocked(fs.readdirSync).mockReturnValue([
+      makeDirent('second.md', false),
+      makeDirent('first.md', false),
+    ] as any);
+
+    vi.mocked(fs.readFileSync).mockImplementation((p) => {
+      if (String(p).endsWith('second.md')) {
+        return '---\ntitle: Second\nweight: 2\n---\nContent';
+      }
+
+      return '---\ntitle: First\nweight: 1\n---\nContent';
+    });
+
+    const result = buildNavFromDir(dir, ['cloud-platform']);
+
+    expect(result.map((item) => item.title)).toEqual(['First', 'Second']);
   });
 });

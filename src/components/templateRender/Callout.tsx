@@ -1,12 +1,4 @@
-import type { ReactNode } from 'react';
-
-export type CalloutTone = 'info' | 'warning';
-
-export interface CalloutProps {
-  tone?: CalloutTone;
-  title?: string;
-  children: ReactNode;
-}
+import { CalloutProps } from '@/types/types';
 
 export function Callout({ tone = 'info', title, children }: CalloutProps) {
   if (tone === 'warning') {

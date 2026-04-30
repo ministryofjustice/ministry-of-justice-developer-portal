@@ -2,7 +2,7 @@ import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 
 //TODO: Refactor when feedback is implemented - current implementation tests are reference only.
 

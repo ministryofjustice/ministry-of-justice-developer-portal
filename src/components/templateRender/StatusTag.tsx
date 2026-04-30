@@ -1,8 +1,5 @@
-export type StatusTagValue = 'live' | 'beta' | 'alpha' | 'deprecated';
+import { StatusTagProps, StatusTagValue, } from '@/types/types';
 
-export interface StatusTagProps {
-  status: StatusTagValue;
-}
 
 const statusConfig: Record<StatusTagValue, { label: string; className: string }> = {
   live: { label: 'Live', className: 'govuk-tag govuk-tag--green' },

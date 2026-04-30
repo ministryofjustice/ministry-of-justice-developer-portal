@@ -1,11 +1,4 @@
-import type { ReactNode } from 'react';
-
-export interface SectionProps {
-  heading: string;
-  children: ReactNode;
-  className?: string;
-  contentClassName?: string;
-}
+import { SectionProps } from '@/types/types';
 
 export function Section({
   heading,

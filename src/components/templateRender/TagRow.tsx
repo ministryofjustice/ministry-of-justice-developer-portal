@@ -1,12 +1,5 @@
-import type { ReactNode } from 'react';
-import { StatusTag, type StatusTagValue } from '@/components/templateRender/StatusTag';
-
-export interface TagRowProps {
-  kicker?: string;
-  categoryTag?: string;
-  status?: StatusTagValue;
-  children?: ReactNode;
-}
+import { StatusTag } from '@/components/templateRender/StatusTag';
+import { TagRowProps } from '@/types/types';
 
 export function TagRow({ kicker, categoryTag, status, children }: TagRowProps) {
   if (!kicker && !categoryTag && !status && !children) {

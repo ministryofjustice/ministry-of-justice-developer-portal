@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { formatEventDateTime } from '@/lib/date';
-import { StatusTag, StatusTagValue } from '@/components/templateRender/StatusTag';
+import { StatusTag } from '@/components/templateRender/StatusTag';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { TagRow } from '@/components/templateRender/TagRow';
 import { getCommunityCategoryLabel } from '@/lib/categoryLabels';
@@ -13,6 +13,7 @@ import { Section } from '@/components/templateRender/Section';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
 import community from '../../../../content/community/community.json';
+import { StatusTagValue } from '@/types/types';
 
 type CommunityParams = { slug: string };
 

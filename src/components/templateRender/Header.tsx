@@ -1,19 +1,6 @@
-import type { ReactNode } from 'react';
 import { PageIntro } from '@/components/templateRender/PageIntro';
 import { TagRow } from '@/components/templateRender/TagRow';
-import type { StatusTagValue } from '@/components/templateRender/StatusTag';
-
-export type HeaderStatus = StatusTagValue;
-
-export interface HeaderProps {
-  title: string;
-  categoryTag?: string;
-  owner?: string;
-  status?: HeaderStatus;
-  summary?: string;
-  kicker?: string;
-  actions?: ReactNode;
-}
+import { HeaderProps } from '@/types/types';
 
 export function Header({
   title,

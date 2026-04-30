@@ -1,14 +1,4 @@
-import type { ReactNode } from 'react';
-
-export interface MetaItem {
-  label: string;
-  value: ReactNode;
-}
-
-export interface MetaBarProps {
-  items: MetaItem[];
-  className?: string;
-}
+import { MetaBarProps } from '@/types/types';
 
 export function MetaBar({ items, className = 'app-doc-meta' }: MetaBarProps) {
   const visibleItems = items.filter((item) => item.value !== null && item.value !== undefined && item.value !== false);
