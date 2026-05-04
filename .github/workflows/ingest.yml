@@ -30,6 +30,8 @@ jobs:
   ingest:
     name: Ingest and Commit Content
     runs-on: ubuntu-latest
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
     steps:
       - name: Checkout repository
@@ -86,9 +88,8 @@ jobs:
           git push
 
       - name: Notify Slack
-        if: always() && secrets.SLACK_WEBHOOK_URL != ''
+        if: always() && env.SLACK_WEBHOOK_URL != ''
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           STATUS: ${{ job.status }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           SOURCE_ID: ${{ steps.register-self-service.outputs.source_id || github.event.inputs.source_id || github.event.inputs.source || github.event.client_payload.source_id || 'all-enabled-sources' }}
