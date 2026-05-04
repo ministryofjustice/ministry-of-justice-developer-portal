@@ -39,7 +39,7 @@ jobs:
         uses: actions/create-github-app-token@v1
         with:
           app-id: ${{ secrets.MOJ_DEV_PORTAL_ONBOARDING_APP_ID }}
-          private-key: ${{ secrets.MOJ_DEV_PORTAL_ONBOARDING_PRIVATE_KEY }}
+          private-key: ${{ secrets.MOJ_DEV_PORTAL_ONBOARDING_APP_PRIVATE_KEY }}
 
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
