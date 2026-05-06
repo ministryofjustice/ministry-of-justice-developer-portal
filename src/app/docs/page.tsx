@@ -83,23 +83,12 @@ export default function DocsIndex() {
               <div key={item.slug} className="app-card">
                 <span className="app-card__tag">guideline</span>
                 <h3 className="govuk-heading-s app-card__title">
-                  {item.externalUrl ? (
-                    <a
-                      href={item.externalUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="govuk-link govuk-link--no-visited-state app-card__title-link"
-                    >
-                      {item.title}
-                    </a>
-                  ) : (
-                    <Link
-                      href={`/guidelines/${item.slug}`}
-                      className="govuk-link govuk-link--no-visited-state app-card__title-link"
-                    >
-                      {item.title}
-                    </Link>
-                  )}
+                  <Link
+                    href={`/guidelines/${item.slug}`}
+                    className="govuk-link govuk-link--no-visited-state app-card__title-link"
+                  >
+                    {item.title}
+                  </Link>
                 </h3>
                 <p className="govuk-body app-card__description">{item.description}</p>
               </div>

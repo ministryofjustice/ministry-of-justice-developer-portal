@@ -94,24 +94,12 @@ export default function GuidelinesPage() {
               <ul className="govuk-list">
                 {phaseGuidelines.map((item) => (
                   <li key={item.slug}>
-                    {item.externalUrl ? (
-                      <a
-                        href={item.externalUrl}
-                        className="govuk-link govuk-link--no-visited-state"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {item.title}
-                        <span className="govuk-visually-hidden"> (opens in a new tab)</span>
-                      </a>
-                    ) : (
-                      <Link
-                        href={`/guidelines/${item.slug}`}
-                        className="govuk-link govuk-link--no-visited-state"
-                      >
-                        {item.title}
-                      </Link>
-                    )}
+                    <Link
+                      href={`/guidelines/${item.slug}`}
+                      className="govuk-link govuk-link--no-visited-state"
+                    >
+                      {item.title}
+                    </Link>
 
                     <span className="govuk-body-s" style={{ color: '#505a5f', marginLeft: 8 }}>
                       — {item.description}

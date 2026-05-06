@@ -24,7 +24,7 @@ const phaseLabels: Record<string, string> = {
 type Params = { slug: string };
 
 export function generateStaticParams() {
-  return guidelines.items.filter((g) => !g.externalUrl).map((g) => ({ slug: g.slug }));
+  return guidelines.items.map((g) => ({ slug: g.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -42,23 +42,60 @@ export default async function GuidelineDetailPage({ params }: { params: Promise<
     notFound();
   }
 
-  // Handle external URLs
+  const reviewStatus = getReviewStatus(guideline.lastReviewedOn, guideline.reviewIn);
+
+  // Render external guidelines inside portal chrome instead of sending users away directly.
   if (guideline.externalUrl) {
-    // Redirect or show external link (adjust as needed)
     return (
       <div className="govuk-width-container">
         <Breadcrumbs
           items={[{ label: guidelines.title, href: '/guidelines' }, { label: guideline.title }]}
         />
+
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
+            <TagRow categoryTag={phaseLabels[guideline.phase]} />
             <PageIntro
               title={guideline.title}
               titleClassName="govuk-heading-xl govuk-!-margin-top-2 govuk-!-margin-bottom-2"
+              summary={guideline.description}
             />
-            <p>This guideline is hosted externally: <a href={guideline.externalUrl} className="govuk-link">{guideline.externalUrl}</a></p>
+
+            <div className="govuk-inset-text">
+              This guideline is published on an external canonical source. You are viewing the portal
+              summary and metadata in a consistent MoJ layout.
+            </div>
+
+            <p className="govuk-body">
+              <a
+                href={guideline.externalUrl}
+                className="govuk-link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open full guidance at source
+              </a>{' '}
+              <span className="govuk-hint">(opens in a new tab)</span>
+            </p>
+
+            <MetaBar
+              items={[
+                {
+                  label: 'Last reviewed',
+                  value: formatLongDate(guideline.lastReviewedOn),
+                },
+                {
+                  label: 'Review status',
+                  value: <ReviewBadge status={reviewStatus as ReviewStatus} />,
+                },
+                { label: 'Owner', value: guideline.owner },
+              ]}
+            />
+
+            <FeedbackWidget />
           </div>
         </div>
+
         <ChatBot />
       </div>
     );
@@ -75,8 +112,6 @@ This guideline is coming soon. Content is being developed.
 
 If you have questions, reach out to the ${guideline.owner} team.
   `;
-
-  const reviewStatus = getReviewStatus(guideline.lastReviewedOn, guideline.reviewIn);
 
   return (
     <div className="govuk-width-container">
