@@ -111,10 +111,10 @@ export default async function LiveSourcePage({
   searchParams,
 }: {
   params: Promise<Params>;
-  searchParams?: Promise<SearchParams>;
+  searchParams?: SearchParams;
 }) {
   const { sourceId } = await params;
-  const { url } = searchParams ? await searchParams : {};
+  const { url } = searchParams || {};
   const source = getLiveDocSources().find((item) => item.slug === sourceId);
 
   if (!source || !source.externalUrl) {

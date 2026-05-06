@@ -183,10 +183,10 @@ export default async function GuidelineDetailPage({
   searchParams,
 }: {
   params: Promise<Params>;
-  searchParams?: Promise<SearchParams>;
+  searchParams?: SearchParams;
 }) {
   const { slug } = await params;
-  const { url } = searchParams ? await searchParams : {};
+  const { url } = searchParams || {};
   const guideline = guidelines.items.find((g) => g.slug === slug);
 
   if (!guideline) {
