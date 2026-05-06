@@ -1,0 +1,37 @@
+openapi: 3.0.3
+info:
+  title: Test Billing API
+  version: 1.0.0
+  description: Sample YAML OpenAPI definition for ReDoc renderer testing.
+servers:
+  - url: https://billing.example.test
+paths:
+  /invoices:
+    get:
+      summary: List invoices
+      operationId: listInvoices
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Invoice'
+components:
+  schemas:
+    Invoice:
+      type: object
+      required:
+        - id
+        - amount
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+          example: GBP

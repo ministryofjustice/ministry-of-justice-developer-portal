@@ -72,45 +72,63 @@ export default function GuidelinesPage() {
     <div className="govuk-width-container">
       <Breadcrumbs items={[{ label: pageContent.title }]} />
 
-      <PageIntro
-        title={pageContent.title}
-        summary={pageContent.summary}
-        summaryClassName="govuk-body-l"
-      />
+      <div className="app-layout">
+        <nav className="app-layout__sidebar" aria-label="Guidelines phases">
+          <h2 className="app-subnav__section-title">Guidelines</h2>
+          <ul className="app-subnav">
+            {phases.map((phase) => (
+              <li key={phase.key} className="app-subnav__item">
+                <a href={`#${phase.key}`} className="app-subnav__link">
+                  {phase.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-      {phases.map((phase) => {
-        const phaseGuidelines = pageContent.items.filter((g) => g.phase === phase.key);
+        <div className="app-layout__content">
+          <PageIntro
+            title={pageContent.title}
+            summary={pageContent.summary}
+            summaryClassName="govuk-body-l"
+          />
 
-        return (
-          <section
-            key={phase.key}
-            className={`app-phase-card app-phase-card--${phase.cssModifier}`}
-          >
-            <h2 className="govuk-heading-l govuk-!-margin-bottom-1">{phase.title}</h2>
+          {phases.map((phase) => {
+            const phaseGuidelines = pageContent.items.filter((g) => g.phase === phase.key);
 
-            <p className="govuk-body">{phase.description}</p>
+            return (
+              <section
+                key={phase.key}
+                id={phase.key}
+                className={`app-phase-card app-phase-card--${phase.cssModifier}`}
+              >
+                <h2 className="govuk-heading-l govuk-!-margin-bottom-1">{phase.title}</h2>
 
-            {phaseGuidelines.length > 0 && (
-              <ul className="govuk-list">
-                {phaseGuidelines.map((item) => (
-                  <li key={item.slug}>
-                    <Link
-                      href={`/guidelines/${item.slug}`}
-                      className="govuk-link govuk-link--no-visited-state"
-                    >
-                      {item.title}
-                    </Link>
+                <p className="govuk-body">{phase.description}</p>
 
-                    <span className="govuk-body-s" style={{ color: '#505a5f', marginLeft: 8 }}>
-                      — {item.description}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-        );
-      })}
+                {phaseGuidelines.length > 0 && (
+                  <ul className="govuk-list">
+                    {phaseGuidelines.map((item) => (
+                      <li key={item.slug}>
+                        <Link
+                          href={`/guidelines/${item.slug}`}
+                          className="govuk-link govuk-link--no-visited-state"
+                        >
+                          {item.title}
+                        </Link>
+
+                        <span className="govuk-body-s" style={{ color: '#505a5f', marginLeft: 8 }}>
+                          — {item.description}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            );
+          })}
+        </div>
+      </div>
 
       <ChatBot />
     </div>

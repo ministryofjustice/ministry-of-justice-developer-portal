@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
@@ -21,7 +22,60 @@ const phaseLabels: Record<string, string> = {
   measuring: 'Measuring Success',
 };
 
+const phaseOrder = ['inception', 'development', 'technology', 'standards', 'measuring'];
+
+type GuidelineItem = {
+  slug: string;
+  title: string;
+  phase: string;
+  description: string;
+  owner: string;
+  lastReviewedOn: string;
+  reviewIn: string;
+  externalUrl?: string;
+};
+
 type Params = { slug: string };
+
+type SearchParams = { url?: string };
+
+function GuidelinesSidebar({ currentSlug }: { currentSlug: string }) {
+  const items = (guidelines.items as GuidelineItem[]) || [];
+
+  return (
+    <nav className="app-layout__sidebar" aria-label="Guidelines navigation">
+      <h2 className="app-subnav__section-title">Guidelines</h2>
+
+      {phaseOrder.map((phaseKey) => {
+        const phaseItems = items.filter((item) => item.phase === phaseKey);
+        if (phaseItems.length === 0) return null;
+
+        return (
+          <div key={phaseKey} className="govuk-!-margin-bottom-4">
+            <h3 className="govuk-heading-s govuk-!-margin-bottom-1">
+              {phaseLabels[phaseKey] || phaseKey}
+            </h3>
+            <ul className="app-subnav">
+              {phaseItems.map((item) => {
+                const isActive = item.slug === currentSlug;
+                return (
+                  <li key={item.slug} className="app-subnav__item">
+                    <Link
+                      href={`/guidelines/${item.slug}`}
+                      className={`app-subnav__link${isActive ? ' app-subnav__link--active' : ''}`}
+                    >
+                      {item.title}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        );
+      })}
+    </nav>
+  );
+}
 
 function stripDangerousTags(html: string): string {
   return html
@@ -43,6 +97,47 @@ function absolutizeAssetUrls(html: string, pageUrl: string): string {
 
 function removeTargetBlank(html: string): string {
   return html.replace(/\s+target=(['"])_blank\1/gi, '');
+}
+
+function rewriteExternalAnchorsForInlineNavigation(
+  html: string,
+  guidelineSlug: string,
+  activeUrl: string
+): string {
+  return html.replace(/(<a\b[^>]*\shref=(['"])([^'"]+)\2[^>]*>)/gi, (full, openTag, quote, href) => {
+    const rawHref = String(href || '').trim();
+    if (!rawHref || rawHref.startsWith('#') || rawHref.startsWith('mailto:') || rawHref.startsWith('tel:')) {
+      return full;
+    }
+
+    try {
+      const resolved = new URL(rawHref, activeUrl);
+      if (!/^https?:$/.test(resolved.protocol)) {
+        return full;
+      }
+
+      const inlineHref = `/guidelines/${guidelineSlug}?url=${encodeURIComponent(resolved.toString())}`;
+      return full.replace(`${quote}${href}${quote}`, `${quote}${inlineHref}${quote}`);
+    } catch {
+      return full;
+    }
+  });
+}
+
+function resolveGuidelineExternalUrl(defaultUrl: string, requestedUrl?: string): string {
+  const fallback = new URL(defaultUrl);
+  if (!requestedUrl) return fallback.toString();
+
+  try {
+    const resolved = new URL(requestedUrl, fallback);
+    const allowedHosts = new Set([fallback.host]);
+    if (!/^https?:$/.test(resolved.protocol) || !allowedHosts.has(resolved.host)) {
+      return fallback.toString();
+    }
+    return resolved.toString();
+  } catch {
+    return fallback.toString();
+  }
 }
 
 function extractMainLikeContent(html: string): string | null {
@@ -83,8 +178,15 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return { title: guideline.title };
 }
 
-export default async function GuidelineDetailPage({ params }: { params: Promise<Params> }) {
+export default async function GuidelineDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<Params>;
+  searchParams?: Promise<SearchParams>;
+}) {
   const { slug } = await params;
+  const { url } = searchParams ? await searchParams : {};
   const guideline = guidelines.items.find((g) => g.slug === slug);
 
   if (!guideline) {
@@ -95,7 +197,11 @@ export default async function GuidelineDetailPage({ params }: { params: Promise<
 
   // Render external guidance inside portal chrome as a single-page experience.
   if (guideline.externalUrl) {
-    const externalHtml = await fetchExternalGuidanceHtml(guideline.externalUrl);
+    const activeExternalUrl = resolveGuidelineExternalUrl(guideline.externalUrl, url);
+    const externalHtmlRaw = await fetchExternalGuidanceHtml(activeExternalUrl);
+    const externalHtml = externalHtmlRaw
+      ? rewriteExternalAnchorsForInlineNavigation(externalHtmlRaw, guideline.slug, activeExternalUrl)
+      : null;
 
     return (
       <div className="govuk-width-container">
@@ -103,8 +209,10 @@ export default async function GuidelineDetailPage({ params }: { params: Promise<
           items={[{ label: guidelines.title, href: '/guidelines' }, { label: guideline.title }]}
         />
 
-        <div className="govuk-grid-row">
-          <div className="govuk-grid-column-two-thirds">
+        <div className="app-layout">
+          <GuidelinesSidebar currentSlug={guideline.slug} />
+
+          <div className="app-layout__content">
             <TagRow categoryTag={phaseLabels[guideline.phase]} />
             <PageIntro
               title={guideline.title}
@@ -115,7 +223,7 @@ export default async function GuidelineDetailPage({ params }: { params: Promise<
             {externalHtml ? (
               <>
                 <div className="govuk-inset-text">
-                  Canonical source: <a href={guideline.externalUrl} className="govuk-link">{guideline.externalUrl}</a>
+                  Canonical source: <a href={activeExternalUrl} className="govuk-link">{activeExternalUrl}</a>
                 </div>
                 <div
                   className="app-prose-scope"
@@ -128,7 +236,7 @@ export default async function GuidelineDetailPage({ params }: { params: Promise<
                   We could not render the canonical guidance inline right now.
                 </div>
                 <p className="govuk-body">
-                  <a href={guideline.externalUrl} className="govuk-link">
+                  <a href={activeExternalUrl} className="govuk-link">
                     Open full guidance at source
                   </a>
                 </p>
@@ -176,8 +284,10 @@ If you have questions, reach out to the ${guideline.owner} team.
         items={[{ label: guidelines.title, href: '/guidelines' }, { label: guideline.title }]}
       />
 
-      <div className="govuk-grid-row">
-        <div className="govuk-grid-column-two-thirds">
+      <div className="app-layout">
+        <GuidelinesSidebar currentSlug={guideline.slug} />
+
+        <div className="app-layout__content">
           <TagRow categoryTag={phaseLabels[guideline.phase]} />
           <PageIntro
             title={guideline.title}

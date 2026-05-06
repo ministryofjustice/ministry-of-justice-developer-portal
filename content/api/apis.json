@@ -7,6 +7,30 @@
       "specUrl": "https://ministryofjustice.github.io/hmpps-integration-api/openapi/api-docs.json",
       "owner": "HMPPS",
       "sourceUrl": "https://github.com/ministryofjustice/hmpps-integration-api"
+    },
+    {
+      "slug": "test-petstore-json",
+      "title": "Test Petstore API (JSON)",
+      "description": "Local test OpenAPI JSON definition rendered by ReDoc.",
+      "specUrl": "/api-specs/test-petstore.json",
+      "owner": "DX Portal",
+      "sourceUrl": "https://github.com/ministryofjustice/ministry-of-justice-developer-portal"
+    },
+    {
+      "slug": "test-orders-json",
+      "title": "Test Orders API (JSON)",
+      "description": "Local test OpenAPI JSON definition with security scheme and pagination.",
+      "specUrl": "/api-specs/test-orders.json",
+      "owner": "DX Portal",
+      "sourceUrl": "https://github.com/ministryofjustice/ministry-of-justice-developer-portal"
+    },
+    {
+      "slug": "test-billing-yaml",
+      "title": "Test Billing API (YAML)",
+      "description": "Local test OpenAPI YAML definition rendered by ReDoc.",
+      "specUrl": "/api-specs/test-billing.yaml",
+      "owner": "DX Portal",
+      "sourceUrl": "https://github.com/ministryofjustice/ministry-of-justice-developer-portal"
     }
   ]
 }

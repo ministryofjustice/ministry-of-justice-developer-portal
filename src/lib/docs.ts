@@ -30,45 +30,103 @@ export function getGuidelinePage(slug: string): { content: string } | null {
 }
 
 const DOCS_DIR = path.join(process.cwd(), 'content', 'docs');
+const SOURCES_FILE = path.join(process.cwd(), 'sources.json');
+
+type SourceConfig = {
+  id: string;
+  name: string;
+  description?: string;
+  category?: string;
+  repo: string;
+  format: string;
+  enabled?: boolean;
+  externalUrl?: string;
+};
+
+function getConfiguredSources(): SourceConfig[] {
+  if (!fs.existsSync(SOURCES_FILE)) return [];
+  const raw = JSON.parse(fs.readFileSync(SOURCES_FILE, 'utf-8')) as { sources?: SourceConfig[] };
+  return raw.sources || [];
+}
+
+function toGithubPagesUrl(repo: string): string {
+  const [owner, name] = repo.split('/');
+  if (!owner || !name) return `https://github.com/${repo}`;
+  return `https://${owner}.github.io/${name}/`;
+}
+
+export function getLiveDocSources(): DocSource[] {
+  return getConfiguredSources()
+    .filter((s) => s.enabled !== false && s.format !== 'tech-docs-template')
+    .map((s) => ({
+      slug: s.id,
+      name: s.name,
+      description: s.description || '',
+      category: s.category || 'documentation',
+      items: [],
+      href: `/docs/live/${encodeURIComponent(s.id)}`,
+      renderMode: 'live',
+      externalUrl: s.externalUrl || toGithubPagesUrl(s.repo),
+    }));
+}
 
 /**
  * Get all doc sources (top-level folders under content/docs/)
  */
 export function getDocSources(): DocSource[] {
-  if (!fs.existsSync(DOCS_DIR)) return [];
+  const ingestedSources: DocSource[] = [];
 
-  const entries = fs.readdirSync(DOCS_DIR, { withFileTypes: true });
-  const sources: DocSource[] = [];
+  if (fs.existsSync(DOCS_DIR)) {
+    const entries = fs.readdirSync(DOCS_DIR, { withFileTypes: true });
 
-  for (const entry of entries) {
-    if (!entry.isDirectory()) continue;
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
 
-    const navPath = path.join(DOCS_DIR, entry.name, '_nav.json');
-    const metaPath = path.join(DOCS_DIR, entry.name, '_meta.json');
+      const navPath = path.join(DOCS_DIR, entry.name, '_nav.json');
+      const metaPath = path.join(DOCS_DIR, entry.name, '_meta.json');
 
-    let name = entry.name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-    let description = '';
-    let category = 'documentation';
+      let name = entry.name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+      let description = '';
+      let category = 'documentation';
 
-    if (fs.existsSync(metaPath)) {
-      const meta = JSON.parse(fs.readFileSync(metaPath, 'utf-8'));
-      name = meta.name || name;
-      description = meta.description || '';
-      category = meta.category || category;
+      if (fs.existsSync(metaPath)) {
+        const meta = JSON.parse(fs.readFileSync(metaPath, 'utf-8'));
+        name = meta.name || name;
+        description = meta.description || '';
+        category = meta.category || category;
+      }
+
+      let items: NavItem[] = [];
+      if (fs.existsSync(navPath)) {
+        items = JSON.parse(fs.readFileSync(navPath, 'utf-8'));
+      } else {
+        // Auto-generate nav from file system
+        items = buildNavFromDir(path.join(DOCS_DIR, entry.name), [entry.name]);
+      }
+
+      ingestedSources.push({
+        slug: entry.name,
+        name,
+        description,
+        category,
+        items,
+        href: `/docs/${encodeURIComponent(entry.name)}`,
+        renderMode: 'ingested',
+      });
     }
-
-    let items: NavItem[] = [];
-    if (fs.existsSync(navPath)) {
-      items = JSON.parse(fs.readFileSync(navPath, 'utf-8'));
-    } else {
-      // Auto-generate nav from file system
-      items = buildNavFromDir(path.join(DOCS_DIR, entry.name), [entry.name]);
-    }
-
-    sources.push({ slug: entry.name, name, description, category, items });
   }
 
-  return sources;
+  const liveSources = getLiveDocSources();
+  const seen = new Set<string>();
+  const merged: DocSource[] = [];
+
+  for (const source of [...ingestedSources, ...liveSources]) {
+    if (seen.has(source.slug)) continue;
+    seen.add(source.slug);
+    merged.push(source);
+  }
+
+  return merged;
 }
 
 /**

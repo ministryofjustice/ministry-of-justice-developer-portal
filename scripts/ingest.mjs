@@ -81,6 +81,13 @@ async function main() {
     console.log(`\n─── ${source.name} (${source.id}) ───`);
     try {
       validateSource(source);
+
+      if (source.format !== 'tech-docs-template') {
+        console.log(`  ⏭️  Skipped (format '${source.format}' is rendered on the fly, not ingested)`);
+        results.push({ id: source.id, pages: 0, assets: 0, skipped: true });
+        continue;
+      }
+
       const stats = await ingestSource(source);
       results.push({ id: source.id, ...stats });
       console.log(`  ✅ ${stats.pages} pages ingested, ${stats.assets} assets copied`);
@@ -93,7 +100,11 @@ async function main() {
   // Summary
   console.log('\n─── Summary ───');
   for (const r of results) {
-    const status = r.error ? `❌ ${r.error}` : `✅ ${r.pages} pages, ${r.assets} assets`;
+    const status = r.error
+      ? `❌ ${r.error}`
+      : r.skipped
+        ? '⏭️  skipped (rendered on the fly)'
+        : `✅ ${r.pages} pages, ${r.assets} assets`;
     console.log(`  ${r.id}: ${status}`);
   }
   console.log('');

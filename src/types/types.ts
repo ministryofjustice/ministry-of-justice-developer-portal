@@ -30,6 +30,9 @@ export interface DocSource {
   description: string;
   category: string;
   items: NavItem[];
+  href?: string;
+  renderMode?: 'ingested' | 'live';
+  externalUrl?: string;
 }
 
 export interface BreadcrumbItem {

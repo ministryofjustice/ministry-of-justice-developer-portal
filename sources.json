@@ -56,6 +56,19 @@
       "branch": "main",
       "docsPath": ".",
       "format": "docsify",
+      "externalUrl": "https://sb21460.github.io/moj-portal-docsify-test-site/",
+      "enabled": true
+    },
+    {
+      "id": "docsify-example-showcase",
+      "name": "Docsify Example Showcase",
+      "description": "Sample Docsify repository with MOJ wrapper shell for live showcase in the portal.",
+      "category": "platform",
+      "repo": "sb21460/moj-portal-docsify-example-showcase",
+      "branch": "main",
+      "docsPath": ".",
+      "format": "docsify",
+      "externalUrl": "https://sb21460.github.io/moj-portal-docsify-example-showcase/",
       "enabled": true
     }
   ]
