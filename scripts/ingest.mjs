@@ -24,6 +24,7 @@ const ROOT = path.resolve(__dirname, '..');
 const CONTENT_DIR = path.join(ROOT, 'content', 'docs');
 const SOURCES_FILE = path.join(ROOT, 'sources.json');
 const CLONE_DIR = path.join(ROOT, '.ingestion-cache');
+const SUPPORTED_FORMATS = new Set(['tech-docs-template', 'markdown', 'docsify']);
 const ASSET_EXTENSIONS = new Set([
   '.png',
   '.jpg',
@@ -79,6 +80,7 @@ async function main() {
   for (const source of toProcess) {
     console.log(`\n─── ${source.name} (${source.id}) ───`);
     try {
+      validateSource(source);
       const stats = await ingestSource(source);
       results.push({ id: source.id, ...stats });
       console.log(`  ✅ ${stats.pages} pages ingested, ${stats.assets} assets copied`);
@@ -95,6 +97,10 @@ async function main() {
     console.log(`  ${r.id}: ${status}`);
   }
   console.log('');
+
+  if (results.some((r) => r.error)) {
+    process.exit(1);
+  }
 }
 
 // ── Ingest a single source ──────────────────────────────────────
@@ -123,6 +129,10 @@ async function ingestSource(source) {
   const files = discoverFiles(docsRoot, config.format);
   console.log(`  Found ${files.length} source files in ${config.docsPath}`);
 
+  if (files.length === 0) {
+    throw new Error(`No source files found for format '${config.format}' in docsPath '${config.docsPath}'`);
+  }
+
   if (dryRun) {
     let dryRunAssetCount = 0;
     const dryRunAssetPaths = new Set();
@@ -147,22 +157,20 @@ async function ingestSource(source) {
     return { pages: files.length, assets: dryRunAssetCount };
   }
 
-  // Clean previous output and write fresh
-  if (fs.existsSync(outputDir)) {
-    fs.rmSync(outputDir, { recursive: true });
-  }
-  if (fs.existsSync(publicAssetsDir)) {
-    fs.rmSync(publicAssetsDir, { recursive: true });
-  }
-  fs.mkdirSync(outputDir, { recursive: true });
-  fs.mkdirSync(publicAssetsDir, { recursive: true });
+  const stagingRoot = fs.mkdtempSync(path.join(cloneDir, `staging-${source.id}-`));
+  const stageOutputDir = path.join(stagingRoot, 'content');
+  const stagePublicAssetsDir = path.join(stagingRoot, 'public');
+
+  fs.mkdirSync(stageOutputDir, { recursive: true });
+  fs.mkdirSync(stagePublicAssetsDir, { recursive: true });
 
   let pageCount = 0;
   const assetPaths = new Set();
 
   for (const file of files) {
     const converted = convertFile(file, source);
-    const outputPath = path.join(outputDir, converted.outputRelative);
+    const outputPath = path.join(stageOutputDir, converted.outputRelative);
+    assertPathInside(outputPath, stageOutputDir, 'output page path');
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     fs.writeFileSync(outputPath, converted.content, 'utf-8');
 
@@ -182,8 +190,11 @@ async function ingestSource(source) {
   let assetCount = 0;
   for (const relPath of assetPaths) {
     const src = path.join(docsRoot, relPath);
-    const contentDest = path.join(outputDir, relPath);
-    const publicDest = path.join(publicAssetsDir, relPath);
+    const contentDest = path.join(stageOutputDir, relPath);
+    const publicDest = path.join(stagePublicAssetsDir, relPath);
+
+    assertPathInside(contentDest, stageOutputDir, 'content asset path');
+    assertPathInside(publicDest, stagePublicAssetsDir, 'public asset path');
 
     fs.mkdirSync(path.dirname(contentDest), { recursive: true });
     fs.copyFileSync(src, contentDest);
@@ -203,12 +214,62 @@ async function ingestSource(source) {
     ingested_at: new Date().toISOString(),
   };
   fs.writeFileSync(
-    path.join(outputDir, '_meta.json'),
+    path.join(stageOutputDir, '_meta.json'),
     JSON.stringify(meta, null, 2),
     'utf-8'
   );
 
+  assertPathInside(outputDir, CONTENT_DIR, 'final output directory');
+  assertPathInside(publicAssetsDir, path.join(ROOT, 'public', 'docs'), 'final public assets directory');
+
+  if (fs.existsSync(outputDir)) {
+    fs.rmSync(outputDir, { recursive: true });
+  }
+  if (fs.existsSync(publicAssetsDir)) {
+    fs.rmSync(publicAssetsDir, { recursive: true });
+  }
+
+  fs.mkdirSync(path.dirname(outputDir), { recursive: true });
+  fs.mkdirSync(path.dirname(publicAssetsDir), { recursive: true });
+  fs.renameSync(stageOutputDir, outputDir);
+  fs.renameSync(stagePublicAssetsDir, publicAssetsDir);
+
+  fs.rmSync(stagingRoot, { recursive: true, force: true });
+
   return { pages: pageCount, assets: assetCount };
+}
+
+function validateSource(source) {
+  if (!source || typeof source !== 'object') {
+    throw new Error('Invalid source: expected object');
+  }
+
+  const required = ['id', 'name', 'repo', 'docsPath', 'format'];
+  for (const field of required) {
+    if (!source[field] || typeof source[field] !== 'string') {
+      throw new Error(`Invalid source '${source.id || 'unknown'}': missing required field '${field}'`);
+    }
+  }
+
+  if (!/^[a-z0-9-]+$/.test(source.id)) {
+    throw new Error(`Invalid source id '${source.id}': must be kebab-case`);
+  }
+
+  if (!SUPPORTED_FORMATS.has(source.format)) {
+    throw new Error(`Unsupported format '${source.format}' for source '${source.id}'`);
+  }
+}
+
+function assertPathInside(targetPath, allowedRoot, label) {
+  const normalizedTarget = path.resolve(targetPath);
+  const normalizedRoot = path.resolve(allowedRoot);
+  const relative = path.relative(normalizedRoot, normalizedTarget);
+
+  if (relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative))) {
+    return;
+  }
+
+  throw new Error(`Unsafe ${label}: ${targetPath}`);
 }
 
 // ── Git operations ──────────────────────────────────────────────
@@ -275,6 +336,9 @@ function isDocFile(name, format) {
   if (format === 'tech-docs-template') {
     return name.endsWith('.html.md.erb') || name.endsWith('.md');
   }
+  if (format === 'docsify') {
+    return name.endsWith('.md');
+  }
   return name.endsWith('.md') || name.endsWith('.mdx');
 }
 
@@ -310,6 +374,10 @@ function convertFile(file, source) {
     body = convertTechDocsPatterns(body, source);
   }
 
+  if (source.format === 'docsify') {
+    body = convertDocsifyPatterns(body, source, file.relative);
+  }
+
   // 5. Reconstruct the file
   const outputFm = buildFrontmatter(frontmatter);
   const outputContent = `---\n${outputFm}---\n\n${body.trim()}\n`;
@@ -321,6 +389,141 @@ function convertFile(file, source) {
   }
 
   return { content: outputContent, outputRelative };
+}
+
+function convertDocsifyPatterns(body, source, currentFileRelative) {
+  return body.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (fullMatch, text, href, offset, input) => {
+    if (offset > 0 && input[offset - 1] === '!') {
+      return fullMatch;
+    }
+
+    const rewritten = rewriteDocsifyLink(href, source.id, currentFileRelative);
+    if (!rewritten) {
+      return fullMatch;
+    }
+
+    return `[${text}](${rewritten})`;
+  });
+}
+
+function rewriteDocsifyLink(rawHref, sourceId, currentFileRelative) {
+  if (!rawHref) return null;
+
+  const href = rawHref.trim();
+  if (!href || href.startsWith('mailto:') || href.startsWith('tel:')) {
+    return null;
+  }
+  if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(href) || href.startsWith('//')) {
+    return null;
+  }
+
+  if (href.startsWith('#/') || href.startsWith('/#/')) {
+    const route = href.startsWith('/#/') ? href.slice(3) : href.slice(2);
+    return toPortalDocsRoute(route, sourceId);
+  }
+
+  if (href.startsWith('#')) {
+    return null;
+  }
+
+  const { pathPart, suffix } = splitLinkSuffix(href);
+  if (!pathPart.toLowerCase().endsWith('.md')) {
+    return null;
+  }
+
+  const currentPosix = currentFileRelative.replace(/\\/g, '/');
+  const currentDir = path.posix.dirname(currentPosix);
+  const resolved = pathPart.startsWith('/')
+    ? path.posix.normalize(pathPart.slice(1))
+    : path.posix.normalize(path.posix.join(currentDir, pathPart));
+
+  if (!resolved || resolved.startsWith('..')) {
+    return null;
+  }
+
+  const route = toDocsifyRouteWithoutExtension(resolved);
+  const convertedSuffix = convertDocsifySuffix(suffix);
+  return buildPortalRoute(route, sourceId, convertedSuffix);
+}
+
+function splitLinkSuffix(href) {
+  const hashIndex = href.indexOf('#');
+  const queryIndex = href.indexOf('?');
+
+  let cutIndex = -1;
+  if (hashIndex >= 0 && queryIndex >= 0) {
+    cutIndex = Math.min(hashIndex, queryIndex);
+  } else if (hashIndex >= 0) {
+    cutIndex = hashIndex;
+  } else if (queryIndex >= 0) {
+    cutIndex = queryIndex;
+  }
+
+  if (cutIndex === -1) {
+    return { pathPart: href, suffix: '' };
+  }
+
+  return {
+    pathPart: href.slice(0, cutIndex),
+    suffix: href.slice(cutIndex),
+  };
+}
+
+function toPortalDocsRoute(rawRoute, sourceId) {
+  const { pathPart, suffix } = splitLinkSuffix(rawRoute || '');
+  const normalizedPath = path.posix.normalize(pathPart.replace(/^\/+/, ''));
+  const route = toDocsifyRouteWithoutExtension(normalizedPath);
+  const convertedSuffix = convertDocsifySuffix(suffix);
+  return buildPortalRoute(route, sourceId, convertedSuffix);
+}
+
+function toDocsifyRouteWithoutExtension(rawPath) {
+  if (!rawPath || rawPath === '.' || rawPath === '/') {
+    return '';
+  }
+
+  let route = rawPath.replace(/^\/+|\/+$/g, '');
+  route = route.replace(/\.md$/i, '');
+  route = route.replace(/\/README$/i, '');
+  if (/^README$/i.test(route)) {
+    return '';
+  }
+
+  return route;
+}
+
+function convertDocsifySuffix(suffix) {
+  if (!suffix) return '';
+
+  let query = '';
+  let hash = '';
+
+  if (suffix.startsWith('?')) {
+    const hashIndex = suffix.indexOf('#');
+    query = hashIndex === -1 ? suffix : suffix.slice(0, hashIndex);
+    hash = hashIndex === -1 ? '' : suffix.slice(hashIndex);
+  } else if (suffix.startsWith('#')) {
+    hash = suffix;
+  } else {
+    return suffix;
+  }
+
+  if (query) {
+    const params = new URLSearchParams(query.slice(1));
+    if (!hash && params.has('id')) {
+      hash = `#${params.get('id')}`;
+      params.delete('id');
+    }
+    const remaining = params.toString();
+    query = remaining ? `?${remaining}` : '';
+  }
+
+  return `${query}${hash}`;
+}
+
+function buildPortalRoute(route, sourceId, suffix = '') {
+  const normalized = route ? `/${route}` : '';
+  return `/docs/${sourceId}${normalized}${suffix}`;
 }
 
 // ── ERB stripping ───────────────────────────────────────────────

@@ -124,3 +124,12 @@ export interface Product {
   status: StatusTagValue;
   tags: string[];
 }
+
+export interface ApiReference {
+  slug: string;
+  title: string;
+  description: string;
+  specUrl: string;
+  owner?: string;
+  sourceUrl?: string;
+}
