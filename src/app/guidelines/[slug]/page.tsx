@@ -23,6 +23,55 @@ const phaseLabels: Record<string, string> = {
 
 type Params = { slug: string };
 
+function stripDangerousTags(html: string): string {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<noscript[\s\S]*?<\/noscript>/gi, '');
+}
+
+function absolutizeAssetUrls(html: string, pageUrl: string): string {
+  return html.replace(/(href|src)=(['"])([^'"#][^'"]*)\2/gi, (full, attr, quote, value) => {
+    try {
+      const absolute = new URL(value, pageUrl).toString();
+      return `${attr}=${quote}${absolute}${quote}`;
+    } catch {
+      return full;
+    }
+  });
+}
+
+function removeTargetBlank(html: string): string {
+  return html.replace(/\s+target=(['"])_blank\1/gi, '');
+}
+
+function extractMainLikeContent(html: string): string | null {
+  const mainMatch = html.match(/<main\b[^>]*>[\s\S]*?<\/main>/i);
+  if (mainMatch) return mainMatch[0];
+
+  const articleMatch = html.match(/<article\b[^>]*>[\s\S]*?<\/article>/i);
+  if (articleMatch) return articleMatch[0];
+
+  return null;
+}
+
+async function fetchExternalGuidanceHtml(url: string): Promise<string | null> {
+  try {
+    const res = await fetch(url, { next: { revalidate: 60 * 60 * 6 } });
+    if (!res.ok) return null;
+
+    const rawHtml = await res.text();
+    const extracted = extractMainLikeContent(rawHtml);
+    if (!extracted) return null;
+
+    const cleaned = stripDangerousTags(extracted);
+    const withAbsoluteUrls = absolutizeAssetUrls(cleaned, url);
+    return removeTargetBlank(withAbsoluteUrls);
+  } catch {
+    return null;
+  }
+}
+
 export function generateStaticParams() {
   return guidelines.items.map((g) => ({ slug: g.slug }));
 }
@@ -44,8 +93,10 @@ export default async function GuidelineDetailPage({ params }: { params: Promise<
 
   const reviewStatus = getReviewStatus(guideline.lastReviewedOn, guideline.reviewIn);
 
-  // Render external guidelines inside portal chrome instead of sending users away directly.
+  // Render external guidance inside portal chrome as a single-page experience.
   if (guideline.externalUrl) {
+    const externalHtml = await fetchExternalGuidanceHtml(guideline.externalUrl);
+
     return (
       <div className="govuk-width-container">
         <Breadcrumbs
@@ -61,22 +112,28 @@ export default async function GuidelineDetailPage({ params }: { params: Promise<
               summary={guideline.description}
             />
 
-            <div className="govuk-inset-text">
-              This guideline is published on an external canonical source. You are viewing the portal
-              summary and metadata in a consistent MoJ layout.
-            </div>
-
-            <p className="govuk-body">
-              <a
-                href={guideline.externalUrl}
-                className="govuk-link"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Open full guidance at source
-              </a>{' '}
-              <span className="govuk-hint">(opens in a new tab)</span>
-            </p>
+            {externalHtml ? (
+              <>
+                <div className="govuk-inset-text">
+                  Canonical source: <a href={guideline.externalUrl} className="govuk-link">{guideline.externalUrl}</a>
+                </div>
+                <div
+                  className="app-prose-scope"
+                  dangerouslySetInnerHTML={{ __html: externalHtml }}
+                />
+              </>
+            ) : (
+              <>
+                <div className="govuk-inset-text">
+                  We could not render the canonical guidance inline right now.
+                </div>
+                <p className="govuk-body">
+                  <a href={guideline.externalUrl} className="govuk-link">
+                    Open full guidance at source
+                  </a>
+                </p>
+              </>
+            )}
 
             <MetaBar
               items={[

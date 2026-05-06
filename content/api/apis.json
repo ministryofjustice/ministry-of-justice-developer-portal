@@ -4,7 +4,7 @@
       "slug": "hmpps-integration-api",
       "title": "HMPPS Integration API",
       "description": "OpenAPI reference for HMPPS Integration API rendered in the portal shell.",
-      "specUrl": "https://raw.githubusercontent.com/ministryofjustice/hmpps-integration-api/main/openapi.json",
+      "specUrl": "https://ministryofjustice.github.io/hmpps-integration-api/openapi/api-docs.json",
       "owner": "HMPPS",
       "sourceUrl": "https://github.com/ministryofjustice/hmpps-integration-api"
     }

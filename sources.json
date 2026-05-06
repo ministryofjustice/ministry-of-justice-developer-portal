@@ -46,6 +46,17 @@
       "docsPath": "docs",
       "format": "markdown",
       "enabled": true
+    },
+    {
+      "id": "docsify-test-site",
+      "name": "Docsify Test Site",
+      "description": "Test docsify source used to validate ingestion into the MoJ Developer Portal.",
+      "category": "platform",
+      "repo": "sb21460/moj-portal-docsify-test-site",
+      "branch": "main",
+      "docsPath": ".",
+      "format": "docsify",
+      "enabled": true
     }
   ]
 }
