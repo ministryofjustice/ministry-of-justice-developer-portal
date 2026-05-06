@@ -157,7 +157,7 @@ async function ingestSource(source) {
     return { pages: files.length, assets: dryRunAssetCount };
   }
 
-  const stagingRoot = fs.mkdtempSync(path.join(cloneDir, `staging-${source.id}-`));
+  const stagingRoot = fs.mkdtempSync(path.join(CLONE_DIR, `staging-${source.id}-`));
   const stageOutputDir = path.join(stagingRoot, 'content');
   const stagePublicAssetsDir = path.join(stagingRoot, 'public');
 
