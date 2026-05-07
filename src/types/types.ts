@@ -31,7 +31,7 @@ export interface DocSource {
   category: string;
   items: NavItem[];
   href?: string;
-  renderMode?: 'ingested' | 'live';
+  renderMode?: 'ingested' | 'live' | 'redirect';
   externalUrl?: string;
 }
 

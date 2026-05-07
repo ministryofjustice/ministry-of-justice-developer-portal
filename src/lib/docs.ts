@@ -41,6 +41,7 @@ type SourceConfig = {
   format: string;
   enabled?: boolean;
   externalUrl?: string;
+  linkMode?: 'live' | 'redirect';
 };
 
 function getConfiguredSources(): SourceConfig[] {
@@ -64,8 +65,11 @@ export function getLiveDocSources(): DocSource[] {
       description: s.description || '',
       category: s.category || 'documentation',
       items: [],
-      href: `/docs/live/${encodeURIComponent(s.id)}`,
-      renderMode: 'live',
+      href:
+        s.linkMode === 'redirect'
+          ? s.externalUrl || toGithubPagesUrl(s.repo)
+          : `/docs/live/${encodeURIComponent(s.id)}`,
+      renderMode: s.linkMode === 'redirect' ? 'redirect' : 'live',
       externalUrl: s.externalUrl || toGithubPagesUrl(s.repo),
     }));
 }

@@ -70,6 +70,19 @@
       "format": "docsify",
       "externalUrl": "https://sb21460.github.io/moj-portal-docsify-example-showcase/",
       "enabled": true
+    },
+    {
+      "id": "opg-technical-guidance",
+      "name": "OPG Technical Guidance",
+      "description": "Technical guidance from OPG engineering teams.",
+      "category": "guidance",
+      "repo": "ministryofjustice/opg-technical-guidance",
+      "branch": "main",
+      "docsPath": ".",
+      "format": "markdown",
+      "externalUrl": "https://github.com/ministryofjustice/opg-technical-guidance",
+      "linkMode": "redirect",
+      "enabled": true
     }
   ]
 }
