@@ -80,7 +80,7 @@
       "branch": "main",
       "docsPath": ".",
       "format": "markdown",
-      "externalUrl": "https://github.com/ministryofjustice/opg-technical-guidance",
+      "externalUrl": "https://docs.opg.service.justice.gov.uk/",
       "linkMode": "redirect",
       "enabled": true
     }

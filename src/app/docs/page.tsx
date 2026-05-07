@@ -66,12 +66,26 @@ export default function DocsIndex() {
               <div key={source.slug} className="app-card">
                 <span className="app-card__tag">{source.category}</span>
                 <h2 className="govuk-heading-m app-card__title">
-                  <Link
-                    href={source.href || `/docs/${encodeURIComponent(source.slug)}`}
-                    className="govuk-link govuk-link--no-visited-state app-card__title-link"
-                  >
-                    {source.name}
-                  </Link>
+                  {source.renderMode === 'redirect' ? (
+                    <>
+                      <a
+                        href={source.href || source.externalUrl}
+                        className="govuk-link govuk-link--no-visited-state app-card__title-link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {source.name}
+                      </a>{' '}
+                      <span className="govuk-hint">(opens in a new tab)</span>
+                    </>
+                  ) : (
+                    <Link
+                      href={source.href || `/docs/${encodeURIComponent(source.slug)}`}
+                      className="govuk-link govuk-link--no-visited-state app-card__title-link"
+                    >
+                      {source.name}
+                    </Link>
+                  )}
                 </h2>
                 <p className="govuk-body app-card__description">{source.description}</p>
               </div>
