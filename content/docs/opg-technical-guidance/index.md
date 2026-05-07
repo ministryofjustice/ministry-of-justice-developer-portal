@@ -1,11 +1,11 @@
 ---
-title: OPG Technical Guidance (Ingested Example)
+title: OPG Technical Guidance
 source_repo: ministryofjustice/opg-technical-guidance
 source_path: index.md
 ingested_at: "2026-05-07T00:00:00.000Z"
 ---
 
-# OPG Technical Guidance (Ingested Example)
+# OPG Technical Guidance
 
 This section demonstrates the ingested documentation pattern for OPG technical guidance.
 

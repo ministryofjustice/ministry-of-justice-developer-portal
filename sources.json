@@ -61,22 +61,9 @@
       "enabled": true
     },
     {
-      "id": "docsify-example-showcase",
-      "name": "Docsify Example Showcase",
-      "description": "Sample Docsify repository with MOJ wrapper shell for live showcase in the portal.",
-      "category": "platform",
-      "repo": "sb21460/moj-portal-docsify-example-showcase",
-      "branch": "main",
-      "docsPath": ".",
-      "format": "docsify",
-      "externalUrl": "https://sb21460.github.io/moj-portal-docsify-example-showcase/",
-      "linkMode": "redirect",
-      "enabled": true
-    },
-    {
-      "id": "opg-technical-guidance",
-      "name": "OPG Technical Guidance",
-      "description": "Technical guidance from OPG engineering teams.",
+      "id": "opg-technical-guidance-redirect",
+      "name": "OPG Technical Guidance (Redirect)",
+      "description": "External redirect pattern for OPG technical guidance.",
       "category": "guidance",
       "repo": "ministryofjustice/opg-technical-guidance",
       "branch": "main",
@@ -87,9 +74,9 @@
       "enabled": true
     },
     {
-      "id": "opg-technical-guidance-ingested",
-      "name": "OPG Technical Guidance (Ingested Example)",
-      "description": "Example ingestion source block for OPG technical guidance.",
+      "id": "opg-technical-guidance",
+      "name": "OPG Technical Guidance",
+      "description": "Ingestion source block for OPG technical guidance.",
       "category": "guidance",
       "repo": "ministryofjustice/opg-technical-guidance",
       "branch": "main",
