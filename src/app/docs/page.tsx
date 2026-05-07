@@ -47,6 +47,21 @@ export default function DocsIndex() {
         <>
           <h2 className="govuk-heading-l">Documentation Sources</h2>
           <div className="app-cards">
+            <div className="app-card">
+              <span className="app-card__tag">api</span>
+              <h2 className="govuk-heading-m app-card__title">
+                <Link
+                  href="/docs/api"
+                  className="govuk-link govuk-link--no-visited-state app-card__title-link"
+                >
+                  API References
+                </Link>
+              </h2>
+              <p className="govuk-body app-card__description">
+                OpenAPI references rendered with ReDoc in the documentation experience.
+              </p>
+            </div>
+
             {sources.map((source) => (
               <div key={source.slug} className="app-card">
                 <span className="app-card__tag">{source.category}</span>

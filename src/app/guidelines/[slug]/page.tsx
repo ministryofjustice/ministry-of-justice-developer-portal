@@ -14,180 +14,79 @@ import guidelines from '../../../../content/guidelines/guidelines.json';
 import { markdownToHtml } from '@/lib/markdown/markdownToHtml';
 import { getGuidelinePage } from '@/lib/docs';
 
-const phaseLabels: Record<string, string> = {
-  inception: 'Project Inception',
-  development: 'Development & Iteration',
-  technology: 'Technology Choice',
-  standards: 'Standards & Best Practices',
-  measuring: 'Measuring Success',
-};
+interface Params {
+  slug: string;
+}
 
-const phaseOrder = ['inception', 'development', 'technology', 'standards', 'measuring'];
-
-type GuidelineItem = {
+interface GuidelineItem {
   slug: string;
   title: string;
-  phase: string;
+  phase: 'inception' | 'development' | 'technology' | 'standards' | 'measuring';
   description: string;
   owner: string;
   lastReviewedOn: string;
   reviewIn: string;
   externalUrl?: string;
+}
+
+const phaseLabels: Record<GuidelineItem['phase'], string> = {
+  inception: 'Project inception',
+  development: 'Development and iteration',
+  technology: 'Technology choice',
+  standards: 'Standards and best practices',
+  measuring: 'Measuring success',
 };
 
-type Params = { slug: string };
-
-type SearchParams = { url?: string };
-
 function GuidelinesSidebar({ currentSlug }: { currentSlug: string }) {
-  const items = (guidelines.items as GuidelineItem[]) || [];
-
   return (
     <nav className="app-layout__sidebar" aria-label="Guidelines navigation">
       <h2 className="app-subnav__section-title">Guidelines</h2>
-
-      {phaseOrder.map((phaseKey) => {
-        const phaseItems = items.filter((item) => item.phase === phaseKey);
-        if (phaseItems.length === 0) return null;
-
-        return (
-          <div key={phaseKey} className="govuk-!-margin-bottom-4">
-            <h3 className="govuk-heading-s govuk-!-margin-bottom-1">
-              {phaseLabels[phaseKey] || phaseKey}
-            </h3>
-            <ul className="app-subnav">
-              {phaseItems.map((item) => {
-                const isActive = item.slug === currentSlug;
-                return (
-                  <li key={item.slug} className="app-subnav__item">
-                    <Link
-                      href={`/guidelines/${item.slug}`}
-                      className={`app-subnav__link${isActive ? ' app-subnav__link--active' : ''}`}
-                    >
-                      {item.title}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        );
-      })}
+      <ul className="app-subnav">
+        {(guidelines.items as GuidelineItem[]).map((item) => (
+          <li key={item.slug} className="app-subnav__item">
+            {item.externalUrl ? (
+              <a
+                href={item.externalUrl}
+                className="app-subnav__link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {item.title}
+              </a>
+            ) : (
+              <Link
+                href={`/guidelines/${item.slug}`}
+                className={item.slug === currentSlug ? 'app-subnav__link app-subnav__link--current' : 'app-subnav__link'}
+                aria-current={item.slug === currentSlug ? 'page' : undefined}
+              >
+                {item.title}
+              </Link>
+            )}
+          </li>
+        ))}
+      </ul>
     </nav>
   );
 }
 
-function stripDangerousTags(html: string): string {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, '')
-    .replace(/<style[\s\S]*?<\/style>/gi, '')
-    .replace(/<noscript[\s\S]*?<\/noscript>/gi, '');
-}
-
-function absolutizeAssetUrls(html: string, pageUrl: string): string {
-  return html.replace(/(href|src)=(['"])([^'"#][^'"]*)\2/gi, (full, attr, quote, value) => {
-    try {
-      const absolute = new URL(value, pageUrl).toString();
-      return `${attr}=${quote}${absolute}${quote}`;
-    } catch {
-      return full;
-    }
-  });
-}
-
-function removeTargetBlank(html: string): string {
-  return html.replace(/\s+target=(['"])_blank\1/gi, '');
-}
-
-function rewriteExternalAnchorsForInlineNavigation(
-  html: string,
-  guidelineSlug: string,
-  activeUrl: string
-): string {
-  return html.replace(/(<a\b[^>]*\shref=(['"])([^'"]+)\2[^>]*>)/gi, (full, openTag, quote, href) => {
-    const rawHref = String(href || '').trim();
-    if (!rawHref || rawHref.startsWith('#') || rawHref.startsWith('mailto:') || rawHref.startsWith('tel:')) {
-      return full;
-    }
-
-    try {
-      const resolved = new URL(rawHref, activeUrl);
-      if (!/^https?:$/.test(resolved.protocol)) {
-        return full;
-      }
-
-      const inlineHref = `/guidelines/${guidelineSlug}?url=${encodeURIComponent(resolved.toString())}`;
-      return full.replace(`${quote}${href}${quote}`, `${quote}${inlineHref}${quote}`);
-    } catch {
-      return full;
-    }
-  });
-}
-
-function resolveGuidelineExternalUrl(defaultUrl: string, requestedUrl?: string): string {
-  const fallback = new URL(defaultUrl);
-  if (!requestedUrl) return fallback.toString();
-
-  try {
-    const resolved = new URL(requestedUrl, fallback);
-    const allowedHosts = new Set([fallback.host]);
-    if (!/^https?:$/.test(resolved.protocol) || !allowedHosts.has(resolved.host)) {
-      return fallback.toString();
-    }
-    return resolved.toString();
-  } catch {
-    return fallback.toString();
-  }
-}
-
-function extractMainLikeContent(html: string): string | null {
-  const mainMatch = html.match(/<main\b[^>]*>[\s\S]*?<\/main>/i);
-  if (mainMatch) return mainMatch[0];
-
-  const articleMatch = html.match(/<article\b[^>]*>[\s\S]*?<\/article>/i);
-  if (articleMatch) return articleMatch[0];
-
-  return null;
-}
-
-async function fetchExternalGuidanceHtml(url: string): Promise<string | null> {
-  try {
-    const res = await fetch(url, { next: { revalidate: 60 * 60 * 6 } });
-    if (!res.ok) return null;
-
-    const rawHtml = await res.text();
-    const extracted = extractMainLikeContent(rawHtml);
-    if (!extracted) return null;
-
-    const cleaned = stripDangerousTags(extracted);
-    const withAbsoluteUrls = absolutizeAssetUrls(cleaned, url);
-    return removeTargetBlank(withAbsoluteUrls);
-  } catch {
-    return null;
-  }
-}
-
 export function generateStaticParams() {
-  return guidelines.items.map((g) => ({ slug: g.slug }));
+  return (guidelines.items as GuidelineItem[]).map((g) => ({ slug: g.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
-  const guideline = guidelines.items.find((g) => g.slug === slug);
+  const guideline = (guidelines.items as GuidelineItem[]).find((g) => g.slug === slug);
   if (!guideline) return {};
   return { title: guideline.title };
 }
 
 export default async function GuidelineDetailPage({
   params,
-  searchParams,
 }: {
   params: Promise<Params>;
-  searchParams?: SearchParams;
 }) {
   const { slug } = await params;
-  const { url } = searchParams || {};
-  const guideline = guidelines.items.find((g) => g.slug === slug);
+  const guideline = (guidelines.items as GuidelineItem[]).find((g) => g.slug === slug);
 
   if (!guideline) {
     notFound();
@@ -195,14 +94,7 @@ export default async function GuidelineDetailPage({
 
   const reviewStatus = getReviewStatus(guideline.lastReviewedOn, guideline.reviewIn);
 
-  // Render external guidance inside portal chrome as a single-page experience.
   if (guideline.externalUrl) {
-    const activeExternalUrl = resolveGuidelineExternalUrl(guideline.externalUrl, url);
-    const externalHtmlRaw = await fetchExternalGuidanceHtml(activeExternalUrl);
-    const externalHtml = externalHtmlRaw
-      ? rewriteExternalAnchorsForInlineNavigation(externalHtmlRaw, guideline.slug, activeExternalUrl)
-      : null;
-
     return (
       <div className="govuk-width-container">
         <Breadcrumbs
@@ -220,28 +112,16 @@ export default async function GuidelineDetailPage({
               summary={guideline.description}
             />
 
-            {externalHtml ? (
-              <>
-                <div className="govuk-inset-text">
-                  Canonical source: <a href={activeExternalUrl} className="govuk-link">{activeExternalUrl}</a>
-                </div>
-                <div
-                  className="app-prose-scope"
-                  dangerouslySetInnerHTML={{ __html: externalHtml }}
-                />
-              </>
-            ) : (
-              <>
-                <div className="govuk-inset-text">
-                  We could not render the canonical guidance inline right now.
-                </div>
-                <p className="govuk-body">
-                  <a href={activeExternalUrl} className="govuk-link">
-                    Open full guidance at source
-                  </a>
-                </p>
-              </>
-            )}
+            <div className="govuk-inset-text">
+              This guideline is maintained on a canonical external source.
+            </div>
+
+            <p className="govuk-body">
+              <a href={guideline.externalUrl} className="govuk-link" target="_blank" rel="noopener noreferrer">
+                Open full guidance at source
+              </a>{' '}
+              <span className="govuk-hint">(opens in a new tab)</span>
+            </p>
 
             <MetaBar
               items={[
@@ -266,7 +146,6 @@ export default async function GuidelineDetailPage({
     );
   }
 
-  // Load content from MDX or use placeholder
   const pageData = getGuidelinePage(guideline.slug);
   const content = pageData ? await markdownToHtml(pageData.content) : `
 ## ${guideline.title}
@@ -292,6 +171,7 @@ If you have questions, reach out to the ${guideline.owner} team.
           <PageIntro
             title={guideline.title}
             titleClassName="govuk-heading-xl govuk-!-margin-top-2 govuk-!-margin-bottom-2"
+            summary={guideline.description}
           />
 
           <div
