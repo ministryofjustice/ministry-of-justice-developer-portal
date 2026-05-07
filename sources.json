@@ -57,6 +57,7 @@
       "docsPath": ".",
       "format": "docsify",
       "externalUrl": "https://sb21460.github.io/moj-portal-docsify-test-site/",
+      "linkMode": "redirect",
       "enabled": true
     },
     {
@@ -69,6 +70,7 @@
       "docsPath": ".",
       "format": "docsify",
       "externalUrl": "https://sb21460.github.io/moj-portal-docsify-example-showcase/",
+      "linkMode": "redirect",
       "enabled": true
     },
     {
@@ -83,6 +85,17 @@
       "externalUrl": "https://docs.opg.service.justice.gov.uk/",
       "linkMode": "redirect",
       "enabled": true
+    },
+    {
+      "id": "opg-technical-guidance-ingested",
+      "name": "OPG Technical Guidance (Ingested Example)",
+      "description": "Example ingestion source block for OPG technical guidance.",
+      "category": "guidance",
+      "repo": "ministryofjustice/opg-technical-guidance",
+      "branch": "main",
+      "docsPath": "docs",
+      "format": "tech-docs-template",
+      "enabled": false
     }
   ]
 }

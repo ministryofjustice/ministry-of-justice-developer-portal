@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { getLiveDocSources } from '@/lib/docs';
 
@@ -119,6 +119,10 @@ export default async function LiveSourcePage({
 
   if (!source || !source.externalUrl) {
     notFound();
+  }
+
+  if (source.renderMode === 'redirect') {
+    redirect(source.externalUrl);
   }
 
   const activeUrl = resolveLiveSourceUrl(source.externalUrl, url);
