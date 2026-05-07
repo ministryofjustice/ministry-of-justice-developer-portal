@@ -32,7 +32,11 @@ env/
 .ingestion-cache/
 
 # Ingested content (generated at build time)
-content/docs/
+content/docs/*
+!content/docs/runbooks/
+!content/docs/runbooks/**
+!content/docs/opg-technical-guidance-ingested/
+!content/docs/opg-technical-guidance-ingested/**
 public/docs/
 
 # Generated design-system assets (synced from node_modules)
