@@ -1,0 +1,135 @@
+name: Create or Update GitHub Issues for Dependabot PRs
+
+on:
+  workflow_call:
+    secrets:
+      TEST_PAT:
+        description: "GitHub access token with repo access"
+        required: true
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/dependabot-pr-tracker.yml
+    types: [opened, synchronize]
+
+jobs:
+  process-repo:
+    name: Process ${{ matrix.repo }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Update this list directly in the workflow when repos change.
+          - repo: ministryofjustice/ministry-of-justice-developer-portal
+
+    steps:
+      - name: Install prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+
+      - name: Process repo
+        env:
+          GITHUB_TOKEN: ${{ secrets.TEST_PAT }}
+          REPO: ${{ matrix.repo }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
+            ANCHOR_FRIDAY="2024-05-08"
+            TODAY=$(date +%F)
+            DELTA_SECONDS=$(( $(date -d "$TODAY" +%s) - $(date -d "$ANCHOR_FRIDAY" +%s)  ))
+            DELTA_WEEKS=$((DELTA_SECONDS / 604800 ))
+            SKIP_WEEKLY_TESTS=$(( DELTA_WEEKS % 2))
+            if [[ "$SKIP_WEEKLY_TESTS" -eq 1 ]]; then
+              echo "Skipping mid sprint runs"
+              exit 0
+            fi
+            echo "Near sprint start, continuing with dependabot PR tracking"
+          fi
+
+          REPO_NAME=${REPO##*/}
+          ISSUE_TITLE="Dependabot PRs for $REPO_NAME"
+
+          echo
+          echo "=== Processing $REPO_NAME ==="
+
+          PR_LIST=$(gh pr list \
+            --repo "$REPO" \
+            --base main \
+            --state open \
+            --json number,title,headRefName,author,labels \
+            --search "label:dependencies")
+
+          PR_LIST=$(echo "$PR_LIST" | jq '[.[] | select(
+            (.author.login | test("dependabot|app/dependabot"; "i")) or
+            (.labels[]?.name | test("dependency"; "i"))
+          )]')
+
+          echo "PRs found for $REPO_NAME:"
+          if [[ $(echo "$PR_LIST" | jq 'length') -eq 0 ]]; then
+            echo "  (none)"
+            exit 0
+          fi
+
+          echo "$PR_LIST" | jq -r '.[] | "  - #\(.number): \(.title) (branch \(.headRefName), author \(.author.login))"'
+
+          PR_DESCRIPTION=$(echo "$PR_LIST" \
+            | jq -r \
+              --arg repo "$REPO" \
+              '.[] | "PR Number: \(.number)\nTitle: \(.title)\nBranch: \(.headRefName)\nURL: https://github.com/\($repo)/pull/\(.number)\n"')
+
+          ISSUE_BODY=$(jq -n --arg repo "$REPO_NAME" --arg desc "$PR_DESCRIPTION" \
+            -r '"Repository: \($repo)\n\n\($desc)"')
+
+          EXISTING_ISSUE=$(gh issue list \
+            --repo "$REPO" \
+            --state open \
+            --limit 100 \
+            --json number,title,url \
+            | jq -c --arg title "$ISSUE_TITLE" 'map(select(.title == $title)) | .[0] // empty')
+
+          if [[ -z "$EXISTING_ISSUE" ]]; then
+            echo "Creating GitHub issue for $REPO_NAME"
+            PAYLOAD=$(jq -n --arg title "$ISSUE_TITLE" --arg body "$ISSUE_BODY" \
+              '{ title: $title, body: $body }')
+
+            CREATE=$(printf '%s' "$PAYLOAD" | gh api \
+              --method POST \
+              -H "Accept: application/vnd.github+json" \
+              "repos/$REPO/issues" \
+              --input -)
+
+            ISSUE_NUMBER=$(echo "$CREATE" | jq -r '.number // empty')
+            ISSUE_URL=$(echo "$CREATE" | jq -r '.html_url // empty')
+          else
+            ISSUE_NUMBER=$(echo "$EXISTING_ISSUE" | jq -r '.number')
+            ISSUE_URL=$(echo "$EXISTING_ISSUE" | jq -r '.url')
+
+            echo "Updating GitHub issue #$ISSUE_NUMBER"
+            NOW=$(date '+%Y-%m-%d %H:%M:%S')
+            UPDATE_PAYLOAD=$(jq -n --arg title "$ISSUE_TITLE" --arg repo "$REPO_NAME" --arg now "$NOW" --arg desc "$PR_DESCRIPTION" \
+              '{ title: $title, body: "Updated on \($now)\nRepository: \($repo)\n\n\($desc)" }')
+
+            printf '%s' "$UPDATE_PAYLOAD" | gh api \
+              --method PATCH \
+              -H "Accept: application/vnd.github+json" \
+              "repos/$REPO/issues/$ISSUE_NUMBER" \
+              --input - >/dev/null
+          fi
+
+          if [[ -z "$ISSUE_NUMBER" || -z "$ISSUE_URL" ]]; then
+            echo "ERROR: issue reference is empty after create/update; aborting."
+            exit 1
+          fi
+
+          echo "GitHub issue: #$ISSUE_NUMBER"
+          echo "Commenting on Dependabot PRs"
+
+          for NUM in $(echo "$PR_LIST" | jq -r '.[].number'); do
+            gh pr comment "$NUM" \
+              --repo "$REPO" \
+              --body "Tracked in #$ISSUE_NUMBER ($ISSUE_URL)"
+          done
