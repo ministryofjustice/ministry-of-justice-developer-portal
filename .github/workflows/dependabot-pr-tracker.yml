@@ -6,6 +6,12 @@ on:
       TECH_SERVICES_GITHUB_TOKEN:
         description: "GitHub access token with repo access"
         required: true
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/dependabot-pr-tracker.yml
+    types: [opened, synchronize, reopened]
 
 jobs:
   process-repo:
