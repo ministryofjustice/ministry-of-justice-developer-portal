@@ -46,6 +46,17 @@
       "docsPath": "docs",
       "format": "markdown",
       "enabled": true
+    },
+    {
+      "id": "cloud-optimisation-and-accountability",
+      "name": "Cloud Optimisation and Accountability",
+      "description": "Documentation source for Cloud Optimisation and Accountability.",
+      "category": "platform",
+      "repo": "ministryofjustice/cloud-optimisation-and-accountability",
+      "branch": "main",
+      "docsPath": "docs",
+      "format": "markdown",
+      "enabled": true
     }
   ]
 }
