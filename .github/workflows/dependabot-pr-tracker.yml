@@ -44,9 +44,10 @@ jobs:
             DELTA_WEEKS=$((DELTA_SECONDS / 604800 ))
             SKIP_WEEKLY_TESTS=$(( DELTA_WEEKS % 2))
             if [[ "$SKIP_WEEKLY_TESTS" -eq 1 ]]; then
-              echo "Skipping this week's run (delta weeks: $DELTA_WEEKS)"
+              echo "Skipping mid sprint runs (delta weeks: $DELTA_WEEKS)"
               exit 0
             fi
+            echo "Near sprint start, continuing with dependabot PR tracking"
           fi
 
           REPO_NAME=${REPO##*/}
