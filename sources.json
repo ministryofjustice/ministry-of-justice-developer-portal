@@ -54,8 +54,8 @@
       "category": "platform",
       "repo": "ministryofjustice/cloud-optimisation-and-accountability",
       "branch": "main",
-      "docsPath": "docs",
-      "format": "markdown",
+      "docsPath": "source/documentation",
+      "format": "tech-docs-template",
       "enabled": true
     }
   ]
