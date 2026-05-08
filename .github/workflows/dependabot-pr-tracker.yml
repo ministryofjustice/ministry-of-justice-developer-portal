@@ -3,7 +3,7 @@ name: Create or Update GitHub Issues for Dependabot PRs
 on:
   workflow_call:
     secrets:
-      TECH_SERVICES_GITHUB_TOKEN:
+      TEST_PAT:
         description: "GitHub access token with repo access"
         required: true
   pull_request:
@@ -11,7 +11,7 @@ on:
       - main
     paths:
       - .github/workflows/dependabot-pr-tracker.yml
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize]
 
 jobs:
   process-repo:
