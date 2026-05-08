@@ -40,7 +40,7 @@ jobs:
           cache: npm
 
       - name: SLSA supply chain protection
-        uses: ministryofjustice/devsecops-actions/sca/slsa@a600477f79bedf31163091fad08150ab8b0b5be0
+        uses: ministryofjustice/devsecops-actions/sca/slsa@79b9f7c4bd0d3cb85d4f7a289a515a666d38322e
 
       - name: Install dependencies
         shell: bash
