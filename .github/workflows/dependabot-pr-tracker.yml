@@ -37,7 +37,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+          if [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
             ANCHOR_FRIDAY="2024-05-08"
             TODAY=$(date +%F)
             DELTA_SECONDS=$(( $(date -d "$TODAY" +%s) - $(date -d "$ANCHOR_FRIDAY" +%s)  ))
