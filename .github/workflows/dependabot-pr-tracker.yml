@@ -38,13 +38,13 @@ jobs:
           set -euo pipefail
 
           if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-            ANCHOR_FRIDAY="2024-05-01"
+            ANCHOR_FRIDAY="2024-05-08"
             TODAY=$(date +%F)
             DELTA_SECONDS=$(( $(date -d "$TODAY" +%s) - $(date -d "$ANCHOR_FRIDAY" +%s)  ))
             DELTA_WEEKS=$((DELTA_SECONDS / 604800 ))
             SKIP_WEEKLY_TESTS=$(( DELTA_WEEKS % 2))
             if [[ "$SKIP_WEEKLY_TESTS" -eq 1 ]]; then
-              echo "Skipping mid sprint runs (delta weeks: $DELTA_WEEKS)"
+              echo "Skipping mid sprint runs"
               exit 0
             fi
             echo "Near sprint start, continuing with dependabot PR tracking"
