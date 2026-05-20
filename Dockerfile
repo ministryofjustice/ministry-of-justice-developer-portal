@@ -12,7 +12,7 @@ COPY . .
 RUN npm run ingest
 RUN npm run build
 
-FROM nginx:1.29-alpine
+FROM nginx:1.31-alpine
 
 # Create nginx cache directories and set ownership for non-root user (101)
 RUN mkdir -p /var/cache/nginx/client_temp \
