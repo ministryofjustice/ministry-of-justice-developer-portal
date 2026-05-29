@@ -8,7 +8,8 @@ A cross-government developer portal inspired by [Singapore's Government Develope
 
 - **Product catalogue** — browse platforms, tools, and APIs available across government (mix of real MoJ platforms)
 - **Documentation hub** — technical docs ingested automatically from source repositories (Cloud Platform, Modernisation Platform, Analytical Platform)
-- **Guidelines** — standards and best practices organised by project lifecycle phase, linking out to real cross-government resources (Service Standard, Technology Code of Practice, NCSC guidance, MoJ AI Governance Framework, GOV.UK Design System, and more)
+- **Guidelines** — standards and best practices organised by project lifecycle phase, linking out to real cross-government resources (Service Standard,
+  Technology Code of Practice, NCSC guidance, MoJ AI Governance Framework, GOV.UK Design System, and more)
 - **Community** — links to Slack channels, open source, events
 - **AI chatbot** — contextual help assistant (mock responses in alpha)
 - **Full-text search** — powered by [Pagefind](https://pagefind.app/)
@@ -16,14 +17,14 @@ A cross-government developer portal inspired by [Singapore's Government Develope
 
 ## Tech stack
 
-| Component | Technology |
-|---|---|
-| Framework | [Next.js 16](https://nextjs.org/) (App Router, static export) |
-| Styles | [GOV.UK Frontend](https://frontend.design-system.service.gov.uk/) v6 + Sass |
-| Content | Markdown with YAML frontmatter |
-| Search | [Pagefind](https://pagefind.app/) (client-side, zero-dependency) |
-| Ingestion | Node.js script that clones repos and converts `.html.md.erb` → `.md` |
-| Hosting | Cloud Platform (containerised, Kubernetes) |
+| Component | Technology                                                                  |
+| --------- | --------------------------------------------------------------------------- |
+| Framework | [Next.js 16](https://nextjs.org/) (App Router, static export)               |
+| Styles    | [GOV.UK Frontend](https://frontend.design-system.service.gov.uk/) v6 + Sass |
+| Content   | Markdown with YAML frontmatter                                              |
+| Search    | [Pagefind](https://pagefind.app/) (client-side, zero-dependency)            |
+| Ingestion | Node.js script that clones repos and converts `.html.md.erb` → `.md`        |
+| Hosting   | Cloud Platform (containerised, Kubernetes)                                  |
 
 ## Getting started
 
@@ -119,33 +120,33 @@ npm run test:e2e-debug
 
 The project is structured with source code and tests in parallel (as in the example below).
 
-```
+````
 root/
-├── src/                    
+├── src/
 │   ├── app/
-│   │   ├── community      
+│   │   ├── community
 │   │   ├── contact-us
 │   │   ├── docs
 │   │   └── ...
 │   ├── components/
 │   └── lib/
-├── tests/                    
+├── tests/
 │   ├── unit/
-│   │   ├── app/      
+│   │   ├── app/
 │   │   │   ├── community
 │   │   │   └── ...
-│   │   ├── components/  
+│   │   ├── components/
 │   │   │   ├── breadcrumbs
 │   │   │   └── ...
-│   │   └── ../  
+│   │   └── ../
 │   ├── e2e/
-│   │   ├── smoke/      
+│   │   ├── smoke/
 │   │   │   ├── home
 │   │   │   └── navigation
-│   │   ├── a11y/  
+│   │   ├── a11y/
 │   │   │   ├── home
 │   │   │   └── ...
-│   │   ├── pages/  
+│   │   ├── pages/
 │   │   │   ├── home
 │   │   │   └── ...
 
@@ -161,7 +162,7 @@ make build
 make docker-build IMAGE_URI=local/ministry-of-justice-developer-portal:dev
 make k8s-apply-dev IMAGE_URI=<your-ecr-image-uri>
 make smoke-dev
-```
+````
 
 ## Content structure
 
@@ -190,51 +191,54 @@ content/
 
 ### Guidelines: internal vs external
 
-Guidelines in `guidelines.json` can be either internal (rendered as portal pages) or external (linked out to the canonical source). An entry with an `externalUrl` field links directly — no internal page is generated.
+Guidelines in `guidelines.json` can be either internal (rendered as portal pages) or external (linked out to the canonical source). An entry with an
+`externalUrl` field links directly — no internal page is generated.
 
 Current external links:
 
-| Phase | Resource | Source |
-|---|---|---|
-| Inception | [GOV.UK Service Manual](https://www.gov.uk/service-manual) | GDS |
-| Inception | [Service Standard](https://www.gov.uk/service-manual/service-standard) | GDS |
-| Development | [GDS API Technical & Data Standards](https://www.gov.uk/guidance/gds-api-technical-and-data-standards) | GDS |
-| Development | [NCSC Secure Development & Deployment](https://www.ncsc.gov.uk/collection/developers-collection) | NCSC |
-| Technology | [Technology Code of Practice](https://www.gov.uk/guidance/the-technology-code-of-practice) | CDDO |
-| Technology | [GOV.UK Design System](https://design-system.service.gov.uk/) | GDS |
-| Standards | [MoJ AI Governance Framework](https://technical-guidance.service.justice.gov.uk/documentation/governance/ai-governance-framework.html#introduction) | MoJ |
-| Standards | [NCSC Cloud Security Guidance](https://www.ncsc.gov.uk/collection/cloud-security) | NCSC |
-| Measuring | [Measuring service performance](https://www.gov.uk/service-manual/measuring-success) | GDS |
+| Phase       | Resource                                                                                                                                            | Source |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| Inception   | [GOV.UK Service Manual](https://www.gov.uk/service-manual)                                                                                          | GDS    |
+| Inception   | [Service Standard](https://www.gov.uk/service-manual/service-standard)                                                                              | GDS    |
+| Development | [GDS API Technical & Data Standards](https://www.gov.uk/guidance/gds-api-technical-and-data-standards)                                              | GDS    |
+| Development | [NCSC Secure Development & Deployment](https://www.ncsc.gov.uk/collection/developers-collection)                                                    | NCSC   |
+| Technology  | [Technology Code of Practice](https://www.gov.uk/guidance/the-technology-code-of-practice)                                                          | CDDO   |
+| Technology  | [GOV.UK Design System](https://design-system.service.gov.uk/)                                                                                       | GDS    |
+| Standards   | [MoJ AI Governance Framework](https://technical-guidance.service.justice.gov.uk/documentation/governance/ai-governance-framework.html#introduction) | MoJ    |
+| Standards   | [NCSC Cloud Security Guidance](https://www.ncsc.gov.uk/collection/cloud-security)                                                                   | NCSC   |
+| Measuring   | [Measuring service performance](https://www.gov.uk/service-manual/measuring-success)                                                                | GDS    |
 
 Detailed documentation source setup and ingestion workflow are described in [docs/templates/spec-documentation.md](docs/templates/spec-documentation.md).
 
 ### Webhook-driven updates
 
-Source repos can trigger re-ingestion automatically using `repository_dispatch`. See [`.github/workflows/notify-portal.yml.example`](.github/workflows/notify-portal.yml.example) for a workflow to add to source repos.
+Source repos can trigger re-ingestion automatically using `repository_dispatch`. See
+[`.github/workflows/notify-portal.yml.example`](.github/workflows/notify-portal.yml.example) for a workflow to add to source repos.
 
 ## GitHub Actions
 
-| Workflow | Trigger | Purpose |
-|---|---|---|
-| [`ingest.yml`](.github/workflows/ingest.yml) | Schedule (6h), manual, webhook | Ingest external docs and commit updates |
-| [`deploy-dev.yml`](.github/workflows/deploy-dev.yml) | Push to main, manual | Build image, push to ECR, deploy to dev namespace |
-| [`deploy-prod.yml`](.github/workflows/deploy-prod.yml) | Manual | Build image, push to ECR, deploy to prod namespace |
-| [`preview.yml`](.github/workflows/preview.yml) | Pull request | Dry-run ingest + build check |
+| Workflow                                               | Trigger                        | Purpose                                            |
+| ------------------------------------------------------ | ------------------------------ | -------------------------------------------------- |
+| [`ingest.yml`](.github/workflows/ingest.yml)           | Schedule (6h), manual, webhook | Ingest external docs and commit updates            |
+| [`deploy-dev.yml`](.github/workflows/deploy-dev.yml)   | Push to main, manual           | Build image, push to ECR, deploy to dev namespace  |
+| [`deploy-prod.yml`](.github/workflows/deploy-prod.yml) | Manual                         | Build image, push to ECR, deploy to prod namespace |
+| [`preview.yml`](.github/workflows/preview.yml)         | Pull request                   | Dry-run ingest + build check                       |
 
 ## Deployment
 
 ### Cloud Platform (containerised)
 
-This repository deploys to Cloud Platform via dedicated dev and prod GitHub workflows. The container image is built from the included `Dockerfile`, pushed to ECR, and deployed to Kubernetes using environment-scoped credentials.
+This repository deploys to Cloud Platform via dedicated dev and prod GitHub workflows. The container image is built from the included `Dockerfile`, pushed to
+ECR, and deployed to Kubernetes using environment-scoped credentials.
 
 #### Required GitHub Actions secrets
 
 The deploy workflows expect separate Kubernetes credentials for dev and prod:
 
-| Environment | Required secrets |
-|---|---|
-| Dev | `ECR_ROLE_TO_ASSUME`, `DEV_KUBE_CLUSTER`, `DEV_KUBE_NAMESPACE`, `DEV_KUBE_CERT`, `DEV_KUBE_TOKEN` |
-| Prod | `PROD_ECR_ROLE_TO_ASSUME`, `PROD_KUBE_CLUSTER`, `PROD_KUBE_NAMESPACE`, `PROD_KUBE_CERT`, `PROD_KUBE_TOKEN` |
+| Environment | Required secrets                                                                                           |
+| ----------- | ---------------------------------------------------------------------------------------------------------- |
+| Dev         | `ECR_ROLE_TO_ASSUME`, `DEV_KUBE_CLUSTER`, `DEV_KUBE_NAMESPACE`, `DEV_KUBE_CERT`, `DEV_KUBE_TOKEN`          |
+| Prod        | `PROD_ECR_ROLE_TO_ASSUME`, `PROD_KUBE_CLUSTER`, `PROD_KUBE_NAMESPACE`, `PROD_KUBE_CERT`, `PROD_KUBE_TOKEN` |
 
 These are provided by Cloud Platform module configuration (for this repository) once the relevant Cloud Platform PRs are merged.
 

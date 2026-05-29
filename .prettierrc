@@ -3,6 +3,15 @@
   "singleQuote": true,
   "trailingComma": "all",
   "printWidth": 100,
+  "overrides": [
+    {
+      "files": "**/*.md",
+      "options": {
+        "printWidth": 160,
+        "proseWrap": "always"
+      }
+    }
+  ],
   "tabWidth": 2,
   "arrowParens": "always"
 }

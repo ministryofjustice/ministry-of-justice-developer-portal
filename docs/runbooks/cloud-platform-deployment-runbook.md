@@ -26,8 +26,7 @@ It documents required GitHub configuration, deployment flow, and operational kub
 
 ### Repository Variables (Actions)
 
-Set these at:
-<https://github.com/ministryofjustice/ministry-of-justice-developer-portal/settings/variables/actions>
+Set these at: <https://github.com/ministryofjustice/ministry-of-justice-developer-portal/settings/variables/actions>
 
 Required:
 
@@ -36,8 +35,7 @@ Required:
 
 ### Environment Secrets: Dev
 
-Set these at:
-<https://github.com/ministryofjustice/ministry-of-justice-developer-portal/settings/environments/dev>
+Set these at: <https://github.com/ministryofjustice/ministry-of-justice-developer-portal/settings/environments/dev>
 
 Required:
 
@@ -55,8 +53,7 @@ Expected values:
 
 ### Environment Secrets: Prod
 
-Set these at:
-<https://github.com/ministryofjustice/ministry-of-justice-developer-portal/settings/environments/prod>
+Set these at: <https://github.com/ministryofjustice/ministry-of-justice-developer-portal/settings/environments/prod>
 
 Required:
 
