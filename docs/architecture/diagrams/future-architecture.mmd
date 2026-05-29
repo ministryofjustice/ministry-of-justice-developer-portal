@@ -1,0 +1,37 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontFamily: ''
+    primaryColor: '#e8f1ff'
+    primaryTextColor: '#0b1f33'
+    primaryBorderColor: '#1d70b8'
+    lineColor: '#1d70b8'
+    secondaryColor: '#f3f2f1'
+    tertiaryColor: '#ffffff'
+  layout: fixed
+---
+flowchart TB
+ subgraph sourceTypes["Source types"]
+        githubSource["GitHub Markdown"]
+        confluenceSource["Confluence"]
+        jiraSource["Jira"]
+        otherSource["Other"]
+  end
+ subgraph adapters["Source adapters"]
+        githubAdapter["GitHub Markdown adapter"]
+        confluenceAdapter["Confluence adapter"]
+        jiraAdapter["Jira adapter"]
+        otherAdapter["Other adapter"]
+  end
+    githubSource --> githubAdapter
+    confluenceSource --> confluenceAdapter
+    jiraSource --> jiraAdapter
+    otherSource --> otherAdapter
+    githubAdapter --> canonicalModel["Canonical document model"]
+    confluenceAdapter --> canonicalModel
+    jiraAdapter --> canonicalModel
+    otherAdapter --> canonicalModel
+    canonicalModel --> storage["Storage\nMVP: in repository\nFuture: database or object storage"]
+    storage --> searchIndexes["Search indexes"] & portal["Portal"]
+    searchIndexes --> portal
