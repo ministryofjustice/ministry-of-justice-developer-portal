@@ -1,0 +1,39 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "primaryColor": "#e8f1ff",
+    "primaryTextColor": "#0b1f33",
+    "primaryBorderColor": "#1d70b8",
+    "lineColor": "#1d70b8",
+    "secondaryColor": "#f3f2f1",
+    "tertiaryColor": "#ffffff"
+  }
+}}%%
+
+flowchart TD
+  sourceRepos["<strong>Source repositories</strong><br/><br/>Only public repositories<br/>Only GitHub<br/>Only Markdown"]
+  sourceRegistry["<strong>Source registry</strong><br/><br/>Stored within the portal codebase"]
+  scheduledWorkflow["<strong>Scheduled ingestion workflow</strong><br/><br/>GitHub Actions<br/>Daily initially"]
+  githubAdapter["<strong>GitHub source adapter</strong><br/><br/>Single source adapter for the MVP"]
+  transform["<strong>Transform and normalise</strong><br/><br/>Convert source content into the defined content model"]
+  contentStore["<strong>Canonical content store</strong><br/><br/>Content and documents stored in the portal repo"]
+  searchIndexes["<strong>Generate search indexes</strong><br/><br/>Pagefind initially, or alternative later"]
+  portalOutput["<strong>Output to developer portal docs</strong><br/><br/>Changes raised via PR<br/>No automatic merge"]
+
+  sourceRepos --> githubAdapter
+  sourceRegistry --> scheduledWorkflow
+  scheduledWorkflow --> githubAdapter
+  githubAdapter --> transform
+  transform --> contentStore
+  contentStore --> searchIndexes
+  contentStore --> portalOutput
+  searchIndexes --> portalOutput
+
+  classDef source fill:#e8f1ff,stroke:#1d70b8,stroke-width:2px,color:#0b1f33;
+  classDef process fill:#e9f7ef,stroke:#00703c,stroke-width:2px,color:#0b1f33;
+  classDef output fill:#fff7bf,stroke:#f47738,stroke-width:2px,color:#0b1f33;
+
+  class sourceRepos,sourceRegistry source;
+  class scheduledWorkflow,githubAdapter,transform,contentStore process;
+  class searchIndexes,portalOutput output;

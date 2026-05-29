@@ -6,9 +6,8 @@
 
 ## Purpose
 
-This runbook defines a reusable ingestion process for any repository that
-pulls documentation from external sources and publishes normalized content into
-the portal/site repository.
+This runbook defines a reusable ingestion process for any repository that pulls documentation from external sources and publishes normalized content into the
+portal/site repository.
 
 ## Where To Update This Template
 
