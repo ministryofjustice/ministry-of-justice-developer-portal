@@ -1,0 +1,47 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontFamily: ''
+    primaryColor: '#e8f1ff'
+    primaryTextColor: '#0b1f33'
+    primaryBorderColor: '#1d70b8'
+    lineColor: '#1d70b8'
+    secondaryColor: '#f3f2f1'
+    tertiaryColor: '#ffffff'
+  layout: dagre
+---
+flowchart TB
+    start["Start scheduled ingestion"] --> registry["Read source registry"]
+    registry --> fetch["Fetch content<br><br><em>Clone or shallow fetch<br>Read configured paths</em>"]
+    fetch --> validate["Validate source config<br>and Markdown"]
+    validate --> extract["Extract Markdown docs<br>and assets"]
+    extract --> transform["Transform content<br><br><em>Rewrite links<br>Normalise paths<br>Add metadata</em>"]
+    transform --> write["Write to portal structure<br><br><em>Canonical store<br>In repository</em>"]
+    write --> index["Generate or update<br>search indexes<br><br><em>May be automated in MVP<br>using Pagefind</em>"]
+    index --> report["Create ingestion report<br><br><em>Up for debate</em>"]
+    report --> success["Successful ingestion"]
+    fetch -.-> failure["Failure / error"]
+    validate -.-> failure
+    extract -.-> failure
+    transform -.-> failure
+    write -.-> failure
+    index -.-> failure
+    failure --> handleFailure["Handle failure appropriately<br><br>Retain last successful source<br>Produce failure reporting"]
+
+     start:::startEnd
+     registry:::process
+     fetch:::process
+     validate:::process
+     extract:::process
+     transform:::process
+     write:::process
+     index:::process
+     report:::process
+     success:::startEnd
+     failure:::error
+     handleFailure:::error
+    classDef startEnd fill:#e8f1ff,stroke:#1d70b8,stroke-width:2px,color:#0b1f33
+    classDef process fill:#e9f7ef,stroke:#00703c,stroke-width:2px,color:#0b1f33
+    classDef warning fill:#fff7bf,stroke:#f47738,stroke-width:2px,color:#0b1f33
+    classDef error fill:#fdecea,stroke:#d4351c,stroke-width:2px,color:#0b1f33
