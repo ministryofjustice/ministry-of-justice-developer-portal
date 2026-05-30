@@ -15,7 +15,7 @@ export default function SearchWidget() {
     async function loadPagefind() {
       try {
         // Pagefind generates its JS in /pagefind/pagefind.js at build time
-        // and needs the basePath prefix on GitHub Pages.
+        // and needs the basePath prefix when the app is hosted under a subpath.
         const pagefindPath = `${basePath}/pagefind/pagefind.js`;
         const pf = await import(
           // @ts-ignore — dynamic runtime import of generated pagefind bundle

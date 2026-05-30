@@ -84,14 +84,6 @@ describe('rewriteDocAssetSources', () => {
 });
 
 describe('rewriteDocHref deeper cases', () => {
-  it('handles absolute github pages links', () => {
-    const input = `<a href="https://ministryofjustice.github.io/repo/docs/page">`;
-
-    const result = rewriteDocAnchorLinks(input, ctx);
-
-    expect(result).toContain('/docs/');
-  });
-
   it('leaves /assets paths alone except basePath', () => {
     const input = `<a href="/assets/image.png">`;
 

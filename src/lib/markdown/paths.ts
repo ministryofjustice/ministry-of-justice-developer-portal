@@ -99,32 +99,6 @@ export function ensureDocsTrailingSlash(path: string): string {
   return `${path}/`;
 }
 
-export function rewriteAbsoluteGithubPagesDocsHref(href: string): string | null {
-  let parsed: URL;
-  try {
-    parsed = new URL(href);
-  } catch {
-    return null;
-  }
-
-  if (parsed.hostname !== 'ministryofjustice.github.io') return null;
-
-  let pathname = parsed.pathname;
-
-  if (BASE_PATH && pathname.startsWith(`${BASE_PATH}/docs/`)) {
-    pathname = stripBasePath(pathname);
-  } else {
-    const match = pathname.match(/^\/[^/]+\/docs(\/.*)?$/);
-    if (match) pathname = `/docs${match[1] || ''}`;
-  }
-
-  if (!pathname.startsWith('/docs/')) return null;
-
-  return `${withBasePath(
-    ensureDocsTrailingSlash(normalizeMalformedDocsHref(pathname)),
-  )}${parsed.search}${parsed.hash}`;
-}
-
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

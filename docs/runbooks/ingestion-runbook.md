@@ -4,6 +4,20 @@
 
 - Last reviewed: 2026-04-24
 
+## Repository Values (This Repo)
+
+- Repository: `ministryofjustice/ministry-of-justice-developer-portal`
+- Default branch: `main`
+- Ingestion workflow: `.github/workflows/ingest.yml`
+- Ingestion runner script: `scripts/ingest.mjs`
+- Ingestion library (testable exports): `scripts/ingest-lib.mjs`
+- Sources config: `sources.json`
+- Content output: `content/docs`
+- Public assets output: `public/docs`
+- Manual input name: `source_id`
+- Dispatch event type: `docs-update`
+- Scheduled cadence: every 6 hours (`0 */6 * * *`)
+
 ## Purpose
 
 This runbook defines a reusable ingestion process for any repository that
@@ -31,7 +45,7 @@ Replace placeholders below for your target repository:
 - `<PUBLIC_ASSET_DIR>`: public assets folder (for example `public/docs`)
 - `<NODE_VERSION_VAR>`: Actions variable used by workflow (for example `NODE_VERSION`)
 - `<DISPATCH_EVENT_TYPE>`: repository dispatch type (for example `docs-update`)
-- `<SOURCE_INPUT_NAME>`: manual workflow input name (for example `source`)
+- `<SOURCE_INPUT_NAME>`: manual workflow input name (for example `source_id`)
 
 Absolute links pattern:
 
@@ -69,6 +83,12 @@ Define each source under a list (for example `sources[]`) with fields like:
 - `format`: converter type (`tech-docs-template`, `markdown`, etc.)
 - `enabled`: include/exclude source
 - `owner_slack` or equivalent owner metadata (optional)
+
+`sources.json` is the source of truth for `id`, `repo`, `branch`, `format`, and `enabled`.
+Only these overrides are supported from source repository `portal.yaml`:
+
+- `docs.path`
+- `owner_slack`
 
 ## How To Add A New Source
 
@@ -169,11 +189,18 @@ If workflow expects `client_payload.source_id`:
 }
 ```
 
+`client_payload.source_id` must exactly match the source `id` in `<SOURCES_CONFIG_PATH>`.
+
 ## Workflow Runtime Requirements
 
 - Node version variable configured (for example `vars.<NODE_VERSION_VAR>`)
 - Workflow permissions to commit content changes (`contents: write`) when auto-commit is enabled
 - Network access from runner to source repositories
+
+Notification configuration for this repository:
+
+- Repository secret `SLACK_WEBHOOK_URL` (optional but recommended)
+- When set, the workflow sends Slack notifications for every ingestion outcome (success/failure/cancelled)
 
 ## Commit Strategy
 
@@ -192,6 +219,8 @@ Suggested commit message:
 After each ingestion run:
 
 1. Confirm Actions run success.
+1. If a source ID was provided, verify only that source was ingested.
+1. Validate invalid source ID behavior returns: `No matching sources found`.
 1. Verify changed files under `<CONTENT_OUTPUT_DIR>` and `<PUBLIC_ASSET_DIR>`.
 1. Verify metadata file exists for each ingested source.
 1. Run build locally:
@@ -201,6 +230,7 @@ npm run build
 ```
 
 1. Spot-check representative pages for each source.
+1. Verify Slack notification delivery for the run outcome when `SLACK_WEBHOOK_URL` is configured.
 
 ## Troubleshooting Guide
 

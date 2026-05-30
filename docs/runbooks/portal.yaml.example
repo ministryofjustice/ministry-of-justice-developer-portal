@@ -3,6 +3,10 @@
 #
 # The ingestion pipeline checks for this file first; if absent, it
 # falls back to the settings in sources.json.
+#
+# Supported ingestion overrides in this file are limited to:
+# - docs.path
+# - owner_slack
 
 name: Cloud Platform User Guide
 description: User guide for the Cloud Platform — Kubernetes-based hosting on AWS.
@@ -11,10 +15,3 @@ owner_slack: "#cloud-platform"
 
 docs:
   path: source/documentation       # relative path to doc content
-  format: tech-docs-template       # tech-docs-template | markdown | mdx
-  include:                          # glob patterns (relative to docs.path)
-    - "**/*.html.md.erb"
-    - "**/*.md"
-  exclude:
-    - "**/partials/**"
-    - "**/_*"

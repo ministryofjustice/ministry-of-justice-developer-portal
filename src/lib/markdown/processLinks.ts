@@ -8,7 +8,6 @@ import {
   isBasePathPrefixed,
   ensureDocsTrailingSlash,
   normalizeMalformedDocsHref,
-  rewriteAbsoluteGithubPagesDocsHref,
 } from './paths';
 
 import type { DocsLinkContext } from './markdownToHtml';
@@ -54,9 +53,6 @@ export function rewriteDocAssetSources(html: string, ctx: DocsLinkContext) {
 }
 
 function rewriteDocHref(href: string, ctx: DocsLinkContext): string {
-  const absolute = rewriteAbsoluteGithubPagesDocsHref(href);
-  if (absolute) return absolute;
-
   if (isExternalOrAnchor(href)) return href;
 
   if (href.startsWith('/')) {

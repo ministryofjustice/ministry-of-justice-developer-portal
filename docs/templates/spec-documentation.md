@@ -24,6 +24,11 @@ Current flow:
 3. Generated files are written to `content/docs/<source-id>/`.
 4. `lib/docs.ts` loads that output for `app/docs/page.tsx` and `app/docs/[...slug]/page.tsx`.
 
+Source repositories can notify the portal via `repository_dispatch` with:
+
+- `event_type`: `docs-update`
+- `client_payload.source_id`: exact match to the source `id` in `sources.json`
+
 Because of that, `content/docs/` may not exist until `npm run ingest` has been run.
 
 ## Current metadata model
@@ -116,3 +121,10 @@ Adding a source:
 3. Run `npm run ingest`.
 4. Confirm output under `content/docs/<source-id>/`.
 5. Confirm it appears on `/docs`.
+
+`portal.yaml` overrides are intentionally limited to:
+
+- `docs.path`
+- `owner_slack`
+
+Core source control fields (`id`, `repo`, `branch`, `format`, `enabled`) remain managed in `sources.json`.

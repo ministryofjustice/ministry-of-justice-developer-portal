@@ -4,8 +4,12 @@ run-name: Ingest Content
 on:
   workflow_dispatch:
     inputs:
+      source_id:
+        description: "Source ID to ingest (must match sources.json id; leave empty for all)"
+        required: false
+        type: string
       source:
-        description: "Source ID to ingest (leave empty for all)"
+        description: "Deprecated alias for source_id"
         required: false
         type: string
 
@@ -26,11 +30,21 @@ jobs:
   ingest:
     name: Ingest and Commit Content
     runs-on: ubuntu-latest
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
     steps:
+      - name: Generate app token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.MOJ_DEV_PORTAL_ONBOARDING_APP_ID }}
+          private-key: ${{ secrets.MOJ_DEV_PORTAL_ONBOARDING_APP_PRIVATE_KEY }}
+
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          token: ${{ steps.app-token.outputs.token }}
           fetch-depth: 0
 
       - name: Setup Node.js
@@ -46,14 +60,23 @@ jobs:
         shell: bash
         run: npm ci
 
+      - name: Register self-service source
+        id: register-self-service
+        if: github.event_name == 'repository_dispatch' && github.event.client_payload.repo != null && github.event.client_payload.repo != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_ID=$(node scripts/upsert-self-service-source.mjs "$GITHUB_EVENT_PATH")
+          echo "source_id=${SOURCE_ID}" >> "$GITHUB_OUTPUT"
+          echo "Registered/updated self-service source: ${SOURCE_ID}"
+
       - name: Run ingestion
         shell: bash
         run: |
           set -euo pipefail
-          if [ -n "${{ github.event.inputs.source || '' }}" ]; then
-            node scripts/ingest.mjs "${{ github.event.inputs.source }}"
-          elif [ -n "${{ github.event.client_payload.source_id || '' }}" ]; then
-            node scripts/ingest.mjs "${{ github.event.client_payload.source_id }}"
+          SOURCE_ID="${{ steps.register-self-service.outputs.source_id || github.event.inputs.source_id || github.event.inputs.source || github.event.client_payload.source_id || '' }}"
+          if [ -n "$SOURCE_ID" ]; then
+            node scripts/ingest.mjs "$SOURCE_ID"
           else
             node scripts/ingest.mjs
           fi
@@ -71,3 +94,37 @@ jobs:
           fi
           git commit -m "chore(ingest): refresh external documentation"
           git push
+
+      - name: Notify Slack
+        if: always() && env.SLACK_WEBHOOK_URL != ''
+        env:
+          STATUS: ${{ job.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SOURCE_ID: ${{ steps.register-self-service.outputs.source_id || github.event.inputs.source_id || github.event.inputs.source || github.event.client_payload.source_id || 'all-enabled-sources' }}
+          ACTOR: ${{ github.actor }}
+          REPOSITORY: ${{ github.repository }}
+          TRIGGER: ${{ github.event_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          case "$STATUS" in
+            success)
+              ICON=":white_check_mark:"
+              ;;
+            failure)
+              ICON=":x:"
+              ;;
+            cancelled)
+              ICON=":warning:"
+              ;;
+            *)
+              ICON=":information_source:"
+              ;;
+          esac
+
+          TEXT="$ICON Ingestion *$STATUS* for *$REPOSITORY*\nSource: *$SOURCE_ID*\nTrigger: *$TRIGGER* by *$ACTOR*\nRun: $RUN_URL"
+
+          curl -sS -X POST "$SLACK_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            --data "{\"text\":\"${TEXT//$'\n'/\\n}\"}" >/dev/null

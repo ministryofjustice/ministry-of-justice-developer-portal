@@ -10,13 +10,16 @@ KUBE_NAMESPACE_PROD ?= developer-portal-prod
 DEV_URL ?= https://dev.developer-portal.service.justice.gov.uk/healthz
 PROD_URL ?= https://developer-portal.service.justice.gov.uk/healthz
 
-.PHONY: help install ingest ingest-dry-run build validate docker-build docker-run k8s-apply-dev k8s-apply-prod smoke-dev smoke-prod
+.PHONY: help install ingest ingest-dry-run ingest-test test test-coverage build validate docker-build docker-run k8s-apply-dev k8s-apply-prod smoke-dev smoke-prod
 
 help:
 	@echo "Common tasks:"
 	@echo "  make install           - Install dependencies"
 	@echo "  make ingest            - Ingest all sources"
 	@echo "  make ingest-dry-run    - Preview ingestion changes"
+	@echo "  make ingest-test       - Run ingestion unit tests"
+	@echo "  make test              - Run all unit tests"
+	@echo "  make test-coverage     - Run unit tests with coverage"
 	@echo "  make build             - Build static site + pagefind"
 	@echo "  make validate          - Run markdown/yaml/typescript validation"
 	@echo "  make docker-build      - Build container image (IMAGE_URI=...)"
@@ -34,6 +37,15 @@ ingest:
 
 ingest-dry-run:
 	node scripts/ingest.mjs --dry-run
+
+ingest-test:
+	npm run test -- --run tests/unit/scripts/ingest-lib.test.ts
+
+test:
+	npm run test -- --run
+
+test-coverage:
+	npm run test:coverage
 
 build:
 	npm run build
