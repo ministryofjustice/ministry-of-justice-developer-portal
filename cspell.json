@@ -3,7 +3,6 @@
     "dist/",
     "out/",
     "content/docs/**",
-    "docs/runbooks/**",
     "**/node_modules/**",
     "**/*.drawio",
     "**/*.svg",
