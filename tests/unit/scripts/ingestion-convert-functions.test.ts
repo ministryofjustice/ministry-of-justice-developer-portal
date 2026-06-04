@@ -1,8 +1,20 @@
 // @vitest-environment node
 
+import { remark } from 'remark';
 import { describe, expect, it } from 'vitest';
 
-import { convertTechDocsPatterns, stripErb } from '../../../scripts/ingestion/convert.mjs';
+import { stripErb } from '../../../scripts/ingestion/parsers/techDocsParser.mjs';
+import { linkRewriteTransform } from '../../../scripts/ingestion/transforms/linkRewriteTransform.mjs';
+
+function makeIr(markdownBody: string, format = 'tech-docs-template') {
+  return {
+    sourcePath: 'test.md',
+    outputPath: 'test.md',
+    frontmatter: {},
+    ast: remark().parse(markdownBody),
+    format,
+  };
+}
 
 describe('stripErb', () => {
   it('removes erb tags and empty headings left behind', () => {
@@ -23,23 +35,25 @@ describe('stripErb', () => {
   });
 });
 
-describe('convertTechDocsPatterns', () => {
+describe('linkRewriteTransform', () => {
   it('rewrites docsPath-prefixed html links to docs routes', () => {
-    const result = convertTechDocsPatterns(
-      '[Guide](/documentation/getting-started.html)',
-      { id: 'cloud-platform', docsPath: 'source/documentation' }
-    );
+    const ir = makeIr('[Guide](/documentation/getting-started.html)');
+    const source = { id: 'cloud-platform', docsPath: 'source/documentation', format: 'tech-docs-template' };
 
-    expect(result).toContain('[Guide](/docs/cloud-platform/getting-started)');
+    linkRewriteTransform(ir, source);
+
+    const output = remark().stringify(ir.ast);
+    expect(output).toContain('[Guide](/docs/cloud-platform/getting-started)');
   });
 
-  it('rewrites remaining html links and erb fenced code blocks', () => {
-    const result = convertTechDocsPatterns(
-      ['[Other](/status.html)', '```erb', 'content', '```'].join('\n'),
-      { id: 'cloud-platform' }
-    );
+  it('rewrites absolute html links and erb fenced code block language', () => {
+    const ir = makeIr(['[Other](/status.html)', '```erb', 'content', '```'].join('\n'));
+    const source = { id: 'cloud-platform', format: 'tech-docs-template' };
 
-    expect(result).toContain('[Other](/docs/cloud-platform/status)');
-    expect(result).toContain('```\ncontent');
+    linkRewriteTransform(ir, source);
+
+    const output = remark().stringify(ir.ast);
+    expect(output).toContain('[Other](/docs/cloud-platform/status)');
+    expect(output).not.toContain('```erb');
   });
 });

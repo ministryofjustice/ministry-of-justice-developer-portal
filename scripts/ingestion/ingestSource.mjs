@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { ROOT, CONTENT_DIR } from './constants.mjs';
-import { cloneOrPull } from './git.mjs';
+import { fetchSource } from './connectors/githubConnector.mjs';
 import { parseSimpleYaml } from './yaml.mjs';
 import { discoverFiles } from './discovery.mjs';
 import { convertFile } from './convert.mjs';
@@ -11,7 +11,7 @@ import { collectReferencedAssets } from './assets.mjs';
 export async function ingestSource(source, options = {}) {
   const dryRun = Boolean(options.dryRun);
 
-  const repoDir = cloneOrPull(source);
+  const repoDir = fetchSource(source);
   const portalYamlPath = path.join(repoDir, 'portal.yaml');
   let config = { ...source };
 
