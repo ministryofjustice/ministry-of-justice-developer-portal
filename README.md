@@ -72,6 +72,20 @@ npm run build
 
 This runs `next build` followed by Pagefind indexing. Output is in `out/`.
 
+### Build and test the containerized application locally
+
+You can build and test the containerized application locally:
+
+```bash
+# Build the Docker image
+make docker-build
+
+# Run the container locally on port 8080
+make docker-run
+```
+
+Open [http://localhost:8080](http://localhost:8080) to verify the containerized application works as expected. This simulates the exact environment that will run in production, catching any container-related issues before deployment.
+
 ### Unit Testing
 
 The portal employs Vitest for lightweight, fast unit testing. Tests should be named under the convention `*.test.ts`.
