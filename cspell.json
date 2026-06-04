@@ -3,6 +3,7 @@
     "dist/",
     "out/",
     "content/docs/**",
+    "docs/runbooks/**",
     "**/node_modules/**",
     "**/*.drawio",
     "**/*.svg",
@@ -42,7 +43,8 @@
     "buildx",
     "kubeconfig",
     "kdev",
-    "kprod"
+    "kprod",
+    "webp"
   ],
   "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
   "languageSettings": [
