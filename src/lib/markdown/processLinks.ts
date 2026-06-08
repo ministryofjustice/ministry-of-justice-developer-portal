@@ -10,33 +10,13 @@ import {
   normalizeMalformedDocsHref,
   rewriteAbsoluteGithubPagesDocsHref,
 } from './paths';
+import assetExtensions from './assetExtensions.json';
 
 import type { DocsLinkContext } from './markdownToHtml';
 
 const EXTENSIONS = {
   markdown: new Set(['md', 'markdown', 'html', 'htm']),
-  assets: new Set([
-    'png',
-    'jpg',
-    'jpeg',
-    'gif',
-    'svg',
-    'webp',
-    'avif',
-    'bmp',
-    'ico',
-    'pdf',
-    'csv',
-    'xlsx',
-    'xls',
-    'doc',
-    'docx',
-    'ppt',
-    'pptx',
-    'zip',
-    'drawio',
-    'excalidraw',
-  ]),
+  assets: new Set(assetExtensions),
 };
 
 export function rewriteDocAnchorLinks(html: string, ctx: DocsLinkContext) {
@@ -111,7 +91,7 @@ function rewriteAssetPath(pathname: string, suffix: string, ctx: DocsLinkContext
   return withBasePath(`/docs/${ctx.sourceSlug}/${normalized}${suffix}`);
 }
 
-function rewriteHtmlAttribute(
+export function rewriteHtmlAttribute(
   html: string,
   attr: 'href' | 'src',
   rewriter: (value: string) => string,
@@ -122,7 +102,7 @@ function rewriteHtmlAttribute(
   );
 }
 
-function isExternalOrAnchor(url: string): boolean {
+export function isExternalOrAnchor(url: string): boolean {
   return (
     url.startsWith('#') ||
     url.startsWith('mailto:') ||
