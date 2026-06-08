@@ -6,7 +6,7 @@ import rehypeStringify from 'rehype-stringify';
 import { visit } from 'unist-util-visit';
 import type { Element, Root, Text } from 'hast';
 
-import { rewriteDocAnchorLinks, rewriteDocAssetSources } from './processLinks';
+import { rewriteDocAnchorLinks, rewriteDocAssetSources, rewriteHtmlAttribute } from './processLinks';
 import { normalizeMalformedDocsPathsInHtml, withBasePath } from './paths';
 
 export type DocsLinkContext = {
@@ -42,9 +42,17 @@ export async function markdownToHtml(markdown: string, ctx?: DocsLinkContext): P
  * docs pipeline handles base-path rewriting separately via transformHtml.
  */
 function rewriteAbsoluteLinksWithBasePath(html: string): string {
-  return html
-    .replace(/href="(\/[^"]+)"/g, (_match, path) => `href="${withBasePath(path)}"`)
-    .replace(/src="(\/[^"]+)"/g, (_match, path) => `src="${withBasePath(path)}"`);
+  const withHref = rewriteHtmlAttribute(
+    html,
+    'href',
+    (href) => (href.startsWith('/') ? withBasePath(href) : href),
+  );
+
+  return rewriteHtmlAttribute(
+    withHref,
+    'src',
+    (src) => (src.startsWith('/') ? withBasePath(src) : src),
+  );
 }
 
 function rehypeCallouts() {
