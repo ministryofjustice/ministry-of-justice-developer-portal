@@ -8,7 +8,7 @@ A cross-government developer portal inspired by [Singapore's Government Develope
 
 - **Product catalogue** — browse platforms, tools, and APIs available across government (mix of real MoJ platforms)
 - **Documentation hub** — technical docs ingested automatically from source repositories (Cloud Platform, Modernisation Platform, Analytical Platform)
-- **Guidelines** — standards and best practices organised by project lifecycle phase, linking out to real cross-government resources (Service Standard, Technology Code of Practice, NCSC guidance, MoJ AI Governance Framework, GOV.UK Design System, and more)
+- **Guidelines** — standards and best practices organised by key themes, linking out to real cross-government resources (Service Standard, Technology Code of Practice, NCSC guidance, MoJ AI Governance Framework, GOV.UK Design System, and more)
 - **Community** — links to Slack channels, open source, events
 - **AI chatbot** — contextual help assistant (mock responses in alpha)
 - **Full-text search** — powered by [Pagefind](https://pagefind.app/)

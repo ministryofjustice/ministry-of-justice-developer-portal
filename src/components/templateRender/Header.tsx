@@ -1,6 +1,6 @@
 import { PageIntro } from '@/components/templateRender/PageIntro';
 import { TagRow } from '@/components/templateRender/TagRow';
-import { HeaderProps } from '@/types/types';
+import { HeaderProps } from '@/types';
 
 export function Header({
   title,

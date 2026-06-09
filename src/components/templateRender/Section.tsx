@@ -1,4 +1,4 @@
-import { SectionProps } from '@/types/types';
+import { SectionProps } from '@/types';
 
 export function Section({
   heading,

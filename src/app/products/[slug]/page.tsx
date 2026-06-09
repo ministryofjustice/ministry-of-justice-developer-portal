@@ -3,17 +3,16 @@ import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
 import { getProductCategoryLabel } from '@/lib/categoryLabels';
-import { ActionLinks} from '@/components/templateRender/ActionLinks';
+import { ActionLinks } from '@/components/templateRender/ActionLinks';
 import { MetaBar } from '@/components/templateRender/MetaBar';
 import { PageIntro } from '@/components/templateRender/PageIntro';
-import { StatusTag} from '@/components/templateRender/StatusTag';
+import { StatusTag } from '@/components/templateRender/StatusTag';
 import { TagRow } from '@/components/templateRender/TagRow';
 import { TagList } from '@/components/templateRender/TagList';
 import products from '../../../../content/products/products.json';
 import sources from '../../../../sources.json';
-import { ActionLink, Product } from '@/types/types';
-
-
+import { Product } from '@/types/products';
+import { ActionLink } from '@/types';
 
 type Params = { slug: string };
 

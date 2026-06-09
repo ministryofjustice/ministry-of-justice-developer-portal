@@ -1,5 +1,5 @@
-import type { ReviewStatus } from '@/components/templateRender/ReviewBadge';
 import { parseDate } from './date';
+import { ReviewStatus } from '@/types';
 
 export function getReviewStatus(
   lastReviewedOn?: string,

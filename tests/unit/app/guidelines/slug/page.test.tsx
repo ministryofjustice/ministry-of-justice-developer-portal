@@ -3,7 +3,9 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import '@tests/unit/mocks/AllMocks';
 
 vi.mock('next/navigation', () => ({
-  notFound: vi.fn(() => { throw new Error('NEXT_NOT_FOUND'); }),
+  notFound: vi.fn(() => {
+    throw new Error('NEXT_NOT_FOUND');
+  }),
 }));
 
 vi.mock('@/lib/review', () => ({
@@ -21,11 +23,31 @@ vi.mock('@/lib/docs', () => ({
 vi.mock('@/../content/guidelines/guidelines.json', () => ({
   default: {
     title: 'Guidelines',
+    summary:
+      'Standards and best practices organised by project lifecycle. Follow these guidelines to build services that meet Ministry of Justice and cross-government expectations.',
+    sections: [
+      {
+        key: 'inception',
+        title: 'Project Inception',
+        description:
+          'Starting your project — understanding the problem, assessing feasibility, and planning your approach.',
+        modifier: 'inception',
+      },
+      {
+        key: 'development',
+        title: 'Development & Iteration',
+        description:
+          'Building your service — coding standards, security practices, and agile delivery.',
+        modifier: 'development',
+      },
+    ],
     items: [
       {
         slug: 'choosing-hosting',
         title: 'Choosing a hosting platform',
-        phase: 'inception',
+        section: 'inception',
+        description:
+          'How to decide between Cloud Platform, Modernisation Platform, and other hosting options for your service.',
         owner: 'Cloud Platform team',
         lastReviewedOn: '2026-02-01',
         reviewIn: '6 months',
@@ -33,7 +55,8 @@ vi.mock('@/../content/guidelines/guidelines.json', () => ({
       {
         slug: 'external-guide',
         title: 'An External Guide',
-        phase: 'development',
+        section: 'development',
+        description: 'An externally hosted guide.',
         owner: 'Digital Services',
         lastReviewedOn: '2026-01-01',
         reviewIn: '12 months',
@@ -44,7 +67,10 @@ vi.mock('@/../content/guidelines/guidelines.json', () => ({
 }));
 
 import { getGuidelinePage } from '@/lib/docs';
-import GuidelinePage, { generateStaticParams } from '@/app/guidelines/[slug]/page';
+import GuidelinePage, {
+  generateStaticParams,
+  generateMetadata,
+} from '@/app/guidelines/[slug]/page';
 import { notFound } from 'next/navigation';
 
 const params = (slug: string) => Promise.resolve({ slug });
@@ -52,7 +78,10 @@ const params = (slug: string) => Promise.resolve({ slug });
 describe('GuidelinePage', () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.mocked(notFound).mockImplementation(() => { throw new Error('NEXT_NOT_FOUND'); });
+
+    vi.mocked(notFound).mockImplementation(() => {
+      throw new Error('NEXT_NOT_FOUND');
+    });
   });
 
   describe('generateStaticParams', () => {
@@ -64,16 +93,40 @@ describe('GuidelinePage', () => {
     });
   });
 
+  describe('generateMetadata', () => {
+    it('returns the guideline title for a valid slug', async () => {
+      const result = await generateMetadata({
+        params: params('choosing-hosting'),
+      });
+
+      expect(result).toEqual({
+        title: 'Choosing a hosting platform',
+      });
+    });
+
+    it('returns an empty object for an unknown slug', async () => {
+      const result = await generateMetadata({
+        params: params('does-not-exist'),
+      });
+
+      expect(result).toEqual({});
+    });
+  });
+
   describe('with a valid slug and file content', () => {
     it('renders the page title', async () => {
-      vi.mocked(getGuidelinePage).mockReturnValue({ content: 'Some guideline content' });
+      vi.mocked(getGuidelinePage).mockReturnValue({
+        content: 'Some guideline content',
+      });
 
       render(await GuidelinePage({ params: params('choosing-hosting') }));
 
-      expect(screen.getByRole('heading', { name: 'Choosing a hosting platform' })).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: 'Choosing a hosting platform' }),
+      ).toBeInTheDocument();
     });
 
-    it('renders the phase tag', async () => {
+    it('renders the section tag', async () => {
       vi.mocked(getGuidelinePage).mockReturnValue({ content: 'Content' });
 
       render(await GuidelinePage({ params: params('choosing-hosting') }));
@@ -82,7 +135,9 @@ describe('GuidelinePage', () => {
     });
 
     it('renders the markdown content', async () => {
-      vi.mocked(getGuidelinePage).mockReturnValue({ content: 'Some guideline content' });
+      vi.mocked(getGuidelinePage).mockReturnValue({
+        content: 'Some guideline content',
+      });
 
       render(await GuidelinePage({ params: params('choosing-hosting') }));
 
@@ -95,6 +150,7 @@ describe('GuidelinePage', () => {
       render(await GuidelinePage({ params: params('choosing-hosting') }));
 
       const metaBar = screen.getByTestId('meta-bar');
+
       expect(metaBar).toHaveTextContent('Last reviewed');
       expect(metaBar).toHaveTextContent('formatted-2026-02-01');
       expect(metaBar).toHaveTextContent('Cloud Platform team');
@@ -140,6 +196,7 @@ describe('GuidelinePage', () => {
       render(await GuidelinePage({ params: params('choosing-hosting') }));
 
       const proseContent = document.querySelector('.app-prose-scope');
+
       expect(proseContent?.textContent).toMatch(/Cloud Platform team/i);
     });
   });
@@ -148,7 +205,10 @@ describe('GuidelinePage', () => {
     it('renders the external link', async () => {
       render(await GuidelinePage({ params: params('external-guide') }));
 
-      const link = screen.getByRole('link', { name: 'https://example.com/guide' });
+      const link = screen.getByRole('link', {
+        name: 'https://example.com/guide',
+      });
+
       expect(link).toHaveAttribute('href', 'https://example.com/guide');
     });
 
@@ -157,13 +217,19 @@ describe('GuidelinePage', () => {
 
       expect(screen.getByRole('heading', { name: 'An External Guide' })).toBeInTheDocument();
     });
+
+    it('renders the section tag', async () => {
+      render(await GuidelinePage({ params: params('external-guide') }));
+
+      expect(screen.getByTestId('tag-row')).toHaveTextContent('Development & Iteration');
+    });
   });
 
   describe('for an unknown slug', () => {
     it('calls notFound()', async () => {
-      await expect(
-        GuidelinePage({ params: params('does-not-exist') }),
-      ).rejects.toThrow('NEXT_NOT_FOUND');
+      await expect(GuidelinePage({ params: params('does-not-exist') })).rejects.toThrow(
+        'NEXT_NOT_FOUND',
+      );
 
       expect(notFound).toHaveBeenCalledOnce();
     });

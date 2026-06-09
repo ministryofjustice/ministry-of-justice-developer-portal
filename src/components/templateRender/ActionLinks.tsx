@@ -1,5 +1,5 @@
-import { ActionLinksProps } from '@/types/types';
 import Link from 'next/link';
+import { ActionLinksProps } from '@/types';
 
 export function ActionLinks({ links }: ActionLinksProps) {
   if (links.length === 0) return null;
