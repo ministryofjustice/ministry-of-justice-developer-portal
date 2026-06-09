@@ -7,12 +7,13 @@ import { formatLongDate } from '@/lib/date';
 import { getReviewStatus } from '@/lib/review';
 import { MetaBar } from '@/components/templateRender/MetaBar';
 import { PageIntro } from '@/components/templateRender/PageIntro';
-import { ReviewBadge, type ReviewStatus } from '@/components/templateRender/ReviewBadge';
 import { TagRow } from '@/components/templateRender/TagRow';
 import guidelines from '../../../../content/guidelines/guidelines.json';
 import { markdownToHtml } from '@/lib/markdown/markdownToHtml';
 import { getGuidelinePage } from '@/lib/docs';
 import { GuidelinesContent } from '@/types/guidelines';
+import { ReviewStatus } from '@/types';
+import { ReviewBadge } from '@/components/templateRender/ReviewBadge';
 
 type Params = { slug: string };
 

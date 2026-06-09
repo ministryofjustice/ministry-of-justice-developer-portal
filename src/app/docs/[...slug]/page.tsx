@@ -9,8 +9,8 @@ import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
 import { MetaBar } from '@/components/templateRender/MetaBar';
-import { ReviewBadge, type ReviewStatus } from '@/components/templateRender/ReviewBadge';
-import { NavItem } from '@/types';
+import { NavItem, ReviewStatus } from '@/types';
+import { ReviewBadge } from '@/components/templateRender/ReviewBadge';
 
 type Params = { slug: string[] };
 
