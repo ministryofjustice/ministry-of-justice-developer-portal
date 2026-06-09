@@ -13,7 +13,7 @@ const features = [
   {
     tag: 'Learn',
     title: 'Guidelines',
-    description: 'Standards and best practices organised by by key themes.',
+    description: 'Standards and best practices organised by key themes.',
     href: '/guidelines',
   },
   {

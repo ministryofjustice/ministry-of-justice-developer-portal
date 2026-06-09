@@ -18,6 +18,6 @@ export interface ProductCardProps {
   name: string;
   category: string;
   description: string;
-  status: string;
+  status: StatusTagValue;
   tags: string[];
 }

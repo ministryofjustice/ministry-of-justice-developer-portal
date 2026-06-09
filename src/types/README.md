@@ -14,6 +14,7 @@ Types are grouped by domain or purpose rather than being kept in one large file.
 | `navigation.ts` | Shared navigation types, such as breadcrumbs.                          |
 | `products.ts`   | Types for product catalogue items and product cards.                   |
 | `search.ts`     | Types for search result data.                                          |
+| `contact.ts`    | Types for contact data.                                                |
 | `index.ts`      | Barrel file that re-exports the public types from this directory.      |
 
 ## Importing types
@@ -21,5 +22,5 @@ Types are grouped by domain or purpose rather than being kept in one large file.
 Prefer importing from the specific file when the domain is clear:
 
 ```ts
-import type { GuidelinesContent } from '@/types/guidelines';```
-
+import type { GuidelinesContent } from '@/types/guidelines';
+```
