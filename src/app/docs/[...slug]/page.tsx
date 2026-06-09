@@ -10,7 +10,7 @@ import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
 import { MetaBar } from '@/components/templateRender/MetaBar';
 import { ReviewBadge, type ReviewStatus } from '@/components/templateRender/ReviewBadge';
-import { NavItem } from '@/types/types';
+import { NavItem } from '@/types';
 
 type Params = { slug: string[] };
 

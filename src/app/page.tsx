@@ -13,8 +13,7 @@ const features = [
   {
     tag: 'Learn',
     title: 'Guidelines',
-    description:
-      'Standards and best practices organised by project lifecycle — from inception through to measuring success.',
+    description: 'Standards and best practices organised by by key themes.',
     href: '/guidelines',
   },
   {

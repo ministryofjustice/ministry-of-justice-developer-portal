@@ -1,7 +1,9 @@
-import { MetaBarProps } from '@/types/types';
+import { MetaBarProps } from '@/types';
 
 export function MetaBar({ items, className = 'app-doc-meta' }: MetaBarProps) {
-  const visibleItems = items.filter((item) => item.value !== null && item.value !== undefined && item.value !== false);
+  const visibleItems = items.filter(
+    (item) => item.value !== null && item.value !== undefined && item.value !== false,
+  );
 
   if (visibleItems.length === 0) return null;
 

@@ -1,4 +1,4 @@
-import { CalloutProps } from '@/types/types';
+import { CalloutProps } from '@/types';
 
 export function Callout({ tone = 'info', title, children }: CalloutProps) {
   if (tone === 'warning') {

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { getProductCategoryLabel } from '@/lib/categoryLabels';
-import { ProductCardProps } from '@/types/types';
+import { ProductCardProps } from '@/types/products';
 
 export function ProductCard({ slug, name, category, description, status, tags }: ProductCardProps) {
   return (
