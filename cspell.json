@@ -43,9 +43,21 @@
     "kubeconfig",
     "kdev",
     "kprod",
-    "webp"
+    "webp",
+    "octo",
+    "OCTO"
   ],
-  "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
+  "dictionaries": [
+    "en-gb",
+    "companies",
+    "softwareTerms",
+    "misc",
+    "lorem-ipsum",
+    "typescript",
+    "node",
+    "bash",
+    "npm"
+  ],
   "languageSettings": [
     {
       "languageId": "commit-msg",

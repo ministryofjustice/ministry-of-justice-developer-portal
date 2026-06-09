@@ -57,6 +57,17 @@
       "docsPath": "source/documentation",
       "format": "tech-docs-template",
       "enabled": true
+    },
+    {
+      "id": "octo-strategic-docs",
+      "name": "OCTO Strategic Documentation",
+      "description": "Documentation source for OCTO Strategic Documentation.",
+      "category": "documentation",
+      "repo": "ministryofjustice/octo-strategic-docs",
+      "branch": "main",
+      "docsPath": "source",
+      "format": "tech-docs-template",
+      "enabled": true
     }
   ]
 }
