@@ -20,13 +20,13 @@ Example:
   "format": "tech-docs-template",
   "enabled": true,
   "navGrouping": {
-	"enabled": true,
-	"indexPath": "source/index.html.md.erb",
-	"sectionSlug": "standards",
-	"sectionHeading": "Standards",
-	"groupHeadingLevel": 3,
-	"sourceLinkPrefix": "documentation/",
-	"linkPathPrefix": "standards/"
+    "enabled": true,
+    "indexPath": "source/index.html.md.erb",
+    "sectionSlug": "standards",
+    "sectionHeading": "Standards",
+    "groupHeadingLevel": 3,
+    "sourceLinkPrefix": "documentation/",
+    "linkPathPrefix": "standards/"
   }
 }
 ```

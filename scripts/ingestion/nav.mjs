@@ -176,7 +176,7 @@ function buildGroupPageContent(sourceId, sectionLabel, group) {
 
   return [
     '---',
-    `title: ${group.title}`,
+    `title: ${JSON.stringify(group.title)}`,
     '---',
     '',
     `# ${group.title}`,

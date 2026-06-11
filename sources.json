@@ -71,7 +71,7 @@
     },
     {
       "id": "ministry-of-justice-technical-guidance",
-      "name": "Ministry of justice technical guidance",
+      "name": "Ministry of Justice Technical Guidance",
       "description": "How we build and operate products at the Ministry of Justice",
       "category": "documentation",
       "repo": "ministryofjustice/technical-guidance",

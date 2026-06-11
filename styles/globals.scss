@@ -174,16 +174,20 @@ html {
     color: #003078;
   }
 
-  &--active {
+  &--active,
+  &--active:link,
+  &--active:visited {
     border-left-color: #1d70b8;
     font-weight: 700;
     background: #f3f2f1;
-    color: #0b0c0c;
+    color: #003078;
   }
 
-  &--parent-active {
+  &--parent-active,
+  &--parent-active:link,
+  &--parent-active:visited {
     font-weight: 600;
-    color: #0b0c0c;
+    color: #003078;
   }
 }
 
