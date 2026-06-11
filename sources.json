@@ -68,6 +68,17 @@
       "docsPath": "source",
       "format": "tech-docs-template",
       "enabled": true
+    },
+    {
+      "id": "ministry-of-justice-technical-guidance",
+      "name": "Ministry of justice technical guidance",
+      "description": "How we build and operate products at the Ministry of Justice",
+      "category": "documentation",
+      "repo": "ministryofjustice/technical-guidance",
+      "branch": "main",
+      "docsPath": "source",
+      "format": "tech-docs-template",
+      "enabled": true
     }
   ]
 }
