@@ -74,6 +74,19 @@ describe('buildGroupedChildren', () => {
       'naming-things',
     ]);
   });
+  it('avoids group slug collisions with existing child slugs', () => {
+    const sourceId = 'ministry-of-justice-technical-guidance';
+    const standardsChildren = [
+      { title: 'Operating services (existing page)', slug: [sourceId, 'standards', 'operating-services'] },
+      { title: 'Avoid code freezes', slug: [sourceId, 'standards', 'code-freezes'] },
+    ];
+
+    const groups = [{ title: 'Operating services', pages: ['code-freezes'] }];
+
+    const result = buildGroupedChildren(sourceId, 'standards', standardsChildren, groups);
+
+    expect(result.children[0].slug).toEqual([sourceId, 'standards', 'operating-services-2']);
+  });
 });
 
 describe('generateGroupedNav', () => {
