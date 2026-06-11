@@ -53,6 +53,7 @@ function SidebarNav({
             <Link
               href={`/docs/${itemPath}`}
               className={`app-subnav__link${isActive ? ' app-subnav__link--active' : ''}${isParent ? ' app-subnav__link--parent-active' : ''}`}
+              aria-current={isActive ? 'page' : undefined}
             >
               {item.title}
             </Link>
