@@ -161,13 +161,17 @@ html {
   padding: 8px 12px;
   text-decoration: none;
   font-size: 16px;
-  color: #0b0c0c;
   border-left: 3px solid transparent;
   margin-left: -8px;
 
+  &:link,
+  &:visited {
+    color: #1d70b8;
+  }
+
   &:hover {
     background: #f3f2f1;
-    color: #0b0c0c;
+    color: #003078;
   }
 
   &--active {
