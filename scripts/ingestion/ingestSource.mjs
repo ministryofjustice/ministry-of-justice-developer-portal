@@ -7,6 +7,7 @@ import { parseSimpleYaml } from './yaml.mjs';
 import { discoverFiles } from './discovery.mjs';
 import { convertFile } from './convert.mjs';
 import { collectReferencedAssets } from './assets.mjs';
+import { generateGroupedNav } from './nav.mjs';
 
 export async function ingestSource(source, options = {}) {
   const dryRun = Boolean(options.dryRun);
@@ -115,6 +116,8 @@ export async function ingestSource(source, options = {}) {
     JSON.stringify(meta, null, 2),
     'utf-8'
   );
+
+  generateGroupedNav(source, repoDir, outputDir);
 
   return { pages: pageCount, assets: assetCount };
 }

@@ -29,6 +29,15 @@ export async function generateMetadata({ params }: { params: Promise<Params> }) 
   return { title: page.meta.title };
 }
 
+function hasActiveDescendant(item: NavItem, currentPath: string): boolean {
+  if (!item.children?.length) return false;
+
+  return item.children.some((child) => {
+    const childPath = child.slug.join('/');
+    return childPath === currentPath || hasActiveDescendant(child, currentPath);
+  });
+}
+
 function SidebarNav({
   items,
   currentSlug,
@@ -45,7 +54,7 @@ function SidebarNav({
       {items.map((item) => {
         const itemPath = item.slug.join('/');
         const isActive = currentPath === itemPath;
-        const isParent = currentPath.startsWith(itemPath + '/');
+        const isParent = hasActiveDescendant(item, currentPath);
         const shouldShowChildren = Boolean(item.children?.length) && (isActive || isParent);
 
         return (
