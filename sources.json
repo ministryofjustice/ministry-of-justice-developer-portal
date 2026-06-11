@@ -68,6 +68,26 @@
       "docsPath": "source",
       "format": "tech-docs-template",
       "enabled": true
+    },
+    {
+      "id": "ministry-of-justice-technical-guidance",
+      "name": "Ministry of Justice Technical Guidance",
+      "description": "How we build and operate products at the Ministry of Justice",
+      "category": "documentation",
+      "repo": "ministryofjustice/technical-guidance",
+      "branch": "main",
+      "docsPath": "source/documentation",
+      "format": "tech-docs-template",
+      "navGrouping": {
+        "enabled": true,
+        "indexPath": "source/index.html.md.erb",
+        "sectionSlug": "standards",
+        "sectionHeading": "Standards",
+        "groupHeadingLevel": 3,
+        "sourceLinkPrefix": "documentation/",
+        "linkPathPrefix": "standards/"
+      },
+      "enabled": true
     }
   ]
 }

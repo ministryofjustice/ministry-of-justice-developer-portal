@@ -29,26 +29,45 @@ export async function generateMetadata({ params }: { params: Promise<Params> }) 
   return { title: page.meta.title };
 }
 
-function SidebarNav({ items, currentSlug }: { items: NavItem[]; currentSlug: string[] }) {
+function hasActiveDescendant(item: NavItem, currentPath: string): boolean {
+  if (!item.children?.length) return false;
+
+  return item.children.some((child) => {
+    const childPath = child.slug.join('/');
+    return childPath === currentPath || hasActiveDescendant(child, currentPath);
+  });
+}
+
+function SidebarNav({
+  items,
+  currentSlug,
+  level = 0,
+}: {
+  items: NavItem[];
+  currentSlug: string[];
+  level?: number;
+}) {
   const currentPath = currentSlug.join('/');
 
   return (
-    <ul className="app-subnav">
+    <ul className={`app-subnav${level > 0 ? ' app-subnav--nested' : ''}`}>
       {items.map((item) => {
         const itemPath = item.slug.join('/');
         const isActive = currentPath === itemPath;
-        const isParent = currentPath.startsWith(itemPath + '/');
+        const isParent = hasActiveDescendant(item, currentPath);
+        const shouldShowChildren = Boolean(item.children?.length) && (isActive || isParent);
 
         return (
           <li key={itemPath} className="app-subnav__item">
             <Link
               href={`/docs/${itemPath}`}
-              className={`app-subnav__link${isActive ? ' app-subnav__link--active' : ''}`}
+              className={`app-subnav__link${isActive ? ' app-subnav__link--active' : ''}${isParent ? ' app-subnav__link--parent-active' : ''}`}
+              aria-current={isActive ? 'page' : undefined}
             >
               {item.title}
             </Link>
-            {item.children && (isActive || isParent) && (
-              <SidebarNav items={item.children} currentSlug={currentSlug} />
+            {shouldShowChildren && (
+              <SidebarNav items={item.children!} currentSlug={currentSlug} level={level + 1} />
             )}
           </li>
         );
