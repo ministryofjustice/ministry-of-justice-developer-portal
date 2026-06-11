@@ -139,6 +139,18 @@ html {
   margin: 0;
 }
 
+.app-subnav--nested {
+  margin-top: 2px;
+  margin-left: 12px;
+  padding-left: 10px;
+  border-left: 1px solid #b1b4b6;
+
+  .app-subnav__link {
+    padding: 6px 10px;
+    font-size: 15px;
+  }
+}
+
 .app-subnav__item {
   margin-bottom: 2px;
 }
@@ -160,6 +172,10 @@ html {
     border-left-color: #1d70b8;
     font-weight: 700;
     background: #f3f2f1;
+  }
+
+  &--parent-active {
+    font-weight: 700;
   }
 }
 
