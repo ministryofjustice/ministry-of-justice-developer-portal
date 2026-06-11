@@ -4,6 +4,7 @@ import path from 'path';
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 
 import {
+  buildNavFromDir,
   extractGroupsFromIndex,
   buildGroupedChildren,
   generateGroupedNav,
@@ -40,6 +41,26 @@ describe('extractGroupsFromIndex', () => {
       { title: 'Building software', pages: ['naming-things'] },
     ]);
   });
+
+  it('treats section heading and sourceLinkPrefix as literal text', () => {
+    const content = [
+      '## Standards (v2.0)?',
+      '',
+      '### Group A',
+      '* [Page](docs.v2/standards/page-one.html)',
+      '',
+      '## Next section',
+    ].join('\n');
+
+    const result = extractGroupsFromIndex(content, {
+      sectionHeading: 'Standards (v2.0)?',
+      sourceLinkPrefix: 'docs.v2/',
+      linkPathPrefix: 'standards/',
+      groupHeadingLevel: 3,
+    });
+
+    expect(result).toEqual([{ title: 'Group A', pages: ['page-one'] }]);
+  });
 });
 
 describe('buildGroupedChildren', () => {
@@ -75,17 +96,83 @@ describe('buildGroupedChildren', () => {
     ]);
   });
   it('avoids group slug collisions with existing child slugs', () => {
-    const sourceId = 'ministry-of-justice-technical-guidance';
-    const standardsChildren = [
-      { title: 'Operating services (existing page)', slug: [sourceId, 'standards', 'operating-services'] },
-      { title: 'Avoid code freezes', slug: [sourceId, 'standards', 'code-freezes'] },
+    const sourceId = 'example-source';
+    const sectionChildren = [
+      { title: 'Operating services', slug: [sourceId, 'standards', 'operating-services'] },
+      { title: 'Hosting', slug: [sourceId, 'standards', 'hosting'] },
     ];
 
-    const groups = [{ title: 'Operating services', pages: ['code-freezes'] }];
+    const groups = [{ title: 'Operating services', pages: ['hosting'] }];
 
-    const result = buildGroupedChildren(sourceId, 'standards', standardsChildren, groups);
+    const result = buildGroupedChildren(sourceId, 'standards', sectionChildren, groups);
 
-    expect(result.children[0].slug).toEqual([sourceId, 'standards', 'operating-services-2']);
+    expect(result.groups).toHaveLength(1);
+    expect(result.groups[0].slug).toEqual([sourceId, 'standards', 'operating-services-2']);
+    expect(result.groups[0].children?.map((item: any) => item.slug[item.slug.length - 1])).toEqual([
+      'hosting',
+    ]);
+    expect(result.children[1].slug).toEqual([sourceId, 'standards', 'operating-services']);
+  });
+});
+
+describe('buildNavFromDir', () => {
+  const sourceDir = '/tmp/source';
+
+  function makeDirent(name: string, isDir: boolean): fs.Dirent {
+    return {
+      name,
+      isDirectory: () => isDir,
+      isFile: () => !isDir,
+      isBlockDevice: () => false,
+      isCharacterDevice: () => false,
+      isFIFO: () => false,
+      isSocket: () => false,
+      isSymbolicLink: () => false,
+      parentPath: '',
+      path: '',
+    } as fs.Dirent;
+  }
+
+  beforeEach(() => {
+    vi.mocked(fs.existsSync).mockReset();
+    vi.mocked(fs.readFileSync).mockReset();
+    vi.mocked(fs.readdirSync).mockReset();
+  });
+
+  it('merges a directory and markdown file with the same slug into one nav item', () => {
+    vi.mocked(fs.existsSync).mockImplementation((p) => {
+      const ps = String(p);
+      return ps === sourceDir || ps === path.join(sourceDir, 'foo') || ps === path.join(sourceDir, 'foo', 'index.md');
+    });
+
+    vi.mocked(fs.readdirSync).mockImplementation((p) => {
+      const ps = String(p);
+      if (ps === sourceDir) {
+        return [makeDirent('foo', true), makeDirent('foo.md', false)] as any;
+      }
+      if (ps === path.join(sourceDir, 'foo')) {
+        return [makeDirent('child.md', false)] as any;
+      }
+      return [] as any;
+    });
+
+    vi.mocked(fs.readFileSync).mockImplementation((p) => {
+      const ps = String(p);
+      if (ps.endsWith('foo/index.md')) return '---\ntitle: Foo Directory\nweight: 20\n---\nDirectory content';
+      if (ps.endsWith('foo.md')) return '---\ntitle: Foo Page\nweight: 10\n---\nFile content';
+      if (ps.endsWith('foo/child.md')) return '---\ntitle: Child Page\n---\nChild content';
+      return '';
+    });
+
+    const result = buildNavFromDir(sourceDir, ['example']);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].slug).toEqual(['example', 'foo']);
+    expect(result[0].title).toBe('Foo Page');
+    expect(result[0].weight).toBe(10);
+    expect(result[0].children).toBeDefined();
+    expect(result[0].children).toHaveLength(1);
+    expect(result[0].children?.[0].slug).toEqual(['example', 'foo', 'child']);
   });
 });
 

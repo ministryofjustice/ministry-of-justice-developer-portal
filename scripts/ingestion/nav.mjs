@@ -29,11 +29,15 @@ function uniqueSlug(base, usedSlugs) {
   return candidate;
 }
 
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 export function buildNavFromDir(dir, basePath) {
   if (!fs.existsSync(dir)) return [];
 
   const entries = fs.readdirSync(dir, { withFileTypes: true });
-  const items = [];
+  const itemsBySlug = new Map();
 
   for (const entry of entries) {
     if (entry.name.startsWith('_')) continue;
@@ -51,12 +55,19 @@ export function buildNavFromDir(dir, basePath) {
       }
 
       const children = buildNavFromDir(path.join(dir, entry.name), slugPath);
-      items.push({
-        title,
-        slug: slugPath,
-        children: children.length > 0 ? children : undefined,
-        weight,
-      });
+      const key = slugPath.join('/');
+      const existing = itemsBySlug.get(key);
+      if (existing) {
+        existing.children = children.length > 0 ? children : undefined;
+        existing.weight = Math.min(existing.weight ?? 100, weight);
+      } else {
+        itemsBySlug.set(key, {
+          title,
+          slug: slugPath,
+          children: children.length > 0 ? children : undefined,
+          weight,
+        });
+      }
       continue;
     }
 
@@ -66,10 +77,18 @@ export function buildNavFromDir(dir, basePath) {
       const { data } = matter(fs.readFileSync(path.join(dir, entry.name), 'utf-8'));
       const title = data.title || toTitle(slug);
       const weight = data.weight ?? 100;
-      items.push({ title, slug: slugPath, weight });
+      const key = slugPath.join('/');
+      const existing = itemsBySlug.get(key);
+      if (existing) {
+        existing.title = title;
+        existing.weight = Math.min(existing.weight ?? 100, weight);
+      } else {
+        itemsBySlug.set(key, { title, slug: slugPath, weight });
+      }
     }
   }
 
+  const items = Array.from(itemsBySlug.values());
   return items.sort((a, b) => {
     const weightDiff = (a.weight ?? 100) - (b.weight ?? 100);
     if (weightDiff !== 0) return weightDiff;
@@ -86,7 +105,7 @@ export function extractGroupsFromIndex(indexContent, options = {}) {
   const cleaned = stripErb(indexContent);
   const lines = cleaned.split(/\r?\n/);
 
-  const sectionPattern = new RegExp(`^##\\s+${sectionHeading}\\s*$`, 'i');
+  const sectionPattern = new RegExp(`^##\\s+${escapeRegExp(sectionHeading)}\\s*$`, 'i');
   const sectionStart = lines.findIndex((line) => sectionPattern.test(line.trim()));
   if (sectionStart === -1) return [];
 
@@ -114,7 +133,10 @@ export function extractGroupsFromIndex(indexContent, options = {}) {
     let url = link[1].trim().split('#')[0];
     if (/^https?:\/\//i.test(url)) continue;
 
-    url = url.replace(/^\//, '').replace(new RegExp(`^${sourceLinkPrefix}`), '').replace(/\.html$/, '');
+    url = url
+      .replace(/^\//, '')
+      .replace(new RegExp(`^${escapeRegExp(sourceLinkPrefix)}`), '')
+      .replace(/\.html$/, '');
     if (!url.startsWith(linkPathPrefix)) continue;
 
     const pageSlug = url.slice(linkPathPrefix.length);
@@ -133,7 +155,8 @@ export function buildGroupedChildren(sourceId, sectionSlug, sectionChildren, gro
     sectionChildren.map((item) => [item.slug[item.slug.length - 1], item])
   );
   const usedPageSlugs = new Set();
-  const usedGroupSlugs = new Set();
+  // Reserve existing child slugs so generated group paths cannot shadow real pages/dirs.
+  const usedGroupSlugs = new Set(sectionChildren.map((item) => item.slug[item.slug.length - 1]));
   const groupedItems = [];
 
   for (const group of groups) {
