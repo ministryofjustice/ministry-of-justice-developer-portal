@@ -271,6 +271,12 @@ Set these in GitHub Actions variables at repository level, or as environment var
 - [Cloud Platform deployment runbook](docs/runbooks/cloud-platform-deployment-runbook.md)
 - [Documentation ingestion runbook](docs/runbooks/ingestion-runbook.md)
 
+#### Search Indexing (Interim)
+
+- `public/robots.txt` contains temporary crawler guidance for Issue #299.
+- Core pages remain indexable; high-risk/utility paths are disallowed (`/search`, `/api/`, `/_next/`, and parameterized URLs via `/*?*`).
+- Rules are intended to be reviewed after automated refresh work in Issue #281 is complete.
+
 #### Runtime hardening
 
 Both Kubernetes deployments apply a baseline container hardening profile:
