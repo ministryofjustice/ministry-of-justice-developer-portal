@@ -10,13 +10,14 @@ KUBE_NAMESPACE_PROD ?= developer-portal-prod
 DEV_URL ?= https://dev.developer-portal.service.justice.gov.uk/healthz
 PROD_URL ?= https://developer-portal.service.justice.gov.uk/healthz
 
-.PHONY: help install ingest ingest-dry-run build validate docker-build docker-run k8s-apply-dev k8s-apply-prod smoke-dev smoke-prod
+.PHONY: help install ingest ingest-dry-run catalog-insights build validate docker-build docker-run k8s-apply-dev k8s-apply-prod smoke-dev smoke-prod
 
 help:
 	@echo "Common tasks:"
 	@echo "  make install           - Install dependencies"
 	@echo "  make ingest            - Ingest all sources"
 	@echo "  make ingest-dry-run    - Preview ingestion changes"
+	@echo "  make catalog-insights  - Generate catalog_reports files with SBOM insights"
 	@echo "  make build             - Build static site + pagefind"
 	@echo "  make validate          - Run markdown/yaml/typescript validation"
 	@echo "  make docker-build      - Build container image (IMAGE_URI=...)"
@@ -34,6 +35,9 @@ ingest:
 
 ingest-dry-run:
 	node scripts/ingest.mjs --dry-run
+
+catalog-insights:
+	npm run catalog:sync
 
 build:
 	npm run build

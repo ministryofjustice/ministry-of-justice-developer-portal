@@ -5,12 +5,15 @@ import { ProductCard } from '@/components/ProductCard';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { ChatBot } from '@/components/ChatBot';
 import products from '../../../content/products/products.json';
+import catalogReport from '../../../content/products/catalog_reports/index.json';
+import { CatalogReportEntry, ProductSbomSummary } from '@/types/types';
 
 const categories = [
   { key: 'all', label: 'All' },
   { key: 'platforms', label: 'Platforms' },
   { key: 'apis', label: 'APIs' },
   { key: 'tools', label: 'Tools' },
+  { key: 'sbom', label: 'Catalog insights' },
   { key: 'security', label: 'Security' },
 ];
 
@@ -62,6 +65,11 @@ export default function ProductsPage() {
       .split(/[-_\s]+/)
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
       .join(' ');
+
+  const reportBySlug = (catalogReport?.reports || {}) as unknown as Record<
+    string,
+    CatalogReportEntry
+  >;
 
   return (
     <div className="govuk-width-container">
@@ -167,7 +175,15 @@ export default function ProductsPage() {
           {filtered.length > 0 ? (
             <div className="app-cards">
               {filtered.map((product) => (
-                <ProductCard key={product.slug} {...product} />
+                <ProductCard
+                  key={product.slug}
+                  {...product}
+                  sbom={
+                    reportBySlug[product.slug]?.status
+                      ? (reportBySlug[product.slug] as unknown as ProductSbomSummary)
+                      : undefined
+                  }
+                />
               ))}
             </div>
           ) : (

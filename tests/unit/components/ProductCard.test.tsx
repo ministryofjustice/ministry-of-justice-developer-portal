@@ -52,4 +52,27 @@ describe('ProductCard', () => {
 
     expect(screen.queryByText('Beta')).not.toBeInTheDocument();
   });
+
+  it('renders catalog insights summary when provided', () => {
+    render(
+      <ProductCard
+        {...baseProps}
+        status="live"
+        sbom={{
+          status: 'completed',
+          generatedAt: '2026-06-08T10:00:00Z',
+          packageCount: 128,
+          reportUrl: 'https://api.github.com/example',
+        }}
+      />,
+    );
+
+    expect(screen.getByText('Catalog insights:')).toBeInTheDocument();
+    expect(screen.getByText('Available')).toBeInTheDocument();
+    expect(screen.getByText('Packages: 128')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'View catalog report' })).toHaveAttribute(
+      'href',
+      'https://api.github.com/example',
+    );
+  });
 });

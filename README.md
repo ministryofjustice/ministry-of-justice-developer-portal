@@ -64,6 +64,74 @@ npm run ingest:build
 
 Source repos are configured in [`sources.json`](sources.json).
 
+### Build catalog report data
+
+The product catalogue reads generated report files from [`content/products/catalog_reports`](content/products/catalog_reports).
+That directory contains one file per product slug plus an `index.json`, combining product metadata, repository workflow inventory, and SBOM summaries used by the product cards and detail page.
+
+1. Set a GitHub token with access to dependency graph data:
+
+```bash
+export GITHUB_TOKEN=<your-token>
+```
+
+2. Add repository mapping fields to entries in [`content/products/products.json`](content/products/products.json):
+
+```json
+{
+    "slug": "developer-portal",
+    "sbomOwner": "ministryofjustice",
+    "sbomRepo": "ministry-of-justice-developer-portal"
+}
+```
+
+Products without `sbomRepo` are skipped during SBOM fetch.
+
+3. Generate catalog insights (SBOM fetch + catalog report build):
+
+```bash
+make catalog-insights
+```
+
+This writes generated output files under [`content/products/catalog_reports`](content/products/catalog_reports).
+
+To control how many dependency levels are displayed on the product detail page, set:
+
+```bash
+export SBOM_MAX_DEPTH=2
+```
+
+If unset, the default depth is `2`.
+
+### Reusable SBOM action for other repositories
+
+This repository also provides a reusable GitHub Action at `.github/actions/sbom-report`.
+
+Example usage from another repository:
+
+```yaml
+name: Generate SBOM
+
+on:
+    workflow_dispatch:
+
+jobs:
+    sbom:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        steps:
+            - name: Checkout repository
+                uses: actions/checkout@v4
+
+            - name: Generate SBOM file
+                uses: ministryofjustice/ministry-of-justice-developer-portal/.github/actions/sbom-report@main
+                with:
+                    github-token: ${{ secrets.GITHUB_TOKEN }}
+                    repository: ${{ github.repository }}
+                    output-path: sbom-report.json
+```
+
 ### Build for production
 
 ```bash

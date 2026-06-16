@@ -1,10 +1,11 @@
-[
-  {
+[{
     "slug": "cloud-platform",
     "name": "Cloud Platform",
     "category": "platforms",
     "description": "Kubernetes-based hosting platform on AWS for cloud-native applications. Self-service, with built-in monitoring, logging, and auto-scaling.",
     "owner": "Cloud Platform team",
+    "teamName": "cloud-platform-engineers",
+    "teamOrg": "ministryofjustice",
     "slackChannel": "#cloud-platform",
     "docsUrl": "/docs/cloud-platform",
     "status": "live",
@@ -16,6 +17,8 @@
     "category": "platforms",
     "description": "AWS account-based hosting for applications that don't fit Cloud Platform — typically legacy systems and non-containerised workloads.",
     "owner": "Modernisation Platform team",
+    "teamName": "modernisation-platform",
+    "teamOrg": "ministryofjustice",
     "slackChannel": "#modernisation-platform",
     "docsUrl": "/docs/modernisation-platform",
     "status": "live",
@@ -55,45 +58,17 @@
     "tags": ["notifications", "email", "sms", "api", "gds"]
   },
   {
-    "slug": "spellcheck-auth",
-    "name": "SpellCheck Auth",
-    "category": "apis",
-    "description": "OAuth2 authentication and authorisation service for Ministry of Justice digital services. Provides JWT tokens and role-based access control.",
-    "owner": "Security",
-    "slackChannel": "#spellcheck-auth",
+    "slug": "developer-portal",
+    "name": "Developer Portal",
+    "category": "documentation",
+    "description": "The Ministry of Justice Developer Portal repository: a cross-government developer experience site that aggregates products, documentation, guidelines, and SBOM visibility.",
+    "owner": "Developer Experience",
+    "teamName": "octo-developer-experience",
+    "teamOrg": "ministryofjustice",
+    "slackChannel": "#developer-experience-team",
+    "externalUrl": "https://developer-portal.service.justice.gov.uk/",
     "status": "live",
-    "tags": ["authentication", "oauth2", "security"]
-  },
-  {
-    "slug": "template-deploy",
-    "name": "Template Deploy",
-    "category": "tools",
-    "description": "Standardised deployment templates and GitHub Actions workflows for Ministry of Justice services. CI/CD pipelines as code.",
-    "owner": "Operations Engineering",
-    "slackChannel": "#operations-engineering",
-    "status": "live",
-    "tags": ["ci-cd", "deployment", "github-actions"]
-  },
-  {
-    "slug": "operations-engineering",
-    "name": "Operations Engineering",
-    "category": "tools",
-    "description": "Centralised tooling and support for Ministry of Justice development teams. GitHub organisation management, domain management, and certificate services.",
-    "owner": "Operations Engineering",
-    "slackChannel": "#operations-engineering",
-    "externalUrl": "https://github.com/ministryofjustice",
-    "status": "live",
-    "tags": ["github", "dns", "certificates", "tooling"]
-  },
-  {
-    "slug": "service-registry-api",
-    "name": "Service Registry API",
-    "category": "apis",
-    "description": "RESTful API providing access to the central service registry for Ministry of Justice digital services.",
-    "owner": "Digital Platforms",
-    "slackChannel": "#service-registry",
-    "status": "live",
-    "tags": ["api", "registry", "data"]
+    "tags": ["developer-experience", "documentation", "sbom", "catalogue"]
   },
   {
     "slug": "moj-design-system",
@@ -134,15 +109,5 @@
     "externalUrl": "https://www.forms.service.gov.uk/",
     "status": "live",
     "tags": ["forms", "no-code", "service-design"]
-  },
-  {
-    "slug": "secure-pipelines",
-    "name": "Secure CI/CD Pipelines",
-    "category": "security",
-    "description": "Security-hardened CI/CD pipeline templates with SAST, DAST, dependency scanning, and container image scanning built in.",
-    "owner": "Security Engineering",
-    "slackChannel": "#security-engineering",
-    "status": "beta",
-    "tags": ["security", "ci-cd", "scanning", "devsecops"]
   }
 ]

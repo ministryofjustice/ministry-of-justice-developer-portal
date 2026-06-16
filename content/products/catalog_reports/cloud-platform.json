@@ -1,0 +1,5070 @@
+{
+  "generatedAt": "2026-06-10T19:30:18.560Z",
+  "actions": {
+    "count": 9,
+    "files": [
+      "dependency-review.yml",
+      "deploy-dev.yml",
+      "deploy-prod.yml",
+      "ingest.yml",
+      "lint.yml",
+      "preview.yml",
+      "release-please.yml",
+      "sca.yml",
+      "unit-test.yml"
+    ]
+  },
+  "report": {
+    "status": "completed",
+    "generatedAt": "2026-06-10T19:29:23Z",
+    "packageCount": 560,
+    "repositoryCount": 15,
+    "completedRepositories": 15,
+    "failedRepositories": 0,
+    "pendingRepositories": 0,
+    "ecosystems": {
+      "githubactions": 126,
+      "github": 15,
+      "golang": 146,
+      "pypi": 72,
+      "npm": 198,
+      "maven": 3
+    },
+    "licenses": {
+      "MIT": 251,
+      "Apache-2.0": 34,
+      "MPL-2.0": 33,
+      "BSD-3-Clause AND LicenseRef-scancode-google-patent-license-golang": 24,
+      "ISC": 8,
+      "BSD-3-Clause": 13,
+      "Apache-2.0 AND BSD-3-Clause AND MIT": 4,
+      "LGPL-2.0-or-later AND LGPL-2.1-only AND LGPL-3.0-or-later AND MIT AND curl": 4,
+      "Apache-2.0 AND MIT AND MPL-2.0": 4,
+      "Apache-2.0 AND BSD-3-Clause AND LicenseRef-scancode-unknown-license-reference": 4,
+      "BlueOak-1.0.0": 1,
+      "0BSD": 1,
+      "LicenseRef-scancode-unicode AND MIT": 1,
+      "BSD-2-Clause": 1,
+      "CC0-1.0 AND MIT": 1,
+      "Apache-2.0 AND BSD-3-Clause AND EPL-1.0 AND LicenseRef-scancode-jdom AND MIT": 1,
+      "BSD-2-Clause AND BSD-3-Clause": 2,
+      "LGPL-2.1-only AND LGPL-3.0-or-later": 1,
+      "Apache-2.0 AND LicenseRef-scancode-unknown-license-reference": 1
+    },
+    "packages": [
+      {
+        "name": "actions/checkout",
+        "version": "8e8c483db84b4bee98b60c0593521ed34d9990e8",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8",
+        "repos": [
+          "cloud-platform-github-workflows",
+          "container-platform-user-guide"
+        ]
+      },
+      {
+        "name": "aws-actions/configure-aws-credentials",
+        "version": "8df5847569e6427dd6c4fb1cf565c83acfa8afa7",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7",
+        "repos": [
+          "cloud-platform-github-workflows"
+        ]
+      },
+      {
+        "name": "slackapi/slack-github-action",
+        "version": "91efab103c0de0a537f72a35f6b8cda0ee76bf0a",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/slackapi/slack-github-action@91efab103c0de0a537f72a35f6b8cda0ee76bf0a",
+        "repos": [
+          "cloud-platform-github-workflows"
+        ]
+      },
+      {
+        "name": "hashicorp/setup-terraform",
+        "version": "b9cd54a3c349d3f38e8881555d616ced269862dd",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd",
+        "repos": [
+          "cloud-platform-github-workflows",
+          "container-platform-terraform-cilium",
+          "container-platform-terraform-gatekeeper",
+          "container-platform-terraform-karpenter"
+        ]
+      },
+      {
+        "name": "aws-actions/configure-aws-credentials",
+        "version": "00943011d9042930efac3dcd3a170e4273319bc8",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/aws-actions/configure-aws-credentials@00943011d9042930efac3dcd3a170e4273319bc8",
+        "repos": [
+          "cloud-platform-github-workflows"
+        ]
+      },
+      {
+        "name": "peter-murray/workflow-application-token-action",
+        "version": "dc0413987a085fa17d19df9e47d4677cf81ffef3",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/peter-murray/workflow-application-token-action@dc0413987a085fa17d19df9e47d4677cf81ffef3",
+        "repos": [
+          "cloud-platform-github-workflows"
+        ]
+      },
+      {
+        "name": "actions/setup-go",
+        "version": "d35c59abb061a4a6fb18e82ac0862c26744d6ab5",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5",
+        "repos": [
+          "cloud-platform-github-workflows"
+        ]
+      },
+      {
+        "name": "actions/upload-artifact",
+        "version": "b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+        "repos": [
+          "cloud-platform-github-workflows",
+          "container-platform-user-guide"
+        ]
+      },
+      {
+        "name": "dorny/test-reporter",
+        "version": "b082adf0eced0765477756c2a610396589b8c637",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/dorny/test-reporter@b082adf0eced0765477756c2a610396589b8c637",
+        "repos": [
+          "cloud-platform-github-workflows"
+        ]
+      },
+      {
+        "name": "com.github.ministryofjustice/cloud-platform-github-workflows",
+        "version": "main",
+        "license": "MIT",
+        "ecosystem": "github",
+        "purl": "pkg:github/ministryofjustice/cloud-platform-github-workflows@main",
+        "repos": [
+          "cloud-platform-github-workflows"
+        ]
+      },
+      {
+        "name": "com.github.ministryofjustice/container-platform-documentation",
+        "version": "main",
+        "ecosystem": "github",
+        "purl": "pkg:github/ministryofjustice/container-platform-documentation@main",
+        "repos": [
+          "container-platform-documentation"
+        ]
+      },
+      {
+        "name": "actions/checkout",
+        "version": "de0fac2e4500dabe0009e67214ff5f5447ce83dd",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
+        "repos": [
+          "container-platform-github-access",
+          "container-platform-terraform-external-dns",
+          "container-platform-terraform-gatekeeper",
+          "container-platform-terraform-gateway-api",
+          "container-platform-terraform-karpenter",
+          "container-platform-terraform-starter-pack",
+          "container-platform-terraform-template",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "actions/dependency-review-action",
+        "version": "2031cfc080254a8a887f58cffee85186f0e49e48",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48",
+        "repos": [
+          "container-platform-github-access",
+          "container-platform-terraform-external-dns",
+          "container-platform-terraform-gatekeeper",
+          "container-platform-terraform-gateway-api",
+          "container-platform-terraform-karpenter",
+          "container-platform-terraform-starter-pack",
+          "container-platform-terraform-template"
+        ]
+      },
+      {
+        "name": "super-linter/super-linter/slim",
+        "version": "9e863354e3ff62e0727d37183162c4a88873df41",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/super-linter/super-linter/slim@9e863354e3ff62e0727d37183162c4a88873df41",
+        "repos": [
+          "container-platform-github-access"
+        ]
+      },
+      {
+        "name": "aws-actions/configure-aws-credentials",
+        "version": "acca2b1b2070338fb9fd1ca27ecee81d687e58e5",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/aws-actions/configure-aws-credentials@acca2b1b2070338fb9fd1ca27ecee81d687e58e5",
+        "repos": [
+          "container-platform-github-access"
+        ]
+      },
+      {
+        "name": "hashicorp/setup-terraform",
+        "version": "5e8dbf3c6d9deaf4193ca7a8fb23f2ac83bb6c85",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/hashicorp/setup-terraform@5e8dbf3c6d9deaf4193ca7a8fb23f2ac83bb6c85",
+        "repos": [
+          "container-platform-github-access"
+        ]
+      },
+      {
+        "name": "actions/github-script",
+        "version": "3a2844b7e9c422d3c10d287c895573f7108da1b3",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3",
+        "repos": [
+          "container-platform-github-access",
+          "modernisation-platform",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "actions/create-github-app-token",
+        "version": "1b10c78c7865c340bc4f6099eb2f838309f1e8c3",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3",
+        "repos": [
+          "container-platform-github-access"
+        ]
+      },
+      {
+        "name": "com.github.ministryofjustice/container-platform-github-access",
+        "version": "main",
+        "license": "MIT",
+        "ecosystem": "github",
+        "purl": "pkg:github/ministryofjustice/container-platform-github-access@main",
+        "repos": [
+          "container-platform-github-access"
+        ]
+      },
+      {
+        "name": "ministryofjustice/cloud-platform-environments/cmd/push-terraform-module-version",
+        "version": "main",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/ministryofjustice/cloud-platform-environments/cmd/push-terraform-module-version@main",
+        "repos": [
+          "container-platform-terraform-cilium"
+        ]
+      },
+      {
+        "name": "ministryofjustice/cloud-platform-github-workflows/.github/workflows/dependencies-project.yml",
+        "version": "main",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/ministryofjustice/cloud-platform-github-workflows/.github/workflows/dependencies-project.yml@main",
+        "repos": [
+          "container-platform-terraform-cilium",
+          "container-platform-terraform-gatekeeper"
+        ]
+      },
+      {
+        "name": "actions/checkout",
+        "version": "11bd71901bbe5b1630ceea73d27597364c9af683",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+        "repos": [
+          "container-platform-terraform-cilium",
+          "container-platform-terraform-gatekeeper",
+          "container-platform-terraform-karpenter"
+        ]
+      },
+      {
+        "name": "terraform-docs/gh-actions",
+        "version": "aeae0038ed47a547e0c0fca5c059d3335f48fb25",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/terraform-docs/gh-actions@aeae0038ed47a547e0c0fca5c059d3335f48fb25",
+        "repos": [
+          "container-platform-terraform-cilium",
+          "container-platform-terraform-karpenter"
+        ]
+      },
+      {
+        "name": "com.github.ministryofjustice/container-platform-terraform-cilium",
+        "version": "main",
+        "license": "MIT",
+        "ecosystem": "github",
+        "purl": "pkg:github/ministryofjustice/container-platform-terraform-cilium@main",
+        "repos": [
+          "container-platform-terraform-cilium"
+        ]
+      },
+      {
+        "name": "com.github.ministryofjustice/container-platform-terraform-external-dns",
+        "version": "main",
+        "license": "MIT",
+        "ecosystem": "github",
+        "purl": "pkg:github/ministryofjustice/container-platform-terraform-external-dns@main",
+        "repos": [
+          "container-platform-terraform-external-dns"
+        ]
+      },
+      {
+        "name": "github.com/stretchr/testify",
+        "version": "1.7.0",
+        "license": "MIT",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/stretchr/testify@1.7.0",
+        "repos": [
+          "container-platform-terraform-gatekeeper"
+        ]
+      },
+      {
+        "name": "github.com/gruntwork-io/terratest",
+        "version": "0.33.0",
+        "license": "Apache-2.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/gruntwork-io/terratest@0.33.0",
+        "repos": [
+          "container-platform-terraform-gatekeeper"
+        ]
+      },
+      {
+        "name": "com.github.ministryofjustice/container-platform-terraform-gatekeeper",
+        "version": "main",
+        "license": "MIT",
+        "ecosystem": "github",
+        "purl": "pkg:github/ministryofjustice/container-platform-terraform-gatekeeper@main",
+        "repos": [
+          "container-platform-terraform-gatekeeper"
+        ]
+      },
+      {
+        "name": "com.github.ministryofjustice/container-platform-terraform-gateway-api",
+        "version": "main",
+        "license": "MIT",
+        "ecosystem": "github",
+        "purl": "pkg:github/ministryofjustice/container-platform-terraform-gateway-api@main",
+        "repos": [
+          "container-platform-terraform-gateway-api"
+        ]
+      },
+      {
+        "name": "ministryofjustice/cloud-platform-github-workflows/.github/workflows/dependencies-project.yml",
+        "version": "61205bd138bba137d94df71e2b58af1955e537cf",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/ministryofjustice/cloud-platform-github-workflows/.github/workflows/dependencies-project.yml@61205bd138bba137d94df71e2b58af1955e537cf",
+        "repos": [
+          "container-platform-terraform-karpenter"
+        ]
+      },
+      {
+        "name": "ministryofjustice/cloud-platform-environments/cmd/push-terraform-module-version",
+        "version": "96d2805c4dda20128dd8b5f0069725b6df9a6949",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/ministryofjustice/cloud-platform-environments/cmd/push-terraform-module-version@96d2805c4dda20128dd8b5f0069725b6df9a6949",
+        "repos": [
+          "container-platform-terraform-karpenter"
+        ]
+      },
+      {
+        "name": "com.github.ministryofjustice/container-platform-terraform-karpenter",
+        "version": "main",
+        "license": "MIT",
+        "ecosystem": "github",
+        "purl": "pkg:github/ministryofjustice/container-platform-terraform-karpenter@main",
+        "repos": [
+          "container-platform-terraform-karpenter"
+        ]
+      },
+      {
+        "name": "aws-actions/configure-aws-credentials",
+        "version": "7474bc4690e29a8392af63c5b98e7449536d5c3a",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a",
+        "repos": [
+          "container-platform-terraform-starter-pack"
+        ]
+      },
+      {
+        "name": "aws-actions/amazon-ecr-login",
+        "version": "fa648b43de3d4d023bcb3f89ed6940096949c419",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/aws-actions/amazon-ecr-login@fa648b43de3d4d023bcb3f89ed6940096949c419",
+        "repos": [
+          "container-platform-terraform-starter-pack"
+        ]
+      },
+      {
+        "name": "com.github.ministryofjustice/container-platform-terraform-starter-pack",
+        "version": "main",
+        "license": "MIT",
+        "ecosystem": "github",
+        "purl": "pkg:github/ministryofjustice/container-platform-terraform-starter-pack@main",
+        "repos": [
+          "container-platform-terraform-starter-pack"
+        ]
+      },
+      {
+        "name": "com.github.ministryofjustice/container-platform-terraform-template",
+        "version": "main",
+        "license": "MIT",
+        "ecosystem": "github",
+        "purl": "pkg:github/ministryofjustice/container-platform-terraform-template@main",
+        "repos": [
+          "container-platform-terraform-template"
+        ]
+      },
+      {
+        "name": "actions/dependency-review-action",
+        "version": "3c4e3dcb1aa7874d2c16be7d79418e9b7efd6261",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/dependency-review-action@3c4e3dcb1aa7874d2c16be7d79418e9b7efd6261",
+        "repos": [
+          "container-platform-user-guide"
+        ]
+      },
+      {
+        "name": "actions/configure-pages",
+        "version": "983d7736d9b0ae728b81ab479565c72886d7745b",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b",
+        "repos": [
+          "container-platform-user-guide"
+        ]
+      },
+      {
+        "name": "actions/deploy-pages",
+        "version": "d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e",
+        "repos": [
+          "container-platform-user-guide"
+        ]
+      },
+      {
+        "name": "lycheeverse/lychee-action",
+        "version": "a8c4c7cb88f0c7386610c35eb25108e448569cb0",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/lycheeverse/lychee-action@a8c4c7cb88f0c7386610c35eb25108e448569cb0",
+        "repos": [
+          "container-platform-user-guide"
+        ]
+      },
+      {
+        "name": "com.github.ministryofjustice/container-platform-user-guide",
+        "version": "main",
+        "license": "MIT",
+        "ecosystem": "github",
+        "purl": "pkg:github/ministryofjustice/container-platform-user-guide@main",
+        "repos": [
+          "container-platform-user-guide"
+        ]
+      },
+      {
+        "name": "github.com/aws/aws-sdk-go-v2/service/ssooidc",
+        "version": "v1.36.4",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/aws-sdk-go-v2/service/ssooidc@v1.36.4",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/aws/aws-sdk-go-v2",
+        "version": "v1.41.11",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/aws-sdk-go-v2@v1.41.11",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/aws/aws-sdk-go-v2/service/secretsmanager",
+        "version": "v1.42.1",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/aws-sdk-go-v2/service/secretsmanager@v1.42.1",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/aws/aws-sdk-go-v2/config",
+        "version": "v1.32.22",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/aws-sdk-go-v2/config@v1.32.22",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding",
+        "version": "v1.13.11",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding@v1.13.11",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/aws/aws-sdk-go-v2/service/securityhub",
+        "version": "v1.71.4",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/aws-sdk-go-v2/service/securityhub@v1.71.4",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/aws/aws-sdk-go-v2/service/sts",
+        "version": "v1.43.1",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/aws-sdk-go-v2/service/sts@v1.43.1",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/aws/aws-sdk-go-v2/service/sso",
+        "version": "v1.31.1",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/aws-sdk-go-v2/service/sso@v1.31.1",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/aws/aws-sdk-go-v2/feature/ec2/imds",
+        "version": "v1.18.27",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/aws-sdk-go-v2/feature/ec2/imds@v1.18.27",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/aws/aws-sdk-go-v2/service/internal/presigned-url",
+        "version": "v1.13.27",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/aws-sdk-go-v2/service/internal/presigned-url@v1.13.27",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/aws/aws-sdk-go-v2/internal/endpoints/v2",
+        "version": "v2.7.27",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/aws-sdk-go-v2/internal/endpoints/v2@v2.7.27",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/aws/aws-sdk-go-v2/internal/configsources",
+        "version": "v1.4.27",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/aws-sdk-go-v2/internal/configsources@v1.4.27",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/aws/aws-sdk-go-v2/service/signin",
+        "version": "v1.1.3",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/aws-sdk-go-v2/service/signin@v1.1.3",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/aws/smithy-go",
+        "version": "v1.27.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/smithy-go@v1.27.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/aws/aws-sdk-go-v2/credentials",
+        "version": "v1.19.21",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/aws-sdk-go-v2/credentials@v1.19.21",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/aws/aws-sdk-go-v2/internal/v4a",
+        "version": "v1.4.28",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/aws/aws-sdk-go-v2/internal/v4a@v1.4.28",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/hashicorp/terraform-json",
+        "version": "v0.23.0",
+        "license": "MPL-2.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/hashicorp/terraform-json@v0.23.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/hashicorp/go-cleanhttp",
+        "version": "v0.5.2",
+        "license": "MPL-2.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/hashicorp/go-cleanhttp@v0.5.2",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/hashicorp/go-safetemp",
+        "version": "v1.0.0",
+        "license": "MPL-2.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/hashicorp/go-safetemp@v1.0.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/stretchr/testify",
+        "version": "v1.11.1",
+        "license": "MIT",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/stretchr/testify@v1.11.1",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "golang.org/x/text",
+        "version": "v0.35.0",
+        "license": "BSD-3-Clause AND LicenseRef-scancode-google-patent-license-golang",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/golang.org/x/text@v0.35.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/agext/levenshtein",
+        "version": "v1.2.3",
+        "license": "Apache-2.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/agext/levenshtein@v1.2.3",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/mitchellh/go-homedir",
+        "version": "v1.1.0",
+        "license": "MIT",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/mitchellh/go-homedir@v1.1.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "golang.org/x/sys",
+        "version": "v0.42.0",
+        "license": "BSD-3-Clause AND LicenseRef-scancode-google-patent-license-golang",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/golang.org/x/sys@v0.42.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/davecgh/go-spew",
+        "version": "v1.1.2-0.20180830191138-d8f796af33cc",
+        "license": "ISC",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/davecgh/go-spew@v1.1.2-0.20180830191138-d8f796af33cc",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/pmezard/go-difflib",
+        "version": "v1.0.1-0.20181226105442-5d4384ee4fb2",
+        "license": "BSD-3-Clause",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/pmezard/go-difflib@v1.0.1-0.20181226105442-5d4384ee4fb2",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/hashicorp/hcl/v2",
+        "version": "v2.22.0",
+        "license": "MPL-2.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/hashicorp/hcl/v2@v2.22.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/bgentry/go-netrc",
+        "version": "v0.0.0-20140422174119-9fd32a8b3d3d",
+        "license": "MIT",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/bgentry/go-netrc@v0.0.0-20140422174119-9fd32a8b3d3d",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/tmccombs/hcl2json",
+        "version": "v0.6.4",
+        "license": "Apache-2.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/tmccombs/hcl2json@v0.6.4",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/hashicorp/errwrap",
+        "version": "v1.0.0",
+        "license": "MPL-2.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/hashicorp/errwrap@v1.0.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/hashicorp/go-getter/v2",
+        "version": "v2.2.3",
+        "license": "MPL-2.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/hashicorp/go-getter/v2@v2.2.3",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/jinzhu/copier",
+        "version": "v0.0.0-20190924061706-b57f9002281a",
+        "license": "MIT",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/jinzhu/copier@v0.0.0-20190924061706-b57f9002281a",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/hashicorp/go-multierror",
+        "version": "v1.1.1",
+        "license": "MPL-2.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/hashicorp/go-multierror@v1.1.1",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/klauspost/compress",
+        "version": "v1.16.5",
+        "license": "Apache-2.0 AND BSD-3-Clause AND MIT",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/klauspost/compress@v1.16.5",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/mitchellh/go-testing-interface",
+        "version": "v1.14.1",
+        "license": "MIT",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/mitchellh/go-testing-interface@v1.14.1",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/zclconf/go-cty",
+        "version": "v1.15.0",
+        "license": "MIT",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/zclconf/go-cty@v1.15.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/gruntwork-io/terratest",
+        "version": "v1.0.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/gruntwork-io/terratest@v1.0.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/mattn/go-zglob",
+        "version": "v0.0.2-0.20190814121620-e3c945676326",
+        "license": "MIT",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/mattn/go-zglob@v0.0.2-0.20190814121620-e3c945676326",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "golang.org/x/sync",
+        "version": "v0.20.0",
+        "license": "BSD-3-Clause AND LicenseRef-scancode-google-patent-license-golang",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/golang.org/x/sync@v0.20.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/hashicorp/go-version",
+        "version": "v1.7.0",
+        "license": "MPL-2.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/hashicorp/go-version@v1.7.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "golang.org/x/mod",
+        "version": "v0.33.0",
+        "license": "BSD-3-Clause AND LicenseRef-scancode-google-patent-license-golang",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/golang.org/x/mod@v0.33.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "golang.org/x/crypto",
+        "version": "v0.49.0",
+        "license": "BSD-3-Clause AND LicenseRef-scancode-google-patent-license-golang",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/golang.org/x/crypto@v0.49.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/mitchellh/go-wordwrap",
+        "version": "v1.0.1",
+        "license": "MIT",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/mitchellh/go-wordwrap@v1.0.1",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/ulikunitz/xz",
+        "version": "v0.5.10",
+        "license": "BSD-3-Clause",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/ulikunitz/xz@v0.5.10",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/apparentlymart/go-textseg/v15",
+        "version": "v15.0.0",
+        "license": "MIT",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/apparentlymart/go-textseg/v15@v15.0.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "golang.org/x/tools",
+        "version": "v0.42.0",
+        "license": "BSD-3-Clause AND LicenseRef-scancode-google-patent-license-golang",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/golang.org/x/tools@v0.42.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "gopkg.in/yaml.v3",
+        "version": "v3.0.1",
+        "license": "Apache-2.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/gopkg.in/yaml.v3@v3.0.1",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "requests",
+        "version": "2.33.0",
+        "license": "Apache-2.0",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/requests@2.33.0",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "aws-actions/configure-aws-credentials",
+        "version": "e7f100cf4c008499ea8adda475de1042d6975c7b",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/aws-actions/configure-aws-credentials@e7f100cf4c008499ea8adda475de1042d6975c7b",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-configuration-management",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "actions/checkout",
+        "version": "df4cb1c069e1874edd31b4311f1884172cec0e10",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-configuration-management",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "actions/setup-python",
+        "version": "a309ff8b426b58ec0e2a45f0f869d46889d02405",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "ministryofjustice/modernisation-platform-github-actions/decrypt-secrets",
+        "version": "91d5c1efbe43e1c8fdfc55fd39e8183fc6be8fa8",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/ministryofjustice/modernisation-platform-github-actions/decrypt-secrets@91d5c1efbe43e1c8fdfc55fd39e8183fc6be8fa8",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "ministryofjustice/modernisation-platform-github-actions/.github/workflows/aws-secrets-management.yml",
+        "version": "91d5c1efbe43e1c8fdfc55fd39e8183fc6be8fa8",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/ministryofjustice/modernisation-platform-github-actions/.github/workflows/aws-secrets-management.yml@91d5c1efbe43e1c8fdfc55fd39e8183fc6be8fa8",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "actions/download-artifact",
+        "version": "3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "ministryofjustice/modernisation-platform-github-actions/signed-commit",
+        "version": "91d5c1efbe43e1c8fdfc55fd39e8183fc6be8fa8",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/ministryofjustice/modernisation-platform-github-actions/signed-commit@91d5c1efbe43e1c8fdfc55fd39e8183fc6be8fa8",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-configuration-management",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "actions/stale",
+        "version": "eb5cf3af3ac0a1aa4c9c45633dd1ae542a27a899",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/stale@eb5cf3af3ac0a1aa4c9c45633dd1ae542a27a899",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "actions/create-github-app-token",
+        "version": "bcd2ba49218906704ab6c1aa796996da409d3eb1",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "ministryofjustice/modernisation-platform-github-actions/format-code",
+        "version": "91d5c1efbe43e1c8fdfc55fd39e8183fc6be8fa8",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/ministryofjustice/modernisation-platform-github-actions/format-code@91d5c1efbe43e1c8fdfc55fd39e8183fc6be8fa8",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-configuration-management",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "peter-evans/create-pull-request",
+        "version": "5f6978faf089d4d20b00c7766989d076bb2fc7f1",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "actions/configure-pages",
+        "version": "45bfe0192ca1faeb007ade9deae92b16b8254a0d",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "actions/deploy-pages",
+        "version": "cd2ce8fcbc39b97be8ca5fce6e763baed58fa128",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "hashicorp/setup-terraform",
+        "version": "dfe3c3f87815947d99a8997f908cb6525fc44e9e",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "terraform-linters/setup-tflint",
+        "version": "b480b8fcdaa6f2c577f8e4fa799e89e756bb7c93",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/terraform-linters/setup-tflint@b480b8fcdaa6f2c577f8e4fa799e89e756bb7c93",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-configuration-management",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "actions/cache",
+        "version": "27d5ce7f107fe9357f9df03efb73ab90386fccae",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-configuration-management",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "github/codeql-action/upload-sarif",
+        "version": "87557b9c84dde89fdd9b10e88954ac2f4248e463",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/github/codeql-action/upload-sarif@87557b9c84dde89fdd9b10e88954ac2f4248e463",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-configuration-management",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "bridgecrewio/checkov-action",
+        "version": "6772af193d58e46738c9401a4ca9c1f39de0fec8",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/bridgecrewio/checkov-action@6772af193d58e46738c9401a4ca9c1f39de0fec8",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-configuration-management",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "actions/upload-artifact",
+        "version": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-configuration-management",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "terraform-docs/gh-actions",
+        "version": "6de6da0cefcc6b4b7a5cbea4d79d97060733093c",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/terraform-docs/gh-actions@6de6da0cefcc6b4b7a5cbea4d79d97060733093c",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/stretchr/testify",
+        "version": "1.5.1",
+        "license": "MIT",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/stretchr/testify@1.5.1",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/zclconf/go-cty",
+        "version": "1.7.1",
+        "license": "MIT",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/zclconf/go-cty@1.7.1",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/gruntwork-io/terratest",
+        "version": "0.32.1",
+        "license": "Apache-2.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/gruntwork-io/terratest@0.32.1",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "github.com/hashicorp/terraform",
+        "version": "0.14.5",
+        "license": "MPL-2.0",
+        "ecosystem": "golang",
+        "purl": "pkg:golang/github.com/hashicorp/terraform@0.14.5",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "actions/setup-node",
+        "version": "48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "actions/setup-go",
+        "version": "4a3601121dd01d1626a1e23e37211e3254c1c06c",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "ministryofjustice/modernisation-platform-github-actions/terraform-static-analysis",
+        "version": "91d5c1efbe43e1c8fdfc55fd39e8183fc6be8fa8",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/ministryofjustice/modernisation-platform-github-actions/terraform-static-analysis@91d5c1efbe43e1c8fdfc55fd39e8183fc6be8fa8",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "slackapi/slack-github-action",
+        "version": "45a88b9581bfab2566dc881e2cd66d334e621e2c",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "actions/labeler",
+        "version": "f27b608878404679385c85cfa523b85ccb86e213",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/labeler@f27b608878404679385c85cfa523b85ccb86e213",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-configuration-management",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "open-policy-agent/setup-regal",
+        "version": "761188c3b435761fa254beca508a44875619648f",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/open-policy-agent/setup-regal@761188c3b435761fa254beca508a44875619648f",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "ossf/scorecard-action",
+        "version": "4eaacf0543bb3f2c246792bd56e8cdeffafb205a",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/ossf/scorecard-action@4eaacf0543bb3f2c246792bd56e8cdeffafb205a",
+        "repos": [
+          "modernisation-platform",
+          "modernisation-platform-ami-builds",
+          "modernisation-platform-configuration-management",
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "com.github.ministryofjustice/modernisation-platform",
+        "version": "main",
+        "license": "MIT",
+        "ecosystem": "github",
+        "purl": "pkg:github/ministryofjustice/modernisation-platform@main",
+        "repos": [
+          "modernisation-platform"
+        ]
+      },
+      {
+        "name": "boto3",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/boto3",
+        "repos": [
+          "modernisation-platform-ami-builds"
+        ]
+      },
+      {
+        "name": "jmespath",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/jmespath",
+        "repos": [
+          "modernisation-platform-ami-builds"
+        ]
+      },
+      {
+        "name": "botocore",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/botocore",
+        "repos": [
+          "modernisation-platform-ami-builds"
+        ]
+      },
+      {
+        "name": "com.github.ministryofjustice/modernisation-platform-ami-builds",
+        "version": "main",
+        "license": "MIT",
+        "ecosystem": "github",
+        "purl": "pkg:github/ministryofjustice/modernisation-platform-ami-builds@main",
+        "repos": [
+          "modernisation-platform-ami-builds"
+        ]
+      },
+      {
+        "name": "boto3",
+        "version": ">= 1.4.5",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/boto3",
+        "repos": [
+          "modernisation-platform-configuration-management"
+        ]
+      },
+      {
+        "name": "psutil",
+        "version": ">= 5.6.6",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/psutil",
+        "repos": [
+          "modernisation-platform-configuration-management"
+        ]
+      },
+      {
+        "name": "passlib",
+        "version": ">= 1.7.3",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/passlib",
+        "repos": [
+          "modernisation-platform-configuration-management"
+        ]
+      },
+      {
+        "name": "pexpect",
+        "version": ">= 4.8.0",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/pexpect",
+        "repos": [
+          "modernisation-platform-configuration-management"
+        ]
+      },
+      {
+        "name": "botocore",
+        "version": ">= 1.9.12",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/botocore",
+        "repos": [
+          "modernisation-platform-configuration-management"
+        ]
+      },
+      {
+        "name": "pywinrm",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/pywinrm",
+        "repos": [
+          "modernisation-platform-configuration-management"
+        ]
+      },
+      {
+        "name": "com.github.ministryofjustice/modernisation-platform-configuration-management",
+        "version": "main",
+        "license": "MIT",
+        "ecosystem": "github",
+        "purl": "pkg:github/ministryofjustice/modernisation-platform-configuration-management@main",
+        "repos": [
+          "modernisation-platform-configuration-management"
+        ]
+      },
+      {
+        "name": "jmespath",
+        "version": "1.0.1",
+        "license": "MIT",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/jmespath@1.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "s3transfer",
+        "version": "0.15.0",
+        "license": "Apache-2.0",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/s3transfer@0.15.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "mypy-boto3-secretsmanager",
+        "version": "1.41.0",
+        "license": "MIT",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/mypy-boto3-secretsmanager@1.41.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "pycurl",
+        "version": "7.45.7",
+        "license": "LGPL-2.0-or-later AND LGPL-2.1-only AND LGPL-3.0-or-later AND MIT AND curl",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/pycurl@7.45.7",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "six",
+        "version": "1.17.0",
+        "license": "MIT",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/six@1.17.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "botocore",
+        "version": "1.41.2",
+        "license": "Apache-2.0 AND MIT AND MPL-2.0",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/botocore@1.41.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "urllib3",
+        "version": "2.5.0",
+        "license": "MIT",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/urllib3@2.5.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "python-dateutil",
+        "version": "2.9.0.post0",
+        "license": "Apache-2.0 AND BSD-3-Clause AND LicenseRef-scancode-unknown-license-reference",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/python-dateutil@2.9.0.post0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "boto3",
+        "version": "1.41.2",
+        "license": "Apache-2.0",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/boto3@1.41.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "aws-lambda-powertools",
+        "version": "3.29.0",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/aws-lambda-powertools@3.29.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "has-bigints",
+        "version": "1.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/has-bigints@1.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/msal-node",
+        "version": "1.18.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/msal-node@1.18.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/msal-common",
+        "version": "13.3.3",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/msal-common@13.3.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "mime-types",
+        "version": "2.1.35",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/mime-types@2.1.35",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/core-lro",
+        "version": "2.2.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/core-lro@2.2.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "process",
+        "version": "0.11.10",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/process@0.11.10",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "node-abort-controller",
+        "version": "3.0.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/node-abort-controller@3.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-map",
+        "version": "2.0.3",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-map@2.0.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "arraybuffer.prototype.slice",
+        "version": "1.0.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/arraybuffer.prototype.slice@1.0.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "agent-base",
+        "version": "6.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/agent-base@6.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "which-typed-array",
+        "version": "1.1.19",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/which-typed-array@1.1.19",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "async-function",
+        "version": "1.0.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/async-function@1.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "string.prototype.trim",
+        "version": "1.2.10",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/string.prototype.trim@1.2.10",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "set-proto",
+        "version": "1.0.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/set-proto@1.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "has-tostringtag",
+        "version": "1.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/has-tostringtag@1.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "math-intrinsics",
+        "version": "1.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/math-intrinsics@1.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "es-define-property",
+        "version": "1.0.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/es-define-property@1.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "fetch-blob",
+        "version": "3.1.5",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/fetch-blob@3.1.5",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "buffer-equal-constant-time",
+        "version": "1.0.1",
+        "license": "BSD-3-Clause",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/buffer-equal-constant-time@1.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "array-buffer-byte-length",
+        "version": "1.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/array-buffer-byte-length@1.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "function.prototype.name",
+        "version": "1.1.8",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/function.prototype.name@1.1.8",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "xml2js",
+        "version": "0.5.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/xml2js@0.5.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "jsonwebtoken",
+        "version": "9.0.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/jsonwebtoken@9.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-typed-array",
+        "version": "1.1.15",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-typed-array@1.1.15",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-callable",
+        "version": "1.2.7",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-callable@1.2.7",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "ieee754",
+        "version": "1.2.1",
+        "license": "BSD-3-Clause",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/ieee754@1.2.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "delayed-stream",
+        "version": "1.0.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/delayed-stream@1.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "bl",
+        "version": "5.0.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/bl@5.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "which-builtin-type",
+        "version": "1.2.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/which-builtin-type@1.2.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "tough-cookie",
+        "version": "4.1.4",
+        "license": "BSD-3-Clause",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/tough-cookie@4.1.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "jwa",
+        "version": "1.4.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/jwa@1.4.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "string.prototype.trimend",
+        "version": "1.0.9",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/string.prototype.trimend@1.0.9",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "typed-array-byte-length",
+        "version": "1.0.3",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/typed-array-byte-length@1.0.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "typed-array-buffer",
+        "version": "1.0.3",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/typed-array-buffer@1.0.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "node-fetch",
+        "version": "3.3.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/node-fetch@3.3.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "proxy-from-env",
+        "version": "1.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/proxy-from-env@1.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "isarray",
+        "version": "2.0.5",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/isarray@2.0.5",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "http-proxy-agent",
+        "version": "4.0.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/http-proxy-agent@4.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "readable-stream",
+        "version": "3.6.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/readable-stream@3.6.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "es-to-primitive",
+        "version": "1.3.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/es-to-primitive@1.3.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "requires-port",
+        "version": "1.0.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/requires-port@1.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "call-bind-apply-helpers",
+        "version": "1.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/call-bind-apply-helpers@1.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "functions-have-names",
+        "version": "1.2.3",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/functions-have-names@1.2.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-boolean-object",
+        "version": "1.2.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-boolean-object@1.2.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "reflect.getprototypeof",
+        "version": "1.0.10",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/reflect.getprototypeof@1.0.10",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "sax",
+        "version": "1.4.3",
+        "license": "BlueOak-1.0.0",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/sax@1.4.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "typed-array-length",
+        "version": "1.0.7",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/typed-array-length@1.0.7",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "object-keys",
+        "version": "1.1.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/object-keys@1.1.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "define-lazy-prop",
+        "version": "2.0.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/define-lazy-prop@2.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/abort-controller",
+        "version": "1.0.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/abort-controller@1.0.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "js-md4",
+        "version": "0.3.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/js-md4@0.3.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-weakmap",
+        "version": "2.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-weakmap@2.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "side-channel-weakmap",
+        "version": "1.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/side-channel-weakmap@1.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-negative-zero",
+        "version": "2.0.3",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-negative-zero@2.0.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "dunder-proto",
+        "version": "1.0.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/dunder-proto@1.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "data-view-byte-length",
+        "version": "1.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/data-view-byte-length@1.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "safe-regex-test",
+        "version": "1.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/safe-regex-test@1.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "native-duplexpair",
+        "version": "1.0.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/native-duplexpair@1.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "data-uri-to-buffer",
+        "version": "4.0.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/data-uri-to-buffer@4.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/core-tracing",
+        "version": "1.0.0-preview.13",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/core-tracing@1.0.0-preview.13",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "string.prototype.trimstart",
+        "version": "1.0.8",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/string.prototype.trimstart@1.0.8",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "typed-array-byte-offset",
+        "version": "1.0.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/typed-array-byte-offset@1.0.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "form-data",
+        "version": "4.0.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/form-data@4.0.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/logger",
+        "version": "1.0.3",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/logger@1.0.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-wsl",
+        "version": "2.2.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-wsl@2.2.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "ecdsa-sig-formatter",
+        "version": "1.0.11",
+        "license": "Apache-2.0",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/ecdsa-sig-formatter@1.0.11",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "https-proxy-agent",
+        "version": "5.0.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/https-proxy-agent@5.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "available-typed-arrays",
+        "version": "1.0.7",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/available-typed-arrays@1.0.7",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "get-symbol-description",
+        "version": "1.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/get-symbol-description@1.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "globalthis",
+        "version": "1.0.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/globalthis@1.0.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "follow-redirects",
+        "version": "1.15.11",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/follow-redirects@1.15.11",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "generator-function",
+        "version": "2.0.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/generator-function@2.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "web-streams-polyfill",
+        "version": "3.2.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/web-streams-polyfill@3.2.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@types/node",
+        "version": "17.0.23",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40types/node@17.0.23",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "node-fetch",
+        "version": "2.6.7",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/node-fetch@2.6.7",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/identity",
+        "version": "2.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/identity@2.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "define-data-property",
+        "version": "1.1.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/define-data-property@1.1.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@js-joda/core",
+        "version": "5.6.5",
+        "license": "BSD-3-Clause",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40js-joda/core@5.6.5",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@tootallnate/once",
+        "version": "1.1.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40tootallnate/once@1.1.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "mime-db",
+        "version": "1.52.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/mime-db@1.52.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "function-bind",
+        "version": "1.1.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/function-bind@1.1.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-data-view",
+        "version": "1.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-data-view@1.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "data-view-buffer",
+        "version": "1.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/data-view-buffer@1.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "iconv-lite",
+        "version": "0.6.3",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/iconv-lite@0.6.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@types/node-fetch",
+        "version": "2.6.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40types/node-fetch@2.6.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-number-object",
+        "version": "1.1.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-number-object@1.1.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "whatwg-url",
+        "version": "5.0.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/whatwg-url@5.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@types/tunnel",
+        "version": "0.0.3",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40types/tunnel@0.0.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "side-channel-map",
+        "version": "1.0.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/side-channel-map@1.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "tedious",
+        "version": "14.7.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/tedious@14.7.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-finalizationregistry",
+        "version": "1.1.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-finalizationregistry@1.1.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "universalify",
+        "version": "0.2.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/universalify@0.2.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "has-symbols",
+        "version": "1.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/has-symbols@1.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/core-asynciterator-polyfill",
+        "version": "1.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/core-asynciterator-polyfill@1.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "asynckit",
+        "version": "0.4.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/asynckit@0.4.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/core-paging",
+        "version": "1.2.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/core-paging@1.2.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-regex",
+        "version": "1.2.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-regex@1.2.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "unbox-primitive",
+        "version": "1.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/unbox-primitive@1.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-symbol",
+        "version": "1.1.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-symbol@1.1.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "tslib",
+        "version": "2.8.1",
+        "license": "0BSD",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/tslib@2.8.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "object.assign",
+        "version": "4.1.7",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/object.assign@4.1.7",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "combined-stream",
+        "version": "1.0.8",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/combined-stream@1.0.8",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "jws",
+        "version": "4.0.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/jws@4.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "punycode",
+        "version": "2.1.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/punycode@2.1.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "stop-iteration-iterator",
+        "version": "1.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/stop-iteration-iterator@1.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "es-aggregate-error",
+        "version": "1.0.14",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/es-aggregate-error@1.0.14",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-date-object",
+        "version": "1.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-date-object@1.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "possible-typed-array-names",
+        "version": "1.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/possible-typed-array-names@1.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "yallist",
+        "version": "4.0.0",
+        "license": "ISC",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/yallist@4.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "events",
+        "version": "3.3.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/events@3.3.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-docker",
+        "version": "2.2.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-docker@2.2.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "for-each",
+        "version": "0.3.5",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/for-each@0.3.5",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@types/es-aggregate-error",
+        "version": "1.0.6",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40types/es-aggregate-error@1.0.6",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/msal-common",
+        "version": "13.3.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/msal-common@13.3.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "es-errors",
+        "version": "1.3.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/es-errors@1.3.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "internal-slot",
+        "version": "1.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/internal-slot@1.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "jws",
+        "version": "3.2.3",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/jws@3.2.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "safer-buffer",
+        "version": "2.1.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/safer-buffer@2.1.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "formdata-polyfill",
+        "version": "4.0.10",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/formdata-polyfill@4.0.10",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "xmlbuilder",
+        "version": "11.0.1",
+        "license": "LicenseRef-scancode-unicode AND MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/xmlbuilder@11.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/core-tracing",
+        "version": "1.3.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/core-tracing@1.3.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "agent-base",
+        "version": "7.1.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/agent-base@7.1.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "which-boxed-primitive",
+        "version": "1.1.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/which-boxed-primitive@1.1.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "hasown",
+        "version": "2.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/hasown@2.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "has-property-descriptors",
+        "version": "1.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/has-property-descriptors@1.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "psl",
+        "version": "1.8.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/psl@1.8.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "string_decoder",
+        "version": "1.3.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/string_decoder@1.3.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "safe-buffer",
+        "version": "5.2.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/safe-buffer@5.2.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "es-object-atoms",
+        "version": "1.1.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/es-object-atoms@1.1.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "which-collection",
+        "version": "1.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/which-collection@1.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@typespec/ts-http-runtime",
+        "version": "0.3.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40typespec/ts-http-runtime@0.3.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/msal-browser",
+        "version": "2.39.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/msal-browser@2.39.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "es-set-tostringtag",
+        "version": "2.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/es-set-tostringtag@2.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "util-deprecate",
+        "version": "1.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/util-deprecate@1.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "sprintf-js",
+        "version": "1.1.2",
+        "license": "BSD-3-Clause",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/sprintf-js@1.1.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-weakset",
+        "version": "2.0.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-weakset@2.0.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/core-http",
+        "version": "2.3.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/core-http@2.3.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "lru-cache",
+        "version": "6.0.0",
+        "license": "ISC",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/lru-cache@6.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "axios",
+        "version": "1.13.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/axios@1.13.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-shared-array-buffer",
+        "version": "1.0.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-shared-array-buffer@1.0.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "object-inspect",
+        "version": "1.13.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/object-inspect@1.13.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "webidl-conversions",
+        "version": "3.0.1",
+        "license": "BSD-2-Clause",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/webidl-conversions@3.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "uuid",
+        "version": "8.3.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/uuid@8.3.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "set-function-length",
+        "version": "1.2.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/set-function-length@1.2.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "set-function-name",
+        "version": "2.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/set-function-name@2.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "side-channel-list",
+        "version": "1.0.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/side-channel-list@1.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "gopd",
+        "version": "1.2.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/gopd@1.2.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "url-parse",
+        "version": "1.5.10",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/url-parse@1.5.10",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "tunnel",
+        "version": "0.0.6",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/tunnel@0.0.6",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "buffer",
+        "version": "6.0.3",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/buffer@6.0.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "inherits",
+        "version": "2.0.4",
+        "license": "ISC",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/inherits@2.0.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-string",
+        "version": "1.1.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-string@1.1.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "data-view-byte-offset",
+        "version": "1.0.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/data-view-byte-offset@1.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "regexp.prototype.flags",
+        "version": "1.5.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/regexp.prototype.flags@1.5.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "side-channel",
+        "version": "1.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/side-channel@1.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-generator-function",
+        "version": "1.1.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-generator-function@1.1.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "semver",
+        "version": "7.5.2",
+        "license": "ISC",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/semver@7.5.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "https-proxy-agent",
+        "version": "7.0.6",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/https-proxy-agent@7.0.6",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "call-bind",
+        "version": "1.0.8",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/call-bind@1.0.8",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "jsbi",
+        "version": "4.3.2",
+        "license": "Apache-2.0",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/jsbi@4.3.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "http-proxy-agent",
+        "version": "7.0.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/http-proxy-agent@7.0.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "stoppable",
+        "version": "1.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/stoppable@1.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-weakref",
+        "version": "1.1.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-weakref@1.1.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-array-buffer",
+        "version": "3.0.5",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-array-buffer@3.0.5",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "safe-array-concat",
+        "version": "1.1.3",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/safe-array-concat@1.1.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-set",
+        "version": "2.0.3",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-set@2.0.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "form-data",
+        "version": "3.0.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/form-data@3.0.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "base64-js",
+        "version": "1.5.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/base64-js@1.5.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "node-domexception",
+        "version": "1.0.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/node-domexception@1.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "get-proto",
+        "version": "1.0.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/get-proto@1.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "define-properties",
+        "version": "1.2.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/define-properties@1.2.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/core-auth",
+        "version": "1.3.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/core-auth@1.3.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "tr46",
+        "version": "0.0.3",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/tr46@0.0.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "ms",
+        "version": "2.1.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/ms@2.1.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/core-client",
+        "version": "1.5.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/core-client@1.5.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "open",
+        "version": "8.4.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/open@8.4.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "call-bound",
+        "version": "1.0.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/call-bound@1.0.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "has-proto",
+        "version": "1.2.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/has-proto@1.2.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "debug",
+        "version": "4.3.4",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/debug@4.3.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/keyvault-keys",
+        "version": "4.4.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/keyvault-keys@4.4.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "get-intrinsic",
+        "version": "1.3.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/get-intrinsic@1.3.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "lodash",
+        "version": "4.17.21",
+        "license": "CC0-1.0 AND MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/lodash@4.17.21",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/core-util",
+        "version": "1.13.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/core-util@1.13.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "es-abstract",
+        "version": "1.24.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/es-abstract@1.24.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "safe-push-apply",
+        "version": "1.0.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/safe-push-apply@1.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/msal-common",
+        "version": "7.6.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/msal-common@7.6.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "jwa",
+        "version": "2.0.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/jwa@2.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/core-rest-pipeline",
+        "version": "1.7.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/core-rest-pipeline@1.7.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "querystringify",
+        "version": "2.2.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/querystringify@2.2.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "own-keys",
+        "version": "1.0.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/own-keys@1.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-bigint",
+        "version": "1.1.0",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-bigint@1.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@azure/abort-controller",
+        "version": "2.1.2",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40azure/abort-controller@2.1.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "@opentelemetry/api",
+        "version": "1.1.0",
+        "license": "Apache-2.0",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/%40opentelemetry/api@1.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "is-async-function",
+        "version": "2.1.1",
+        "license": "MIT",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/is-async-function@2.1.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "date-fns",
+        "version": "^2.28.0",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/date-fns@%5E2.28.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "node-fetch",
+        "version": "^3.2.3",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/node-fetch@%5E3.2.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "aws-sdk",
+        "version": "^2.1066.0",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/aws-sdk@%5E2.1066.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "chalk",
+        "version": "^4.1.2",
+        "ecosystem": "npm",
+        "purl": "pkg:npm/chalk@%5E4.1.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "org.apache.maven.plugins:maven-shade-plugin",
+        "version": "3.5.1",
+        "license": "Apache-2.0 AND BSD-3-Clause AND EPL-1.0 AND LicenseRef-scancode-jdom AND MIT",
+        "ecosystem": "maven",
+        "purl": "pkg:maven/org.apache.maven.plugins/maven-shade-plugin@3.5.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "com.amazonaws:aws-lambda-java-core",
+        "version": "1.2.3",
+        "license": "Apache-2.0",
+        "ecosystem": "maven",
+        "purl": "pkg:maven/com.amazonaws/aws-lambda-java-core@1.2.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "software.amazon.awssdk:secretsmanager",
+        "version": "2.25.0",
+        "license": "Apache-2.0",
+        "ecosystem": "maven",
+        "purl": "pkg:maven/software.amazon.awssdk/secretsmanager@2.25.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "actions/checkout",
+        "version": "2.3.4",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/actions/checkout@2.3.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "hashicorp/setup-terraform",
+        "version": "1.3.2",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/hashicorp/setup-terraform@1.3.2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "kubernetes",
+        "version": "30.1.0",
+        "license": "Apache-2.0",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/kubernetes@30.1.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "apache-airflow-providers-cncf-kubernetes",
+        "version": "9.0.1",
+        "license": "Apache-2.0",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/apache-airflow-providers-cncf-kubernetes@9.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "apache-airflow-providers-slack",
+        "version": "8.9.1",
+        "license": "Apache-2.0",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/apache-airflow-providers-slack@8.9.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "dag-factory",
+        "version": "1.0.0",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/dag-factory@1.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "pyyaml",
+        "version": "6.0.3",
+        "license": "MIT",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/pyyaml@6.0.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "openai",
+        "version": "2.14.0",
+        "license": "Apache-2.0",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/openai@2.14.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "boto3-stubs",
+        "version": "1.37.23",
+        "license": "MIT",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/boto3-stubs@1.37.23",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "astral-sh/setup-uv",
+        "version": "08807647e7069bb48b6ef5acd8ec9567f424441b",
+        "ecosystem": "githubactions",
+        "purl": "pkg:githubactions/astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "pyarrow",
+        "version": "19.0.0",
+        "license": "Apache-2.0",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/pyarrow@19.0.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "s3fs",
+        "version": "2025.2.0",
+        "license": "BSD-2-Clause AND BSD-3-Clause",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/s3fs@2025.2.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "boto3",
+        "version": "~> 1.34",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/boto3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "mypy",
+        "version": ">= 1.19.1",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/mypy",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "pyright",
+        "version": ">= 1.1.408",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/pyright",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "boto3",
+        "version": ">= 1.42.30",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/boto3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "types-boto3",
+        "version": ">= 1.42.30",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/types-boto3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "mypy-boto3-wafv2",
+        "version": ">= 1.42.3",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/mypy-boto3-wafv2",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "pymssql",
+        "version": "2.3.4",
+        "license": "LGPL-2.1-only AND LGPL-3.0-or-later",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/pymssql@2.3.4",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "python-dotenv",
+        "version": "1.0.1",
+        "license": "BSD-2-Clause AND BSD-3-Clause",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/python-dotenv@1.0.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "etl-manager",
+        "version": "7.5.3",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/etl-manager@7.5.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "aws-xray-sdk",
+        "version": "2.14.0",
+        "license": "Apache-2.0",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/aws-xray-sdk@2.14.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "mojap-metadata",
+        "version": "1.15.3",
+        "license": "MIT",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/mojap-metadata@1.15.3",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "oracledb",
+        "version": "2.5.1",
+        "license": "Apache-2.0 AND LicenseRef-scancode-unknown-license-reference",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/oracledb@2.5.1",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "setuptools",
+        "version": "75.8.0",
+        "license": "MIT",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/setuptools@75.8.0",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "sqlalchemy",
+        "version": "2.0.38",
+        "license": "MIT",
+        "ecosystem": "pypi",
+        "purl": "pkg:pypi/sqlalchemy@2.0.38",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      },
+      {
+        "name": "com.github.ministryofjustice/modernisation-platform-environments",
+        "version": "main",
+        "license": "MIT",
+        "ecosystem": "github",
+        "purl": "pkg:github/ministryofjustice/modernisation-platform-environments@main",
+        "repos": [
+          "modernisation-platform-environments"
+        ]
+      }
+    ],
+    "vulnerabilities": {
+      "critical": 0,
+      "high": 64,
+      "medium": 21,
+      "low": 3,
+      "total": 88,
+      "alerts": [
+        {
+          "number": 115,
+          "severity": "high",
+          "summary": "Apache Arrow: Potential use-after-free when reading IPC file with pre-buffering",
+          "cve": "CVE-2026-25087",
+          "package": "pyarrow",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 15.0.0, < 23.0.1",
+          "fixedIn": "23.0.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/115",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 114,
+          "severity": "high",
+          "summary": "Apache Airflow CNCF Kubernetes provider: JWT Token Exposure in KubernetesExecutor Command-Line Arguments",
+          "cve": "CVE-2026-27173",
+          "package": "apache-airflow-providers-cncf-kubernetes",
+          "ecosystem": "pip",
+          "vulnerableRange": "< 10.17.0",
+          "fixedIn": "10.17.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/114",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 113,
+          "severity": "high",
+          "summary": "Axios: Regular Expression Denial of Service (ReDoS) via Cookie Name Injection",
+          "cve": "CVE-2026-44496",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.16.0",
+          "fixedIn": "1.16.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/113",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 112,
+          "severity": "high",
+          "summary": "Allocation of Resources Without Limits or Throttling in Axios",
+          "cve": "CVE-2026-44488",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.7.0, < 1.16.0",
+          "fixedIn": "1.16.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/112",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 111,
+          "severity": "high",
+          "summary": "Axios: Proxy-Authorization Credential Leak to Origin Server Across HTTP-to-HTTPS Redirect in Axios Node.js HTTP Adapter",
+          "cve": "CVE-2026-44487",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.16.0",
+          "fixedIn": "1.16.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/111",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 110,
+          "severity": "high",
+          "summary": "Axios: Proxy-Authorization header leaks to redirect target when proxy is re-evaluated to direct connection",
+          "cve": "CVE-2026-44486",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.16.0",
+          "fixedIn": "1.16.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/110",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 109,
+          "severity": "high",
+          "summary": "axios Vulnerable to Credential Theft and Response Hijacking via Prototype Pollution Gadget in Config Merge",
+          "cve": "CVE-2026-44495",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.2",
+          "fixedIn": "1.15.2",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/109",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 108,
+          "severity": "high",
+          "summary": "axios Vulnerable to Full Man-in-the-Middle via Prototype Pollution Gadget in `config.proxy`",
+          "cve": "CVE-2026-44494",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.16.0",
+          "fixedIn": "1.16.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/108",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 107,
+          "severity": "high",
+          "summary": "axios's shouldBypassProxy does not recognize IPv4-mapped IPv6 addresses, allowing NO_PROXY bypass (incomplete fix for CVE-2025-62718)",
+          "cve": "CVE-2026-44492",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.16.0",
+          "fixedIn": "1.16.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/107",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 105,
+          "severity": "high",
+          "summary": "urllib3: Sensitive headers forwarded across origins in proxied low-level redirects",
+          "cve": "CVE-2026-44431",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.23, < 2.7.0",
+          "fixedIn": "2.7.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/105",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 104,
+          "severity": "high",
+          "summary": "Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)",
+          "cve": "CVE-2026-21441",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.22, < 2.6.3",
+          "fixedIn": "2.6.3",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/104",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 103,
+          "severity": "high",
+          "summary": "urllib3 streaming API improperly handles highly compressed data",
+          "cve": "CVE-2025-66471",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.0, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/103",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 102,
+          "severity": "high",
+          "summary": "urllib3 allows an unbounded number of links in the decompression chain",
+          "cve": "CVE-2025-66418",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.24, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/102",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 99,
+          "severity": "high",
+          "summary": "urllib3: Sensitive headers forwarded across origins in proxied low-level redirects",
+          "cve": "CVE-2026-44431",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.23, < 2.7.0",
+          "fixedIn": "2.7.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/99",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 98,
+          "severity": "high",
+          "summary": "Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)",
+          "cve": "CVE-2026-21441",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.22, < 2.6.3",
+          "fixedIn": "2.6.3",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/98",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 97,
+          "severity": "high",
+          "summary": "urllib3 streaming API improperly handles highly compressed data",
+          "cve": "CVE-2025-66471",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.0, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/97",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 96,
+          "severity": "high",
+          "summary": "urllib3 allows an unbounded number of links in the decompression chain",
+          "cve": "CVE-2025-66418",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.24, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/96",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 95,
+          "severity": "high",
+          "summary": "urllib3: Sensitive headers forwarded across origins in proxied low-level redirects",
+          "cve": "CVE-2026-44431",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.23, < 2.7.0",
+          "fixedIn": "2.7.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/95",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 94,
+          "severity": "high",
+          "summary": "Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)",
+          "cve": "CVE-2026-21441",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.22, < 2.6.3",
+          "fixedIn": "2.6.3",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/94",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 93,
+          "severity": "high",
+          "summary": "urllib3 streaming API improperly handles highly compressed data",
+          "cve": "CVE-2025-66471",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.0, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/93",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 92,
+          "severity": "high",
+          "summary": "urllib3 allows an unbounded number of links in the decompression chain",
+          "cve": "CVE-2025-66418",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.24, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/92",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 91,
+          "severity": "high",
+          "summary": "urllib3: Sensitive headers forwarded across origins in proxied low-level redirects",
+          "cve": "CVE-2026-44431",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.23, < 2.7.0",
+          "fixedIn": "2.7.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/91",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 90,
+          "severity": "high",
+          "summary": "urllib3: Sensitive headers forwarded across origins in proxied low-level redirects",
+          "cve": "CVE-2026-44431",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.23, < 2.7.0",
+          "fixedIn": "2.7.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/90",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 89,
+          "severity": "high",
+          "summary": "urllib3: Sensitive headers forwarded across origins in proxied low-level redirects",
+          "cve": "CVE-2026-44431",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.23, < 2.7.0",
+          "fixedIn": "2.7.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/89",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 88,
+          "severity": "high",
+          "summary": "urllib3: Sensitive headers forwarded across origins in proxied low-level redirects",
+          "cve": "CVE-2026-44431",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.23, < 2.7.0",
+          "fixedIn": "2.7.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/88",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 87,
+          "severity": "high",
+          "summary": "urllib3: Sensitive headers forwarded across origins in proxied low-level redirects",
+          "cve": "CVE-2026-44431",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.23, < 2.7.0",
+          "fixedIn": "2.7.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/87",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 86,
+          "severity": "high",
+          "summary": "urllib3: Sensitive headers forwarded across origins in proxied low-level redirects",
+          "cve": "CVE-2026-44431",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.23, < 2.7.0",
+          "fixedIn": "2.7.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/86",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 85,
+          "severity": "high",
+          "summary": "urllib3: Sensitive headers forwarded across origins in proxied low-level redirects",
+          "cve": "CVE-2026-44431",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.23, < 2.7.0",
+          "fixedIn": "2.7.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/85",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 84,
+          "severity": "high",
+          "summary": "urllib3: Sensitive headers forwarded across origins in proxied low-level redirects",
+          "cve": "CVE-2026-44431",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.23, < 2.7.0",
+          "fixedIn": "2.7.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/84",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 83,
+          "severity": "high",
+          "summary": "urllib3: Sensitive headers forwarded across origins in proxied low-level redirects",
+          "cve": "CVE-2026-44431",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.23, < 2.7.0",
+          "fixedIn": "2.7.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/83",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 77,
+          "severity": "high",
+          "summary": "Axios: Prototype Pollution Gadgets - Response Tampering, Data Exfiltration, and Request Hijacking",
+          "cve": "CVE-2026-42033",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.1",
+          "fixedIn": "1.15.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/77",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 76,
+          "severity": "high",
+          "summary": "Axios: Header Injection via Prototype Pollution",
+          "cve": "CVE-2026-42035",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.1",
+          "fixedIn": "1.15.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/76",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 73,
+          "severity": "high",
+          "summary": "Axios: Incomplete Fix for CVE-2025-62718 — NO_PROXY Protection Bypassed via RFC 1122 Loopback Subnet (127.0.0.0/8) in Axios 1.15.0",
+          "cve": "CVE-2026-42043",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.1",
+          "fixedIn": "1.15.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/73",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 71,
+          "severity": "high",
+          "summary": "Axios has prototype pollution read-side gadgets in HTTP adapter that allow credential injection and request hijacking",
+          "cve": "CVE-2026-42264",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.2",
+          "fixedIn": "1.15.2",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/71",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 69,
+          "severity": "high",
+          "summary": "Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)",
+          "cve": "CVE-2026-21441",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.22, < 2.6.3",
+          "fixedIn": "2.6.3",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/69",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 68,
+          "severity": "high",
+          "summary": "urllib3 streaming API improperly handles highly compressed data",
+          "cve": "CVE-2025-66471",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.0, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/68",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 67,
+          "severity": "high",
+          "summary": "urllib3 allows an unbounded number of links in the decompression chain",
+          "cve": "CVE-2025-66418",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.24, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/67",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 59,
+          "severity": "high",
+          "summary": "lodash vulnerable to Code Injection via `_.template` imports key names",
+          "cve": "CVE-2026-4800",
+          "package": "lodash",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 4.0.0, <= 4.17.23",
+          "fixedIn": "4.18.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/59",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 56,
+          "severity": "high",
+          "summary": "Axios is Vulnerable to Denial of Service via __proto__ Key in mergeConfig",
+          "cve": "CVE-2026-25639",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, <= 1.13.4",
+          "fixedIn": "1.13.5",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/56",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 52,
+          "severity": "high",
+          "summary": "Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)",
+          "cve": "CVE-2026-21441",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.22, < 2.6.3",
+          "fixedIn": "2.6.3",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/52",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 51,
+          "severity": "high",
+          "summary": "Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)",
+          "cve": "CVE-2026-21441",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.22, < 2.6.3",
+          "fixedIn": "2.6.3",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/51",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 50,
+          "severity": "high",
+          "summary": "Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)",
+          "cve": "CVE-2026-21441",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.22, < 2.6.3",
+          "fixedIn": "2.6.3",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/50",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 49,
+          "severity": "high",
+          "summary": "Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)",
+          "cve": "CVE-2026-21441",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.22, < 2.6.3",
+          "fixedIn": "2.6.3",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/49",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 48,
+          "severity": "high",
+          "summary": "Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)",
+          "cve": "CVE-2026-21441",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.22, < 2.6.3",
+          "fixedIn": "2.6.3",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/48",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 47,
+          "severity": "high",
+          "summary": "Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)",
+          "cve": "CVE-2026-21441",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.22, < 2.6.3",
+          "fixedIn": "2.6.3",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/47",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 46,
+          "severity": "high",
+          "summary": "Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)",
+          "cve": "CVE-2026-21441",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.22, < 2.6.3",
+          "fixedIn": "2.6.3",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/46",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 45,
+          "severity": "high",
+          "summary": "Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)",
+          "cve": "CVE-2026-21441",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.22, < 2.6.3",
+          "fixedIn": "2.6.3",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/45",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 44,
+          "severity": "high",
+          "summary": "urllib3 streaming API improperly handles highly compressed data",
+          "cve": "CVE-2025-66471",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.0, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/44",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 43,
+          "severity": "high",
+          "summary": "urllib3 allows an unbounded number of links in the decompression chain",
+          "cve": "CVE-2025-66418",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.24, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/43",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 42,
+          "severity": "high",
+          "summary": "urllib3 streaming API improperly handles highly compressed data",
+          "cve": "CVE-2025-66471",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.0, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/42",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 41,
+          "severity": "high",
+          "summary": "urllib3 allows an unbounded number of links in the decompression chain",
+          "cve": "CVE-2025-66418",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.24, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/41",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 40,
+          "severity": "high",
+          "summary": "urllib3 streaming API improperly handles highly compressed data",
+          "cve": "CVE-2025-66471",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.0, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/40",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 39,
+          "severity": "high",
+          "summary": "urllib3 allows an unbounded number of links in the decompression chain",
+          "cve": "CVE-2025-66418",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.24, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/39",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 38,
+          "severity": "high",
+          "summary": "urllib3 streaming API improperly handles highly compressed data",
+          "cve": "CVE-2025-66471",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.0, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/38",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 37,
+          "severity": "high",
+          "summary": "urllib3 allows an unbounded number of links in the decompression chain",
+          "cve": "CVE-2025-66418",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.24, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/37",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 36,
+          "severity": "high",
+          "summary": "urllib3 streaming API improperly handles highly compressed data",
+          "cve": "CVE-2025-66471",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.0, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/36",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 35,
+          "severity": "high",
+          "summary": "urllib3 allows an unbounded number of links in the decompression chain",
+          "cve": "CVE-2025-66418",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.24, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/35",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 34,
+          "severity": "high",
+          "summary": "urllib3 streaming API improperly handles highly compressed data",
+          "cve": "CVE-2025-66471",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.0, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/34",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 33,
+          "severity": "high",
+          "summary": "urllib3 allows an unbounded number of links in the decompression chain",
+          "cve": "CVE-2025-66418",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.24, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/33",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 32,
+          "severity": "high",
+          "summary": "urllib3 streaming API improperly handles highly compressed data",
+          "cve": "CVE-2025-66471",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.0, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/32",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 31,
+          "severity": "high",
+          "summary": "urllib3 streaming API improperly handles highly compressed data",
+          "cve": "CVE-2025-66471",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.0, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/31",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 30,
+          "severity": "high",
+          "summary": "urllib3 allows an unbounded number of links in the decompression chain",
+          "cve": "CVE-2025-66418",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.24, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/30",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 29,
+          "severity": "high",
+          "summary": "urllib3 allows an unbounded number of links in the decompression chain",
+          "cve": "CVE-2025-66418",
+          "package": "urllib3",
+          "ecosystem": "pip",
+          "vulnerableRange": ">= 1.24, < 2.6.0",
+          "fixedIn": "2.6.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/29",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 21,
+          "severity": "high",
+          "summary": "setuptools has a path traversal vulnerability in PackageIndex.download that leads to Arbitrary File Write",
+          "cve": "CVE-2025-47273",
+          "package": "setuptools",
+          "ecosystem": "pip",
+          "vulnerableRange": "< 78.1.1",
+          "fixedIn": "78.1.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/21",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 113,
+          "severity": "medium",
+          "summary": "github.com/ulikunitz/xz leaks memory when decoding a corrupted multiple LZMA archives",
+          "cve": "CVE-2025-58058",
+          "package": "github.com/ulikunitz/xz",
+          "ecosystem": "go",
+          "vulnerableRange": "<= 0.5.13",
+          "fixedIn": "0.5.15",
+          "url": "https://github.com/ministryofjustice/modernisation-platform/security/dependabot/113",
+          "_repo": "modernisation-platform"
+        },
+        {
+          "number": 112,
+          "severity": "medium",
+          "summary": "github.com/ulikunitz/xz leaks memory when decoding a corrupted multiple LZMA archives",
+          "cve": "CVE-2025-58058",
+          "package": "github.com/ulikunitz/xz",
+          "ecosystem": "go",
+          "vulnerableRange": "<= 0.5.13",
+          "fixedIn": "0.5.15",
+          "url": "https://github.com/ministryofjustice/modernisation-platform/security/dependabot/112",
+          "_repo": "modernisation-platform"
+        },
+        {
+          "number": 111,
+          "severity": "medium",
+          "summary": "github.com/ulikunitz/xz leaks memory when decoding a corrupted multiple LZMA archives",
+          "cve": "CVE-2025-58058",
+          "package": "github.com/ulikunitz/xz",
+          "ecosystem": "go",
+          "vulnerableRange": "<= 0.5.13",
+          "fixedIn": "0.5.15",
+          "url": "https://github.com/ministryofjustice/modernisation-platform/security/dependabot/111",
+          "_repo": "modernisation-platform"
+        },
+        {
+          "number": 110,
+          "severity": "medium",
+          "summary": "github.com/ulikunitz/xz leaks memory when decoding a corrupted multiple LZMA archives",
+          "cve": "CVE-2025-58058",
+          "package": "github.com/ulikunitz/xz",
+          "ecosystem": "go",
+          "vulnerableRange": "<= 0.5.13",
+          "fixedIn": "0.5.15",
+          "url": "https://github.com/ministryofjustice/modernisation-platform/security/dependabot/110",
+          "_repo": "modernisation-platform"
+        },
+        {
+          "number": 106,
+          "severity": "medium",
+          "summary": "axios has DoS & Header Injection via Prototype Pollution Read-Side Gadgets in axios merge functions",
+          "cve": "CVE-2026-44490",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.16.0",
+          "fixedIn": "1.16.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/106",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 101,
+          "severity": "medium",
+          "summary": "uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided",
+          "cve": "CVE-2026-41907",
+          "package": "uuid",
+          "ecosystem": "npm",
+          "vulnerableRange": "< 11.1.1",
+          "fixedIn": "11.1.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/101",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 82,
+          "severity": "medium",
+          "summary": "Axios: CRLF Injection in multipart/form-data body via unsanitized blob.type in formDataToStream",
+          "cve": "CVE-2026-42037",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.1",
+          "fixedIn": "1.15.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/82",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 81,
+          "severity": "medium",
+          "summary": "Axios: no_proxy bypass via IP alias allows SSRF",
+          "cve": "CVE-2026-42038",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.1",
+          "fixedIn": "1.15.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/81",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 80,
+          "severity": "medium",
+          "summary": "Axios: unbounded recursion in toFormData causes DoS via deeply nested request data",
+          "cve": "CVE-2026-42039",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.1",
+          "fixedIn": "1.15.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/80",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 79,
+          "severity": "medium",
+          "summary": "Axios' HTTP adapter-streamed uploads bypass maxBodyLength when maxRedirects: 0",
+          "cve": "CVE-2026-42034",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.1",
+          "fixedIn": "1.15.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/79",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 78,
+          "severity": "medium",
+          "summary": "Axios: HTTP adapter streamed responses bypass maxContentLength",
+          "cve": "CVE-2026-42036",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.1",
+          "fixedIn": "1.15.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/78",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 75,
+          "severity": "medium",
+          "summary": "Axios: XSRF Token Cross-Origin Leakage via Prototype Pollution Gadget in `withXSRFToken` Boolean Coercion",
+          "cve": "CVE-2026-42042",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.1",
+          "fixedIn": "1.15.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/75",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 74,
+          "severity": "medium",
+          "summary": "Axios: Authentication Bypass via Prototype Pollution Gadget in `validateStatus` Merge Strategy",
+          "cve": "CVE-2026-42041",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.1",
+          "fixedIn": "1.15.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/74",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 72,
+          "severity": "medium",
+          "summary": "Axios: Invisible JSON Response Tampering via Prototype Pollution Gadget in `parseReviver`",
+          "cve": "CVE-2026-42044",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.2",
+          "fixedIn": "1.15.2",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/72",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 65,
+          "severity": "medium",
+          "summary": "python-dotenv: Symlink following in set_key allows arbitrary file overwrite via cross-device rename fallback",
+          "cve": "CVE-2026-28684",
+          "package": "python-dotenv",
+          "ecosystem": "pip",
+          "vulnerableRange": "< 1.2.2",
+          "fixedIn": "1.2.2",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/65",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 64,
+          "severity": "medium",
+          "summary": "Axios has a NO_PROXY Hostname Normalization Bypass that Leads to SSRF",
+          "cve": "CVE-2025-62718",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.0",
+          "fixedIn": "1.15.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/64",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 63,
+          "severity": "medium",
+          "summary": "Axios has Unrestricted Cloud Metadata Exfiltration via Header Injection Chain",
+          "cve": "CVE-2026-40175",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.0",
+          "fixedIn": "1.15.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/63",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 62,
+          "severity": "medium",
+          "summary": "follow-redirects leaks Custom Authentication Headers to Cross-Domain Redirect Targets",
+          "package": "follow-redirects",
+          "ecosystem": "npm",
+          "vulnerableRange": "<= 1.15.11",
+          "fixedIn": "1.16.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/62",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 58,
+          "severity": "medium",
+          "summary": "lodash vulnerable to Prototype Pollution via array path bypass in `_.unset` and `_.omit`",
+          "cve": "CVE-2026-2950",
+          "package": "lodash",
+          "ecosystem": "npm",
+          "vulnerableRange": "<= 4.17.23",
+          "fixedIn": "4.18.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/58",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 54,
+          "severity": "medium",
+          "summary": "Lodash has Prototype Pollution Vulnerability in `_.unset` and `_.omit` functions",
+          "cve": "CVE-2025-13465",
+          "package": "lodash",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 4.0.0, <= 4.17.22",
+          "fixedIn": "4.17.23",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/54",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 17,
+          "severity": "medium",
+          "summary": "Azure Identity Libraries and Microsoft Authentication Library Elevation of Privilege Vulnerability",
+          "cve": "CVE-2024-35255",
+          "package": "@azure/identity",
+          "ecosystem": "npm",
+          "vulnerableRange": "< 4.2.1",
+          "fixedIn": "4.2.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/17",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 100,
+          "severity": "low",
+          "summary": "@tootallnate/once vulnerable to Incorrect Control Flow Scoping",
+          "cve": "CVE-2026-3449",
+          "package": "@tootallnate/once",
+          "ecosystem": "npm",
+          "vulnerableRange": "< 2.0.1",
+          "fixedIn": "2.0.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/100",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 70,
+          "severity": "low",
+          "summary": "Axios: Null Byte Injection via Reverse-Encoding in AxiosURLSearchParams",
+          "cve": "CVE-2026-42040",
+          "package": "axios",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 1.0.0, < 1.15.1",
+          "fixedIn": "1.15.1",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/70",
+          "_repo": "modernisation-platform-environments"
+        },
+        {
+          "number": 53,
+          "severity": "low",
+          "summary": "JavaScript SDK v2 users should add validation to the region parameter value in or migrate to v3",
+          "package": "aws-sdk",
+          "ecosystem": "npm",
+          "vulnerableRange": ">= 2.0.0, <= 3.0.0",
+          "url": "https://github.com/ministryofjustice/modernisation-platform-environments/security/dependabot/53",
+          "_repo": "modernisation-platform-environments"
+        }
+      ]
+    },
+    "repositories": [
+      {
+        "owner": "ministryofjustice",
+        "repo": "cloud-platform-github-workflows",
+        "status": "completed",
+        "generatedAt": "2026-06-10T19:29:10Z",
+        "packageCount": 10,
+        "reportUrl": "https://api.github.com/repos/ministryofjustice/cloud-platform-github-workflows/dependency-graph/sbom",
+        "ecosystems": {
+          "githubactions": 9,
+          "github": 1
+        },
+        "licenses": {
+          "MIT": 1
+        }
+      },
+      {
+        "owner": "ministryofjustice",
+        "repo": "container-platform-documentation",
+        "status": "completed",
+        "generatedAt": "2026-06-10T19:29:11Z",
+        "packageCount": 1,
+        "reportUrl": "https://api.github.com/repos/ministryofjustice/container-platform-documentation/dependency-graph/sbom",
+        "ecosystems": {
+          "github": 1
+        }
+      },
+      {
+        "owner": "ministryofjustice",
+        "repo": "container-platform-github-access",
+        "status": "completed",
+        "generatedAt": "2026-06-10T19:29:12Z",
+        "packageCount": 8,
+        "reportUrl": "https://api.github.com/repos/ministryofjustice/container-platform-github-access/dependency-graph/sbom",
+        "ecosystems": {
+          "githubactions": 7,
+          "github": 1
+        },
+        "licenses": {
+          "MIT": 1
+        }
+      },
+      {
+        "owner": "ministryofjustice",
+        "repo": "container-platform-terraform-cilium",
+        "status": "completed",
+        "generatedAt": "2026-06-10T19:29:13Z",
+        "packageCount": 6,
+        "reportUrl": "https://api.github.com/repos/ministryofjustice/container-platform-terraform-cilium/dependency-graph/sbom",
+        "ecosystems": {
+          "githubactions": 5,
+          "github": 1
+        },
+        "licenses": {
+          "MIT": 1
+        }
+      },
+      {
+        "owner": "ministryofjustice",
+        "repo": "container-platform-terraform-external-dns",
+        "status": "completed",
+        "generatedAt": "2026-06-10T19:29:14Z",
+        "packageCount": 3,
+        "reportUrl": "https://api.github.com/repos/ministryofjustice/container-platform-terraform-external-dns/dependency-graph/sbom",
+        "ecosystems": {
+          "githubactions": 2,
+          "github": 1
+        },
+        "licenses": {
+          "MIT": 1
+        }
+      },
+      {
+        "owner": "ministryofjustice",
+        "repo": "container-platform-terraform-gatekeeper",
+        "status": "completed",
+        "generatedAt": "2026-06-10T19:29:15Z",
+        "packageCount": 8,
+        "reportUrl": "https://api.github.com/repos/ministryofjustice/container-platform-terraform-gatekeeper/dependency-graph/sbom",
+        "ecosystems": {
+          "golang": 2,
+          "githubactions": 5,
+          "github": 1
+        },
+        "licenses": {
+          "MIT": 2,
+          "Apache-2.0": 1
+        }
+      },
+      {
+        "owner": "ministryofjustice",
+        "repo": "container-platform-terraform-gateway-api",
+        "status": "completed",
+        "generatedAt": "2026-06-10T19:29:15Z",
+        "packageCount": 3,
+        "reportUrl": "https://api.github.com/repos/ministryofjustice/container-platform-terraform-gateway-api/dependency-graph/sbom",
+        "ecosystems": {
+          "githubactions": 2,
+          "github": 1
+        },
+        "licenses": {
+          "MIT": 1
+        }
+      },
+      {
+        "owner": "ministryofjustice",
+        "repo": "container-platform-terraform-karpenter",
+        "status": "completed",
+        "generatedAt": "2026-06-10T19:29:16Z",
+        "packageCount": 8,
+        "reportUrl": "https://api.github.com/repos/ministryofjustice/container-platform-terraform-karpenter/dependency-graph/sbom",
+        "ecosystems": {
+          "githubactions": 7,
+          "github": 1
+        },
+        "licenses": {
+          "MIT": 1
+        }
+      },
+      {
+        "owner": "ministryofjustice",
+        "repo": "container-platform-terraform-starter-pack",
+        "status": "completed",
+        "generatedAt": "2026-06-10T19:29:17Z",
+        "packageCount": 5,
+        "reportUrl": "https://api.github.com/repos/ministryofjustice/container-platform-terraform-starter-pack/dependency-graph/sbom",
+        "ecosystems": {
+          "githubactions": 4,
+          "github": 1
+        },
+        "licenses": {
+          "MIT": 1
+        }
+      },
+      {
+        "owner": "ministryofjustice",
+        "repo": "container-platform-terraform-template",
+        "status": "completed",
+        "generatedAt": "2026-06-10T19:29:18Z",
+        "packageCount": 3,
+        "reportUrl": "https://api.github.com/repos/ministryofjustice/container-platform-terraform-template/dependency-graph/sbom",
+        "ecosystems": {
+          "githubactions": 2,
+          "github": 1
+        },
+        "licenses": {
+          "MIT": 1
+        }
+      },
+      {
+        "owner": "ministryofjustice",
+        "repo": "container-platform-user-guide",
+        "status": "completed",
+        "generatedAt": "2026-06-10T19:29:19Z",
+        "packageCount": 7,
+        "reportUrl": "https://api.github.com/repos/ministryofjustice/container-platform-user-guide/dependency-graph/sbom",
+        "ecosystems": {
+          "githubactions": 6,
+          "github": 1
+        },
+        "licenses": {
+          "MIT": 1
+        }
+      },
+      {
+        "owner": "ministryofjustice",
+        "repo": "modernisation-platform",
+        "status": "completed",
+        "generatedAt": "2026-06-10T19:29:20Z",
+        "packageCount": 174,
+        "reportUrl": "https://api.github.com/repos/ministryofjustice/modernisation-platform/dependency-graph/sbom",
+        "ecosystems": {
+          "golang": 144,
+          "pypi": 1,
+          "githubactions": 28,
+          "github": 1
+        },
+        "licenses": {
+          "MPL-2.0": 33,
+          "MIT": 39,
+          "BSD-3-Clause AND LicenseRef-scancode-google-patent-license-golang": 24,
+          "Apache-2.0": 14,
+          "ISC": 4,
+          "BSD-3-Clause": 8,
+          "Apache-2.0 AND BSD-3-Clause AND MIT": 4
+        },
+        "vulnerabilities": {
+          "critical": 0,
+          "high": 0,
+          "medium": 4,
+          "low": 0,
+          "total": 4
+        }
+      },
+      {
+        "owner": "ministryofjustice",
+        "repo": "modernisation-platform-ami-builds",
+        "status": "completed",
+        "generatedAt": "2026-06-10T19:29:21Z",
+        "packageCount": 20,
+        "reportUrl": "https://api.github.com/repos/ministryofjustice/modernisation-platform-ami-builds/dependency-graph/sbom",
+        "ecosystems": {
+          "githubactions": 16,
+          "pypi": 3,
+          "github": 1
+        },
+        "licenses": {
+          "MIT": 1
+        }
+      },
+      {
+        "owner": "ministryofjustice",
+        "repo": "modernisation-platform-configuration-management",
+        "status": "completed",
+        "generatedAt": "2026-06-10T19:29:22Z",
+        "packageCount": 18,
+        "reportUrl": "https://api.github.com/repos/ministryofjustice/modernisation-platform-configuration-management/dependency-graph/sbom",
+        "ecosystems": {
+          "pypi": 6,
+          "githubactions": 11,
+          "github": 1
+        },
+        "licenses": {
+          "MIT": 1
+        }
+      },
+      {
+        "owner": "ministryofjustice",
+        "repo": "modernisation-platform-environments",
+        "status": "completed",
+        "generatedAt": "2026-06-10T19:29:23Z",
+        "packageCount": 286,
+        "reportUrl": "https://api.github.com/repos/ministryofjustice/modernisation-platform-environments/dependency-graph/sbom",
+        "ecosystems": {
+          "pypi": 62,
+          "npm": 198,
+          "maven": 3,
+          "githubactions": 22,
+          "github": 1
+        },
+        "licenses": {
+          "MIT": 199,
+          "Apache-2.0": 19,
+          "LGPL-2.0-or-later AND LGPL-2.1-only AND LGPL-3.0-or-later AND MIT AND curl": 4,
+          "Apache-2.0 AND MIT AND MPL-2.0": 4,
+          "Apache-2.0 AND BSD-3-Clause AND LicenseRef-scancode-unknown-license-reference": 4,
+          "BSD-3-Clause": 5,
+          "BlueOak-1.0.0": 1,
+          "0BSD": 1,
+          "ISC": 4,
+          "LicenseRef-scancode-unicode AND MIT": 1,
+          "BSD-2-Clause": 1,
+          "CC0-1.0 AND MIT": 1,
+          "Apache-2.0 AND BSD-3-Clause AND EPL-1.0 AND LicenseRef-scancode-jdom AND MIT": 1,
+          "BSD-2-Clause AND BSD-3-Clause": 2,
+          "LGPL-2.1-only AND LGPL-3.0-or-later": 1,
+          "Apache-2.0 AND LicenseRef-scancode-unknown-license-reference": 1
+        },
+        "vulnerabilities": {
+          "critical": 0,
+          "high": 64,
+          "medium": 17,
+          "low": 3,
+          "total": 84
+        }
+      }
+    ],
+    "catalog": {
+      "slug": "cloud-platform",
+      "name": "Cloud Platform",
+      "category": "platforms",
+      "description": "Kubernetes-based hosting platform on AWS for cloud-native applications. Self-service, with built-in monitoring, logging, and auto-scaling.",
+      "owner": "Cloud Platform team",
+      "teamName": "cloud-platform-engineers",
+      "teamOrg": "ministryofjustice",
+      "slackChannel": "#cloud-platform",
+      "docsUrl": "/docs/cloud-platform",
+      "status": "live",
+      "tags": [
+        "kubernetes",
+        "hosting",
+        "aws",
+        "containers"
+      ]
+    }
+  }
+}

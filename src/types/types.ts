@@ -44,6 +44,160 @@ export interface ProductCardProps {
   description: string;
   status: string;
   tags: string[];
+  sbom?: ProductSbomSummary;
+}
+
+export interface ProductSbomSummary {
+  status: string;
+  generatedAt?: string;
+  packageCount?: number;
+  reportUrl?: string;
+  error?: string;
+  repositoryCount?: number;
+  completedRepositories?: number;
+  failedRepositories?: number;
+  pendingRepositories?: number;
+  ecosystems?: Record<string, number>;
+  licenses?: Record<string, number>;
+  packages?: SbomPackageLite[];
+  vulnerabilities?: VulnerabilitySummary;
+  repositories?: ProductRepositoryInsight[];
+  sbom?: SbomDocument;
+}
+
+export interface SbomPackageLite {
+  name: string;
+  version?: string;
+  license?: string;
+  ecosystem?: string;
+  purpose?: string;
+  purl?: string;
+  supplier?: string;
+  repos: string[];
+}
+
+export interface VulnerabilityAlert {
+  number?: number;
+  severity: string;
+  summary?: string;
+  cve?: string;
+  cvss?: number;
+  package?: string;
+  ecosystem?: string;
+  vulnerableRange?: string;
+  fixedIn?: string;
+  url?: string;
+  _repo?: string;
+}
+
+export interface VulnerabilitySummary {
+  critical: number;
+  high: number;
+  medium: number;
+  low: number;
+  total: number;
+  alerts?: VulnerabilityAlert[];
+}
+
+export interface ProductRepositoryInsight {
+  owner: string;
+  repo: string;
+  status: string;
+  generatedAt?: string;
+  packageCount?: number;
+  reportUrl?: string;
+  ecosystems?: Record<string, number>;
+  licenses?: Record<string, number>;
+  vulnerabilities?: Omit<VulnerabilitySummary, 'alerts'>;
+  error?: string;
+}
+
+export interface CatalogReportRepository {
+  name?: string;
+  url?: string;
+  homepage?: string;
+  bugsUrl?: string;
+  version?: string;
+}
+
+export interface CatalogReportCatalogMetadata {
+  slug: string;
+  name: string;
+  category: string;
+  description: string;
+  owner: string;
+  teamName?: string;
+  teamOrg?: string;
+  slackChannel?: string;
+  docsUrl?: string;
+  externalUrl?: string;
+  status: StatusTagValue;
+  tags: string[];
+}
+
+export interface CatalogReportEntry {
+  status?: string;
+  generatedAt?: string;
+  packageCount?: number;
+  reportUrl?: string;
+  error?: string;
+  sbom?: SbomDocument;
+  catalog: CatalogReportCatalogMetadata;
+}
+
+export interface CatalogReportActionUsage {
+  count: number;
+  files: string[];
+}
+
+export interface CatalogReport {
+  generatedAt: string;
+  repository?: CatalogReportRepository;
+  actions?: CatalogReportActionUsage;
+  reports: Record<string, CatalogReportEntry>;
+}
+
+export interface CatalogReportFile {
+  generatedAt: string;
+  repository?: CatalogReportRepository;
+  actions?: CatalogReportActionUsage;
+  report: CatalogReportEntry;
+}
+
+export interface SbomCreator {
+  creator?: string;
+}
+
+export interface SbomExternalRef {
+  referenceCategory?: string;
+  referenceType?: string;
+  referenceLocator?: string;
+}
+
+export interface SbomPackage {
+  SPDXID?: string;
+  name?: string;
+  versionInfo?: string;
+  licenseDeclared?: string;
+  licenseConcluded?: string;
+  externalRefs?: SbomExternalRef[];
+}
+
+export interface SbomRelationship {
+  relationshipType?: string;
+  spdxElementId?: string;
+  relatedSpdxElement?: string;
+}
+
+export interface SbomDocument {
+  name?: string;
+  spdxVersion?: string;
+  creationInfo?: {
+    created?: string;
+    creators?: string[];
+  };
+  packages?: SbomPackage[];
+  relationships?: SbomRelationship[];
 }
 
 export interface SearchWidgetResult {
@@ -118,6 +272,8 @@ export interface Product {
   category: string;
   description: string;
   owner: string;
+  teamName?: string;
+  teamOrg?: string;
   slackChannel?: string;
   docsUrl?: string;
   externalUrl?: string;
