@@ -8,7 +8,9 @@ export function FeedbackWidget() {
   const handleFeedback = (value: 'yes' | 'no') => {
     setFeedback(value);
     // In production, send to analytics backend
-    console.log(`Page feedback: ${value}`, { page: typeof window !== 'undefined' ? window.location.pathname : '' });
+    console.log(`Page feedback: ${value}`, {
+      page: typeof window !== 'undefined' ? window.location.pathname : '',
+    });
   };
 
   return (
@@ -18,12 +20,14 @@ export function FeedbackWidget() {
           <p className="govuk-body govuk-!-font-weight-bold">Was this page useful?</p>
           <div className="app-feedback__buttons">
             <button
+              type="button"
               className="app-feedback__button"
               onClick={() => handleFeedback('yes')}
             >
               Yes
             </button>
             <button
+              type="button"
               className="app-feedback__button"
               onClick={() => handleFeedback('no')}
             >

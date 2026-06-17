@@ -1,10 +1,4 @@
-export interface PageIntroProps {
-  title: string;
-  summary?: string;
-  titleId?: string;
-  titleClassName?: string;
-  summaryClassName?: string;
-}
+import { PageIntroProps } from '@/types';
 
 export function PageIntro({
   title,

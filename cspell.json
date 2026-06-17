@@ -34,9 +34,30 @@
     "scrying",
     "katex",
     "SLSA",
-    "healthz"
+    "gomod",
+    "textsf",
+    "healthz",
+    "uwsgi",
+    "scgi",
+    "buildx",
+    "kubeconfig",
+    "kdev",
+    "kprod",
+    "webp",
+    "octo",
+    "OCTO"
   ],
-  "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
+  "dictionaries": [
+    "en-gb",
+    "companies",
+    "softwareTerms",
+    "misc",
+    "lorem-ipsum",
+    "typescript",
+    "node",
+    "bash",
+    "npm"
+  ],
   "languageSettings": [
     {
       "languageId": "commit-msg",

@@ -1,0 +1,37 @@
+# Choosing a hosting platform
+
+## Overview
+
+When starting a new service, one of the first decisions is where to host it. The Ministry of Justice offers two main hosting platforms:
+
+### Cloud Platform (recommended default)
+
+Use Cloud Platform if your application:
+
+- Can be containerised (Docker)
+- Is stateless and follows 12-factor app principles
+- Needs Kubernetes features (auto-scaling, zero-downtime deploys)
+- Does not require PSN connectivity
+
+### Modernisation Platform
+
+Use Modernisation Platform if your application:
+
+- Cannot be containerised
+- Needs EC2 instances or non-Kubernetes infrastructure
+- Requires PSN connectivity
+- Is a legacy application being migrated
+
+### Decision tree
+
+1. Can your app run in a container?  
+   If yes, use Cloud Platform.
+2. Does it need PSN?  
+   If yes, use Modernisation Platform.
+3. Is it a legacy app?  
+   Consider Modernisation Platform for initial hosting, with a plan to migrate to Cloud Platform.
+
+### Getting started
+
+- /docs/cloud-platform
+- /docs/modernisation-platform

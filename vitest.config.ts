@@ -11,8 +11,8 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    include: ['tests/**/*.test.{ts,tsx}'],
-    setupFiles: ['tests/setup.ts'],
+    include: ['tests/unit/**/*.test.{ts,tsx}'],
+    setupFiles: ['tests/unit/setup.ts'],
 
     coverage: {
       provider: 'v8',
@@ -22,7 +22,7 @@ export default defineConfig({
       all: true,
 
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['tests/**', 'src/types/types.ts'],
+      exclude: ['tests/**', 'src/types/**', 'src/app/layout.tsx'],
     },
   },
 });

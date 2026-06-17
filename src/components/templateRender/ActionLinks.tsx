@@ -1,14 +1,5 @@
 import Link from 'next/link';
-
-export interface ActionLink {
-  label: string;
-  href: string;
-  external?: boolean;
-}
-
-export interface ActionLinksProps {
-  links: ActionLink[];
-}
+import { ActionLinksProps } from '@/types';
 
 export function ActionLinks({ links }: ActionLinksProps) {
   if (links.length === 0) return null;
