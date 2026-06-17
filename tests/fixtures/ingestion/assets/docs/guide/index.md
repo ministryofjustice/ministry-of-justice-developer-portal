@@ -1,0 +1,1 @@
+# Asset fixture page

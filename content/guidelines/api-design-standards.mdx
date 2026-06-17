@@ -1,0 +1,45 @@
+# API design standards
+
+## Principles
+
+All APIs should follow these core principles:
+
+### Use RESTful conventions
+
+* Use nouns for resource URLs: `/records`, not `/getRecords`
+* Use HTTP methods: GET, POST, PUT, PATCH, DELETE
+* Return appropriate status codes: 200, 201, 400, 401, 403, 404, 500
+
+### Versioning
+
+* Include the major version in the URL: `/v1/records`
+* Use semantic versioning for the API overall
+* Document breaking changes clearly in the changelog
+
+### Error handling
+
+Return consistent error responses:
+
+```json
+{
+  "status": 400,
+  "errorCode": "VALIDATION_ERROR",
+  "userMessage": "The request was invalid",
+  "developerMessage": "Field 'recordId' is required",
+  "moreInfo": "/docs/errors/VALIDATION_ERROR"
+}
+```
+
+### Pagination
+
+Use cursor-based pagination for large datasets:
+
+```bash
+  GET /v1/records?cursor=abc123&limit=20
+```
+
+### Authentication
+
+* Use OAuth 2.0 with appropriate authorization for Ministry of Justice services
+* Use API keys for simpler integrations
+* Never pass credentials in query strings

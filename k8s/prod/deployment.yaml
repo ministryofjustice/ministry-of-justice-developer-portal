@@ -67,8 +67,11 @@ kind: Ingress
 metadata:
   name: developer-portal
   namespace: developer-portal-prod
+  annotations:
+    external-dns.alpha.kubernetes.io/aws-weight: "100"
+    external-dns.alpha.kubernetes.io/set-identifier: "developer-portal-developer-portal-prod-green"
 spec:
-  ingressClassName: nginx
+  ingressClassName: default
   rules:
     - host: developer-portal.service.justice.gov.uk
       http:

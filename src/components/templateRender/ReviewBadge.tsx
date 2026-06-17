@@ -1,8 +1,4 @@
-export type ReviewStatus = 'ok' | 'warning' | 'overdue';
-
-export interface ReviewBadgeProps {
-  status: ReviewStatus;
-}
+import { ReviewBadgeProps, ReviewStatus } from '@/types';
 
 const labels: Record<ReviewStatus, string> = {
   ok: '✓ Up to date',

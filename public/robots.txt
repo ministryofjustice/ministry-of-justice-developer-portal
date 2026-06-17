@@ -1,0 +1,20 @@
+# Interim indexing controls for Issue #299.
+# This is a temporary mitigation until automated refresh in Issue #281 is complete.
+
+User-agent: *
+
+# Keep core portal content indexable.
+Allow: /
+Allow: /docs/
+Allow: /guidelines/
+Allow: /products/
+Allow: /community/
+
+# Reduce indexing risk for high-churn or non-canonical sections.
+Disallow: /docs/docsify-test-site/
+Disallow: /search
+Disallow: /api/
+Disallow: /_next/
+
+# Avoid indexing search-like parameterized URLs.
+Disallow: /*?*

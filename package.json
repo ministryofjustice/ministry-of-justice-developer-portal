@@ -4,23 +4,28 @@
   "description": "Ministry of Justice Developer Experience Portal - Developer portal baseline security and compliance",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build && npx pagefind --site out",
+    "sync:design-system-assets": "node scripts/sync-design-system-assets.mjs",
+    "postinstall": "npm run sync:design-system-assets",
+    "dev": "npm run sync:design-system-assets && next dev",
+    "build": "npm run sync:design-system-assets && next build && npx pagefind --site out",
     "start": "next start",
     "lint": "npm run validate:ts",
     "ingest": "node scripts/ingest.mjs",
     "ingest:dry-run": "node scripts/ingest.mjs --dry-run",
     "ingest:build": "node scripts/ingest.mjs && next build && npx pagefind --site out",
     "validate:all": "npm run validate:md && npm run validate:yml && npm run validate:ts",
-    "validate:md": "markdownlint '**/*.md' --ignore node_modules --ignore dist --ignore out --config .markdownlint.json --ignore .markdownlintignore",
+    "validate:md": "markdownlint '**/*.{md,mdx}' --ignore node_modules --ignore dist --ignore out --config .markdownlint.json --ignore .markdownlintignore",
     "validate:yml": "if command -v yamllint >/dev/null 2>&1 && [ -f .yamllint.yml ]; then yamllint -c .yamllint.yml '**/*.{yml,yaml}'; else echo 'yamllint not installed or .yamllint.yml missing; skipping YAML validation'; fi",
     "validate:ts": "tsc --noEmit",
     "spellcheck": "cspell '**/*' --no-progress --show-suggestions",
-    "test": "vitest",
-    "test:watch": "vitest --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
-    "test:coverageWatch": "vitest --watch --coverage"
+    "test:e2e": "playwright test",
+    "test:e2e-ui": "playwright test --ui",
+    "test:e2e-headed": "playwright test --headed",
+    "test:e2e-debug": "playwright test --debug"
   },
   "repository": {
     "type": "git",
@@ -34,37 +39,43 @@
   },
   "homepage": "https://github.com/ministryofjustice/ministry-of-justice-developer-portal#readme",
   "dependencies": {
-    "govuk-frontend": "^6.1.0",
+    "@ministryofjustice/frontend": "^9.0.0",
+    "govuk-frontend": "^6.2.0",
     "gray-matter": "^4.0.3",
-    "next": "^16.2.3",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "rehype-highlight": "^7.0.2",
+    "moment": "^2.30.1",
+    "next": "^16.2.6",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "rehype-slug": "^6.0.0",
+    "rehype-stringify": "^10.0.1",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
-    "remark-html": "^16.0.1",
-    "sass": "^1.99.0"
+    "remark-rehype": "^11.1.2",
+    "sass": "^1.100.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
+    "@playwright/test": "^1.60.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
-    "@types/node": "^25.6.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^25.6.2",
     "@types/react": "^19.2.14",
-    "@vitest/coverage-v8": "4.1.4",
-    "@vitest/ui": "^4.1.4",
+    "@vitest/coverage-v8": "^4.1.8",
+    "@vitest/ui": "^4.1.8",
     "cspell": "^10.0.0",
-    "jsdom": "^29.0.2",
+    "jsdom": "^29.1.1",
     "markdownlint-cli": "^0.48.0",
-    "pagefind": "^1.5.0",
-    "prettier": "^3.8.1",
+    "pagefind": "^1.5.2",
+    "prettier": "^3.8.3",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3",
-    "vitest": "4.1.4"
+    "vitest": "4.1.8"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=24.0.0"
   },
   "overrides": {
-    "vite": "8.0.8"
+    "postcss": "8.5.15"
   }
 }
