@@ -1,186 +1,227 @@
 {
   "title": "Guidelines",
-  "summary": "Standards and best practices organised by project lifecycle. Follow these guidelines to build services that meet Ministry of Justice and cross-government expectations.",
-  "items":
-  [
-  {
-    "slug": "choosing-hosting",
-    "title": "Choosing a hosting platform",
-    "phase": "inception",
-    "description": "How to decide between Cloud Platform, Modernisation Platform, and other hosting options for your service.",
-    "owner": "Cloud Platform team",
-    "lastReviewedOn": "2026-02-01",
-    "reviewIn": "6 months"
-  },
-  {
-    "slug": "service-assessments",
-    "title": "Preparing for service assessments",
-    "phase": "inception",
-    "description": "What to expect from GDS service assessments and how to prepare your team.",
-    "owner": "Digital Services",
-    "lastReviewedOn": "2026-01-15",
-    "reviewIn": "6 months"
-  },
-  {
-    "slug": "govuk-service-manual",
-    "title": "GOV.UK Service Manual",
-    "phase": "inception",
-    "description": "GDS guidance on researching, designing, building, and running government services.",
-    "owner": "GDS",
-    "lastReviewedOn": "2026-02-27",
-    "reviewIn": "6 months",
-    "externalUrl": "https://www.gov.uk/service-manual"
-  },
-  {
-    "slug": "service-standard",
-    "title": "Service Standard",
-    "phase": "inception",
-    "description": "The 14-point Service Standard that government services must meet.",
-    "owner": "GDS",
-    "lastReviewedOn": "2026-02-27",
-    "reviewIn": "6 months",
-    "externalUrl": "https://www.gov.uk/service-manual/service-standard"
-  },
-  {
-    "slug": "api-design-standards",
-    "title": "API design standards",
-    "phase": "development",
-    "description": "RESTful API design principles, versioning strategy, error handling, and pagination patterns.",
-    "owner": "Technical Architecture",
-    "lastReviewedOn": "2026-02-15",
-    "reviewIn": "3 months"
-  },
-  {
-    "slug": "source-control",
-    "title": "Source control and branching",
-    "phase": "development",
-    "description": "Git workflow standards, branch naming conventions, commit message formats, and code review expectations.",
-    "owner": "Operations Engineering",
-    "lastReviewedOn": "2025-12-01",
-    "reviewIn": "6 months"
-  },
-  {
-    "slug": "security-in-development",
-    "title": "Security in development",
-    "phase": "development",
-    "description": "Secure coding practices, dependency scanning, secret management, and threat modelling for development teams.",
-    "owner": "Security Engineering",
-    "lastReviewedOn": "2026-01-20",
-    "reviewIn": "3 months"
-  },
-  {
-    "slug": "gds-api-standards",
-    "title": "GDS API Technical & Data Standards",
-    "phase": "development",
-    "description": "Cross-government standards for building and naming APIs, data formats, and integration patterns.",
-    "owner": "GDS",
-    "lastReviewedOn": "2026-02-27",
-    "reviewIn": "6 months",
-    "externalUrl": "https://www.gov.uk/guidance/gds-api-technical-and-data-standards"
-  },
-  {
-    "slug": "ncsc-secure-development",
-    "title": "NCSC Secure Development & Deployment",
-    "phase": "development",
-    "description": "National Cyber Security Centre collection on secure development lifecycle, deployment, and supply chain security.",
-    "owner": "NCSC",
-    "lastReviewedOn": "2026-02-27",
-    "reviewIn": "6 months",
-    "externalUrl": "https://www.ncsc.gov.uk/collection/developers-collection"
-  },
-  {
-    "slug": "technology-choices",
-    "title": "Making technology choices",
-    "phase": "technology",
-    "description": "Framework for evaluating and choosing programming languages, frameworks, and tools for your service.",
-    "owner": "Technical Architecture",
-    "lastReviewedOn": "2026-01-10",
-    "reviewIn": "6 months"
-  },
-  {
-    "slug": "open-source",
-    "title": "Coding in the open",
-    "phase": "technology",
-    "description": "When and how to make your code open source. Licensing, sensitive data, and the benefits of working in the open.",
-    "owner": "Operations Engineering",
-    "lastReviewedOn": "2025-11-15",
-    "reviewIn": "6 months"
-  },
-  {
-    "slug": "technology-code-of-practice",
-    "title": "Technology Code of Practice",
-    "phase": "technology",
-    "description": "Cross-government guidance on how to design, build, and buy technology.",
-    "owner": "CDDO",
-    "lastReviewedOn": "2026-02-27",
-    "reviewIn": "6 months",
-    "externalUrl": "https://www.gov.uk/guidance/the-technology-code-of-practice"
-  },
-  {
-    "slug": "govuk-design-system",
-    "title": "GOV.UK Design System",
-    "phase": "technology",
-    "description": "Styles, components, and patterns for designing government services.",
-    "owner": "GDS",
-    "lastReviewedOn": "2026-02-27",
-    "reviewIn": "6 months",
-    "externalUrl": "https://design-system.service.gov.uk/"
-  },
-  {
-    "slug": "accessibility-requirements",
-    "title": "Accessibility requirements",
-    "phase": "standards",
-    "description": "WCAG 2.2 AA compliance requirements, testing approach, and accessibility statements for government services.",
-    "owner": "Frontend Community",
-    "lastReviewedOn": "2026-02-10",
-    "reviewIn": "3 months"
-  },
-  {
-    "slug": "ai-governance-framework",
-    "title": "AI Governance Framework",
-    "phase": "standards",
-    "description": "MoJ guidance on responsible AI use — risk assessment, transparency, accountability, and ethical considerations.",
-    "owner": "Technical Architecture",
-    "lastReviewedOn": "2026-02-27",
-    "reviewIn": "3 months",
-    "externalUrl": "https://technical-guidance.service.justice.gov.uk/documentation/governance/ai-governance-framework.html#introduction"
-  },
-  {
-    "slug": "incident-management",
-    "title": "Incident management",
-    "phase": "standards",
-    "description": "How to handle production incidents — severity levels, communication, runbooks, and post-incident reviews.",
-    "owner": "Operations Engineering",
-    "lastReviewedOn": "2026-01-05",
-    "reviewIn": "6 months"
-  },
-  {
-    "slug": "ncsc-cloud-security",
-    "title": "NCSC Cloud Security Guidance",
-    "phase": "standards",
-    "description": "National Cyber Security Centre principles for securing cloud-hosted services.",
-    "owner": "NCSC",
-    "lastReviewedOn": "2026-02-27",
-    "reviewIn": "6 months",
-    "externalUrl": "https://www.ncsc.gov.uk/collection/cloud-security"
-  },
-  {
-    "slug": "measuring-service-health",
-    "title": "Measuring service health",
-    "phase": "measuring",
-    "description": "Key metrics, SLIs/SLOs, monitoring dashboards, and how to report on service performance.",
-    "owner": "Cloud Platform team",
-    "lastReviewedOn": "2026-02-01",
-    "reviewIn": "6 months"
-  },
-  {
-    "slug": "govuk-service-performance",
-    "title": "Measuring service performance",
-    "phase": "measuring",
-    "description": "GDS guidance on KPIs, cost per transaction, user satisfaction, and digital take-up.",
-    "owner": "GDS",
-    "lastReviewedOn": "2026-02-27",
-    "reviewIn": "6 months",
-    "externalUrl": "https://www.gov.uk/service-manual/measuring-success"
-  }
-]}
+  "summary": "Standards and best practices organised by key themes. Follow these guidelines to build services that meet Ministry of Justice and cross-government expectations.",
+  "sections": [
+    {
+      "key": "inception",
+      "title": "Project Inception",
+      "description": "Starting your project — understanding the problem, assessing feasibility, and planning your approach.",
+      "modifier": "inception"
+    },
+    {
+      "key": "development",
+      "title": "Development & Iteration",
+      "description": "Building your service — coding standards, security practices, and agile delivery.",
+      "modifier": "development"
+    },
+    {
+      "key": "technology",
+      "title": "Technology Choice",
+      "description": "Choosing the right tools — languages, frameworks, platforms, and open source.",
+      "modifier": "technology"
+    },
+    {
+      "key": "standards",
+      "title": "Standards & Best Practices",
+      "description": "Cross-cutting standards — accessibility, security, incident management, and operational excellence.",
+      "modifier": "standards"
+    },
+    {
+      "key": "measuring",
+      "title": "Measuring Success",
+      "description": "Understanding impact — metrics, monitoring, service health, and user satisfaction.",
+      "modifier": "measuring"
+    }
+  ],
+  "items": [
+    {
+      "slug": "choosing-hosting",
+      "title": "Choosing a hosting platform",
+      "section": "inception",
+      "description": "How to decide between Cloud Platform, Modernisation Platform, and other hosting options for your service.",
+      "owner": "Cloud Platform team",
+      "lastReviewedOn": "2026-02-01",
+      "reviewIn": "6 months"
+    },
+    {
+      "slug": "dependabot-guidelines",
+      "title": "Dependabot guidelines",
+      "section": "inception",
+      "description": "Guidelines for using Dependabot to manage dependencies and security updates.",
+      "owner": "Cloud Platform team",
+      "lastReviewedOn": "2026-02-01",
+      "reviewIn": "6 months"
+    },
+    {
+      "slug": "service-assessments",
+      "title": "Preparing for service assessments",
+      "section": "inception",
+      "description": "What to expect from GDS service assessments and how to prepare your team.",
+      "owner": "Digital Services",
+      "lastReviewedOn": "2026-01-15",
+      "reviewIn": "6 months"
+    },
+    {
+      "slug": "govuk-service-manual",
+      "title": "GOV.UK Service Manual",
+      "section": "inception",
+      "description": "GDS guidance on researching, designing, building, and running government services.",
+      "owner": "GDS",
+      "lastReviewedOn": "2026-02-27",
+      "reviewIn": "6 months",
+      "externalUrl": "https://www.gov.uk/service-manual"
+    },
+    {
+      "slug": "service-standard",
+      "title": "Service Standard",
+      "section": "inception",
+      "description": "The 14-point Service Standard that government services must meet.",
+      "owner": "GDS",
+      "lastReviewedOn": "2026-02-27",
+      "reviewIn": "6 months",
+      "externalUrl": "https://www.gov.uk/service-manual/service-standard"
+    },
+    {
+      "slug": "api-design-standards",
+      "title": "API design standards",
+      "section": "development",
+      "description": "RESTful API design principles, versioning strategy, error handling, and pagination patterns.",
+      "owner": "Technical Architecture",
+      "lastReviewedOn": "2026-02-15",
+      "reviewIn": "3 months"
+    },
+    {
+      "slug": "source-control",
+      "title": "Source control and branching",
+      "section": "development",
+      "description": "Git workflow standards, branch naming conventions, commit message formats, and code review expectations.",
+      "owner": "Operations Engineering",
+      "lastReviewedOn": "2025-12-01",
+      "reviewIn": "6 months"
+    },
+    {
+      "slug": "security-in-development",
+      "title": "Security in development",
+      "section": "development",
+      "description": "Secure coding practices, dependency scanning, secret management, and threat modelling for development teams.",
+      "owner": "Security Engineering",
+      "lastReviewedOn": "2026-01-20",
+      "reviewIn": "3 months"
+    },
+    {
+      "slug": "gds-api-standards",
+      "title": "GDS API Technical & Data Standards",
+      "section": "development",
+      "description": "Cross-government standards for building and naming APIs, data formats, and integration patterns.",
+      "owner": "GDS",
+      "lastReviewedOn": "2026-02-27",
+      "reviewIn": "6 months",
+      "externalUrl": "https://www.gov.uk/guidance/gds-api-technical-and-data-standards"
+    },
+    {
+      "slug": "ncsc-secure-development",
+      "title": "NCSC Secure Development & Deployment",
+      "section": "development",
+      "description": "National Cyber Security Centre collection on secure development lifecycle, deployment, and supply chain security.",
+      "owner": "NCSC",
+      "lastReviewedOn": "2026-02-27",
+      "reviewIn": "6 months",
+      "externalUrl": "https://www.ncsc.gov.uk/collection/developers-collection"
+    },
+    {
+      "slug": "technology-choices",
+      "title": "Making technology choices",
+      "section": "technology",
+      "description": "Framework for evaluating and choosing programming languages, frameworks, and tools for your service.",
+      "owner": "Technical Architecture",
+      "lastReviewedOn": "2026-01-10",
+      "reviewIn": "6 months"
+    },
+    {
+      "slug": "open-source",
+      "title": "Coding in the open",
+      "section": "technology",
+      "description": "When and how to make your code open source. Licensing, sensitive data, and the benefits of working in the open.",
+      "owner": "Operations Engineering",
+      "lastReviewedOn": "2025-11-15",
+      "reviewIn": "6 months"
+    },
+    {
+      "slug": "technology-code-of-practice",
+      "title": "Technology Code of Practice",
+      "section": "technology",
+      "description": "Cross-government guidance on how to design, build, and buy technology.",
+      "owner": "CDDO",
+      "lastReviewedOn": "2026-02-27",
+      "reviewIn": "6 months",
+      "externalUrl": "https://www.gov.uk/guidance/the-technology-code-of-practice"
+    },
+    {
+      "slug": "govuk-design-system",
+      "title": "GOV.UK Design System",
+      "section": "technology",
+      "description": "Styles, components, and patterns for designing government services.",
+      "owner": "GDS",
+      "lastReviewedOn": "2026-02-27",
+      "reviewIn": "6 months",
+      "externalUrl": "https://design-system.service.gov.uk/"
+    },
+    {
+      "slug": "accessibility-requirements",
+      "title": "Accessibility requirements",
+      "section": "standards",
+      "description": "WCAG 2.2 AA compliance requirements, testing approach, and accessibility statements for government services.",
+      "owner": "Frontend Community",
+      "lastReviewedOn": "2026-02-10",
+      "reviewIn": "3 months"
+    },
+    {
+      "slug": "ai-governance-framework",
+      "title": "AI Governance Framework",
+      "section": "standards",
+      "description": "MoJ guidance on responsible AI use — risk assessment, transparency, accountability, and ethical considerations.",
+      "owner": "Technical Architecture",
+      "lastReviewedOn": "2026-02-27",
+      "reviewIn": "3 months",
+      "externalUrl": "https://technical-guidance.service.justice.gov.uk/documentation/governance/ai-governance-framework.html#introduction"
+    },
+    {
+      "slug": "incident-management",
+      "title": "Incident management",
+      "section": "standards",
+      "description": "How to handle production incidents — severity levels, communication, runbooks, and post-incident reviews.",
+      "owner": "Operations Engineering",
+      "lastReviewedOn": "2026-01-05",
+      "reviewIn": "6 months"
+    },
+    {
+      "slug": "ncsc-cloud-security",
+      "title": "NCSC Cloud Security Guidance",
+      "section": "standards",
+      "description": "National Cyber Security Centre principles for securing cloud-hosted services.",
+      "owner": "NCSC",
+      "lastReviewedOn": "2026-02-27",
+      "reviewIn": "6 months",
+      "externalUrl": "https://www.ncsc.gov.uk/collection/cloud-security"
+    },
+    {
+      "slug": "measuring-service-health",
+      "title": "Measuring service health",
+      "section": "measuring",
+      "description": "Key metrics, SLIs/SLOs, monitoring dashboards, and how to report on service performance.",
+      "owner": "Cloud Platform team",
+      "lastReviewedOn": "2026-02-01",
+      "reviewIn": "6 months"
+    },
+    {
+      "slug": "govuk-service-performance",
+      "title": "Measuring service performance",
+      "section": "measuring",
+      "description": "GDS guidance on KPIs, cost per transaction, user satisfaction, and digital take-up.",
+      "owner": "GDS",
+      "lastReviewedOn": "2026-02-27",
+      "reviewIn": "6 months",
+      "externalUrl": "https://www.gov.uk/service-manual/measuring-success"
+    }
+  ]
+}
