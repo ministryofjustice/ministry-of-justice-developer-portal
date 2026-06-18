@@ -12,11 +12,7 @@ export default function ContactPage() {
     <div className="govuk-width-container">
       <Breadcrumbs items={[{ label: 'Contact us' }]} />
 
-      <PageIntro
-        title={contactOptions.title}
-        summary={contactOptions.summary}
-        summaryClassName="govuk-body-l"
-      />
+      <PageIntro title={contact.title} summary={contact.summary} summaryClassName="govuk-body-l" />
 
       {contact.items.map((item) => (
         <section
