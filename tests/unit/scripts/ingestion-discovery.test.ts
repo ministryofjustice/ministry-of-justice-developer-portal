@@ -24,11 +24,15 @@ describe('discoverFiles', () => {
     expect(files).toEqual(['content/a.md', 'content/b.mdx']);
   });
 
-  it('skips eleventy utility pages like tags and sitemap', () => {
+  it('only includes eleventy index pages and ignores utility pages', () => {
     const docsRoot = path.join(FIXTURES_ROOT, 'discovery-eleventy');
 
     const files = discoverFiles(docsRoot, 'eleventy').map((f) => f.relative).sort();
 
-    expect(files).toEqual(['content/guide.mdx', 'content/intro.md']);
+    expect(files).toEqual([
+      'content/index.md',
+      'content/section-a/index.md',
+      'content/section-b/index.mdx',
+    ]);
   });
 });

@@ -37,13 +37,12 @@ function isDocFile(name, format) {
     return name.endsWith('.html.md.erb') || name.endsWith('.md');
   }
   if (format === 'eleventy') {
-    if (isEleventyUtilityPage(name)) return false;
-    return name.endsWith('.md') || name.endsWith('.mdx');
+    return isEleventyIndexFile(name);
   }
   return name.endsWith('.md') || name.endsWith('.mdx');
 }
 
-function isEleventyUtilityPage(name) {
+function isEleventyIndexFile(name) {
   const lower = name.toLowerCase();
-  return lower === 'tag.md' || lower === 'tags.md' || lower === 'sitemap.md';
+  return lower === 'index.md' || lower === 'index.mdx';
 }
