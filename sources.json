@@ -1,6 +1,6 @@
 {
   "sources": [
-    {
+  {
       "id": "cloud-platform",
       "name": "Cloud Platform User Guide",
       "description": "User guide for the Cloud Platform — Kubernetes-based hosting on AWS.",
@@ -67,6 +67,18 @@
       "branch": "main",
       "docsPath": "source",
       "format": "tech-docs-template",
+      "enabled": true
+    },
+    {
+      "id": "data-and-analytics-engineering",
+      "name": "Data & Analytics Engineering",
+      "description": "Handbook for the data and analytics engineering professions at the Ministry of Justice.",
+      "category": "documentation",
+      "repo": "ministryofjustice/data-and-analytics-engineering",
+      "branch": "main",
+      "docsPath": "src/content",
+      "format": "eleventy",
+      "owner_slack": "#data-and-analytics-engineering",
       "enabled": true
     },
     {
