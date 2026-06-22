@@ -1,5 +1,6 @@
 import * as techDocsParser from './techDocsParser.mjs';
 import * as markdownParser from './markdownParser.mjs';
+import * as eleventyParser from './eleventyParser.mjs';
 
 /**
  * Parser registry
@@ -20,6 +21,7 @@ const REGISTRY = {
   'tech-docs-template': techDocsParser,
   markdown: markdownParser,
   mdx: markdownParser,
+  eleventy: eleventyParser,
 };
 
 /**

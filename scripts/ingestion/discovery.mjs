@@ -36,5 +36,14 @@ function isDocFile(name, format) {
   if (format === 'tech-docs-template') {
     return name.endsWith('.html.md.erb') || name.endsWith('.md');
   }
+  if (format === 'eleventy') {
+    if (isEleventyUtilityPage(name)) return false;
+    return name.endsWith('.md') || name.endsWith('.mdx');
+  }
   return name.endsWith('.md') || name.endsWith('.mdx');
+}
+
+function isEleventyUtilityPage(name) {
+  const lower = name.toLowerCase();
+  return lower === 'tag.md' || lower === 'tags.md' || lower === 'sitemap.md';
 }
