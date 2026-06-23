@@ -56,7 +56,8 @@ jobs:
           {
             echo "private_key<<${delimiter}"
             cat gh-app-private-key.pem
-            echo "${delimiter}"
+            # Always place delimiter on its own line, even if key content lacks trailing newline.
+            printf '\n%s\n' "${delimiter}"
           } >> "$GITHUB_OUTPUT"
 
       - name: Generate GitHub App token for catalog insights
