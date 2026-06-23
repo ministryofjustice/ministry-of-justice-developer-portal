@@ -51,7 +51,7 @@
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
     "remark-rehype": "^11.1.2",
-    "sass": "^1.100.0"
+    "sass": "^1.101.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",
