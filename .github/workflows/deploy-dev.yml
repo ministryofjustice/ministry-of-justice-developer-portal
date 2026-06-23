@@ -69,16 +69,28 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Support secrets entered as either multiline PEM or single-line with literal \n.
-          printf '%s' '${{ secrets.DEV_PORTAL_GH_APP_PRIVATE_KEY }}' | perl -pe 's/\\n/\n/g' > gh-app-private-key.pem
+          raw_key='${{ secrets.DEV_PORTAL_GH_APP_PRIVATE_KEY }}'
+          # Trim surrounding double-quotes if the secret was pasted quoted.
+          raw_key="${raw_key#\"}"
+          raw_key="${raw_key%\"}"
+
+          # Handle multiline PEM and single-line values with literal \n.
+          printf '%s' "$raw_key" | perl -pe 's/\\n/\n/g; s/\r$//' > gh-app-private-key.pem
+
+          # If it is still not a PEM, try decoding as base64-encoded PEM.
+          if ! grep -q 'BEGIN .*PRIVATE KEY' gh-app-private-key.pem; then
+            printf '%s' "$raw_key" | tr -d '\r\n ' | base64 --decode > gh-app-private-key.pem 2>/dev/null || true
+          fi
+
           if ! openssl pkey -in gh-app-private-key.pem -noout >/dev/null 2>&1; then
-            echo "Invalid DEV_PORTAL_GH_APP_PRIVATE_KEY format. Expected a valid PEM private key."
+            echo "Invalid DEV_PORTAL_GH_APP_PRIVATE_KEY format. Provide a valid PEM private key (multiline PEM, escaped-newline PEM, or base64-encoded PEM)."
             exit 1
           fi
+          delimiter="PRIVATE_KEY_$(openssl rand -hex 8)"
           {
-            echo "private_key<<EOF"
+            echo "private_key<<${delimiter}"
             cat gh-app-private-key.pem
-            echo "EOF"
+            echo "${delimiter}"
           } >> "$GITHUB_OUTPUT"
 
       - name: Generate GitHub App token for catalog insights
