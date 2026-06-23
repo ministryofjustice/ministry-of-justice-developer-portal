@@ -29,5 +29,20 @@ jobs:
       - name: Ingest content
         run: node scripts/ingest.mjs
 
-      - name: Build
+      - name: Generate GitHub App token for catalog insights
+        id: gh-app-token
+        continue-on-error: true
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.DEV_PORTAL_GH_APP_ID }}
+          private-key: ${{ secrets.DEV_PORTAL_GH_APP_PRIVATE_KEY }}
+
+      - name: Build (with GitHub App token)
+        if: steps.gh-app-token.outcome == 'success' && steps.gh-app-token.outputs.token != ''
+        env:
+          GITHUB_TOKEN: ${{ steps.gh-app-token.outputs.token }}
+        run: npm run build
+
+      - name: Build (without GitHub App token)
+        if: steps.gh-app-token.outcome != 'success' || steps.gh-app-token.outputs.token == ''
         run: npm run build

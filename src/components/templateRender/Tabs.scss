@@ -59,6 +59,17 @@
     box-sizing: border-box;
   }
 
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: end;
+  }
+
+  &__filter-item {
+    min-width: 14rem;
+  }
+
   &__table {
     width: 100%;
     min-width: 700px;
@@ -92,32 +103,40 @@
   }
 
   &__table--vulnerabilities {
-    min-width: 1200px;
-    table-layout: fixed;
+    min-width: 0;
+    table-layout: auto;
 
     .govuk-table__cell,
     .govuk-table__header {
       padding: 0.75rem 0.5rem;
       font-size: 0.875rem;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .govuk-table__header:nth-child(1),
-    .govuk-table__cell:nth-child(1) { width: 100px; }
+    .govuk-table__cell:nth-child(1) { width: 11%; }
 
     .govuk-table__header:nth-child(2),
-    .govuk-table__cell:nth-child(2) { width: 200px; }
+    .govuk-table__cell:nth-child(2) { width: 19%; }
 
     .govuk-table__header:nth-child(3),
-    .govuk-table__cell:nth-child(3) { width: 200px; }
+    .govuk-table__cell:nth-child(3) { width: 14%; }
 
     .govuk-table__header:nth-child(4),
-    .govuk-table__cell:nth-child(4) { width: 150px; }
+    .govuk-table__cell:nth-child(4) { width: 14%; }
 
     .govuk-table__header:nth-child(5),
-    .govuk-table__cell:nth-child(5) { width: 150px; }
+    .govuk-table__cell:nth-child(5) { width: 21%; }
 
     .govuk-table__header:nth-child(6),
-    .govuk-table__cell:nth-child(6) { width: 200px; }
+    .govuk-table__cell:nth-child(6) {
+      width: 21%;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
   }
 
   &__package-name-cell {

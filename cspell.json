@@ -43,7 +43,10 @@
     "kubeconfig",
     "kdev",
     "kprod",
-    "webp"
+    "webp",
+    "ahostsv",
+    "pypi",
+    "SPDXID"
   ],
   "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
   "languageSettings": [

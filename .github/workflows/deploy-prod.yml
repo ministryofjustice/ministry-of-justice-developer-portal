@@ -33,6 +33,14 @@ jobs:
             echo "Missing required secret: PROD_ECR_ROLE_TO_ASSUME"
             exit 1
           fi
+          if [[ -z "${{ secrets.DEV_PORTAL_GH_APP_ID }}" ]]; then
+            echo "Missing required secret: DEV_PORTAL_GH_APP_ID"
+            exit 1
+          fi
+          if [[ -z "${{ secrets.DEV_PORTAL_GH_APP_PRIVATE_KEY }}" ]]; then
+            echo "Missing required secret: DEV_PORTAL_GH_APP_PRIVATE_KEY"
+            exit 1
+          fi
           if [[ -z "${{ vars.ECR_REGION }}" ]]; then
             echo "Missing required variable: ECR_REGION"
             exit 1
@@ -52,13 +60,22 @@ jobs:
         id: ecr-login
         uses: aws-actions/amazon-ecr-login@376925c9d111252e87ae59691e5a442dd100ef6a # v2
 
+      - name: Generate GitHub App token for catalog insights
+        id: gh-app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.DEV_PORTAL_GH_APP_ID }}
+          private-key: ${{ secrets.DEV_PORTAL_GH_APP_PRIVATE_KEY }}
+
       - name: Build and push image
         id: build-push
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ steps.gh-app-token.outputs.token }}
         run: |
           set -euo pipefail
           IMAGE_URI="${{ steps.ecr-login.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${IMAGE_TAG}"
-          docker buildx build --platform linux/amd64 --load -t "${IMAGE_URI}" .
+          docker buildx build --platform linux/amd64 --load --secret id=github_token,env=GITHUB_TOKEN -t "${IMAGE_URI}" .
           docker push "${IMAGE_URI}"
           echo "image_uri=${IMAGE_URI}" >> "$GITHUB_OUTPUT"
 

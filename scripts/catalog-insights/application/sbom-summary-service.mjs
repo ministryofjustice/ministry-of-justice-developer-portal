@@ -259,6 +259,25 @@ export function mergeCountMaps(a, b) {
 const SEVERITY_ORDER = ['critical', 'high', 'medium', 'low'];
 
 /**
+ * Normalise ecosystem aliases to consistent names.
+ * Handles common variations: npm/node, gem/rubygems, pypi/pip, etc.
+ * @param {string | undefined} ecosystem
+ * @returns {string | undefined}
+ */
+export function normaliseEcosystem(ecosystem) {
+  if (!ecosystem) return undefined;
+  const lower = ecosystem.toLowerCase().trim();
+  const aliases = {
+    'node': 'npm',
+    'rubygems': 'gem',
+    'pip': 'pypi',
+    'github_actions': 'githubactions',
+    'github-actions': 'githubactions',
+  };
+  return aliases[lower] || lower;
+}
+
+/**
  * Normalises raw Dependabot alert objects into a compact vulnerability summary.
  * @param {Array<object>} alerts
  * @returns {{ critical: number, high: number, medium: number, low: number, total: number, alerts: Array<object> }}
@@ -270,6 +289,9 @@ export function normaliseVulnerabilityAlerts(alerts) {
     const severity = (alert?.security_advisory?.severity ?? 'unknown').toLowerCase();
     if (severity in counts) counts[severity]++;
 
+    const rawEcosystem = alert?.dependency?.package?.ecosystem;
+    const ecosystem = normaliseEcosystem(rawEcosystem);
+
     return {
       number: alert?.number,
       severity,
@@ -277,10 +299,16 @@ export function normaliseVulnerabilityAlerts(alerts) {
       cve: alert?.security_advisory?.cve_id ?? undefined,
       cvss: alert?.security_advisory?.cvss?.score ?? undefined,
       package: alert?.dependency?.package?.name,
-      ecosystem: alert?.dependency?.package?.ecosystem,
+      ecosystem,
+      manifestPath: alert?.dependency?.manifest_path ?? undefined,
+      scope: alert?.dependency?.scope ?? undefined,
       vulnerableRange: alert?.security_vulnerability?.vulnerable_version_range ?? undefined,
       fixedIn: alert?.security_vulnerability?.first_patched_version?.identifier ?? undefined,
       url: alert?.html_url ?? undefined,
+      observedVersions: undefined,
+      matchQuality: undefined,
+      currentVersion: undefined,
+      currentVersionReason: undefined,
     };
   });
 

@@ -10,7 +10,9 @@ RUN npm ci
 
 COPY . .
 RUN npm run ingest
-RUN npm run build
+RUN --mount=type=secret,id=github_token \
+    GITHUB_TOKEN=$(cat /run/secrets/github_token 2>/dev/null || true) \
+    npm run build
 
 FROM nginx:1.29-alpine
 

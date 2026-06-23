@@ -11,6 +11,7 @@ import { TagRow } from '@/components/templateRender/TagRow';
 import { TagList } from '@/components/templateRender/TagList';
 import { Section } from '@/components/templateRender/Section';
 import { Tabs } from '@/components/templateRender/Tabs';
+import { VulnerabilitiesTable } from '@/components/VulnerabilitiesTable';
 import { loadCatalogReportEntryBySlug } from '@/lib/catalogReports';
 import products from '../../../../content/products/products.json';
 import sources from '../../../../sources.json';
@@ -63,13 +64,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
   // Product-level vulnerability data
   const vulnerabilities = sbom?.vulnerabilities;
   const vulnAlerts = vulnerabilities?.alerts ?? [];
-  const hasVulns = (vulnerabilities?.total ?? 0) > 0;
-  const severityColour = (sev: string) => {
-    if (sev === 'critical') return 'govuk-tag--red';
-    if (sev === 'high') return 'govuk-tag--orange';
-    if (sev === 'medium') return 'govuk-tag--yellow';
-    return 'govuk-tag--blue';
-  };
+  const hasVulnerabilities = (vulnerabilities?.total ?? 0) > 0;
+  const severityOrder = ['critical', 'high', 'medium', 'low'] as const;
 
   // Product-level ecosystem and license totals (aggregated server-side in the report)
   const ecosystems = sbom?.ecosystems ?? {};
@@ -162,7 +158,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                           <tbody className="govuk-table__body">
                             <tr className="govuk-table__row">
                               <th className="govuk-table__header" scope="row">Status</th>
-                              <td className="govuk-table__cell">{formatSbomStatus(sbom.status)}</td>
+                              <td className="govuk-table__cell">
+                                <div>{formatSbomStatus(sbom.status)}</div>
+                                <div className="govuk-body-s govuk-!-margin-top-1 govuk-!-margin-bottom-0">
+                                  Completed <strong>{sbom.completedRepositories || 0}</strong>, Failed <strong>{sbom.failedRepositories || 0}</strong>, Pending <strong>{sbom.pendingRepositories || 0}</strong>
+                                </div>
+                              </td>
                             </tr>
                             <tr className="govuk-table__row">
                               <th className="govuk-table__header" scope="row">Team</th>
@@ -184,6 +185,30 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                               <th className="govuk-table__header" scope="row">Ecosystems</th>
                               <td className="govuk-table__cell">{sortedEcosystems.length > 0 ? sortedEcosystems.map(([name]) => name).join(', ') : 'None detected'}</td>
                             </tr>
+                            <tr className="govuk-table__row">
+                              <th className="govuk-table__header" scope="row">Unique licenses</th>
+                              <td className="govuk-table__cell">
+                                <strong>{sortedLicenses.length}</strong>
+                              </td>
+                            </tr>
+                            <tr className="govuk-table__row">
+                              <th className="govuk-table__header" scope="row">Unique ecosystems</th>
+                              <td className="govuk-table__cell">
+                                <strong>{sortedEcosystems.length}</strong>
+                              </td>
+                            </tr>
+                            {hasVulnerabilities && (
+                              <tr className="govuk-table__row">
+                                <th className="govuk-table__header" scope="row">Vulnerabilities (open)</th>
+                                <td className="govuk-table__cell">
+                                  <strong>{vulnerabilities!.total}</strong> total —{' '}
+                                  <strong className="govuk-!-colour-red">{vulnerabilities!.critical}</strong> critical,{' '}
+                                  <strong>{vulnerabilities!.high}</strong> high,{' '}
+                                  <strong>{vulnerabilities!.medium}</strong> medium,{' '}
+                                  <strong>{vulnerabilities!.low}</strong> low
+                                </td>
+                              </tr>
+                            )}
                             {sbom.error && (
                               <tr className="govuk-table__row">
                                 <th className="govuk-table__header" scope="row">Error</th>
@@ -289,61 +314,22 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                   },
                   {
                     id: 'vulnerabilities',
-                    label: hasVulns
+                    label: hasVulnerabilities
                       ? `Vulnerabilities (${vulnerabilities!.total})`
                       : 'Vulnerabilities',
-                    content: hasVulns ? (
+                    content: hasVulnerabilities ? (
                       <div style={{ minWidth: 0, overflow: 'hidden' }}>
                         <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
                           {(['critical', 'high', 'medium', 'low'] as const).map((sev) => (
                             <div key={sev}>
                               <p className="govuk-body-s govuk-!-margin-bottom-1" style={{ textTransform: 'capitalize' }}>{sev}</p>
-                              <strong className={`govuk-tag ${severityColour(sev)}`}>
+                              <strong className="govuk-tag">
                                 {vulnerabilities![sev]}
                               </strong>
                             </div>
                           ))}
                         </div>
-                        <div className="app-tabs__table-wrapper">
-                          <table className="govuk-table govuk-!-margin-bottom-0 app-tabs__table app-tabs__table--vulnerabilities">
-                            <thead className="govuk-table__head">
-                              <tr className="govuk-table__row">
-                                <th className="govuk-table__header" scope="col">Severity</th>
-                                <th className="govuk-table__header" scope="col">Package</th>
-                                <th className="govuk-table__header" scope="col">Vulnerable range</th>
-                                <th className="govuk-table__header" scope="col">Fixed in</th>
-                                <th className="govuk-table__header" scope="col">CVE / CVSS</th>
-                                <th className="govuk-table__header" scope="col">Repository</th>
-                              </tr>
-                            </thead>
-                            <tbody className="govuk-table__body">
-                              {vulnAlerts.map((alert, i) => (
-                                <tr className="govuk-table__row" key={`${alert._repo}-${alert.number ?? i}`}>
-                                  <td className="govuk-table__cell">
-                                    <strong className={`govuk-tag ${severityColour(alert.severity)}`} style={{ textTransform: 'capitalize' }}>
-                                      {alert.severity}
-                                    </strong>
-                                  </td>
-                                  <td className="govuk-table__cell">
-                                    <span className="govuk-body-s">{alert.package || '—'}</span>
-                                    {alert.ecosystem && <><br /><span className="govuk-body-s govuk-!-colour-secondary">{alert.ecosystem}</span></>}
-                                  </td>
-                                  <td className="govuk-table__cell govuk-body-s">{alert.vulnerableRange || '—'}</td>
-                                  <td className="govuk-table__cell govuk-body-s">{alert.fixedIn || 'No fix'}</td>
-                                  <td className="govuk-table__cell govuk-body-s">
-                                    {alert.url ? (
-                                      <a className="govuk-link" href={alert.url} target="_blank" rel="noreferrer">
-                                        {alert.cve ?? `#${alert.number}`}
-                                      </a>
-                                    ) : (alert.cve ?? '—')}
-                                    {alert.cvss !== undefined && <><br /><span>CVSS {alert.cvss}</span></>}
-                                  </td>
-                                  <td className="govuk-table__cell govuk-body-s">{alert._repo || '—'}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
+                        <VulnerabilitiesTable alerts={vulnAlerts} />
                       </div>
                     ) : (
                       <p className="govuk-body">No open Dependabot vulnerability alerts found. This may mean the repositories are secure, Dependabot is not enabled, or the token lacks <code>security_events</code> scope.</p>
@@ -388,14 +374,18 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                                         <dt>License</dt>
                                         <dd>{pkg.license || '—'}</dd>
                                       </div>
-                                      <div>
-                                        <dt>Purpose</dt>
-                                        <dd>{pkg.purpose || '—'}</dd>
-                                      </div>
-                                      <div>
-                                        <dt>Supplier</dt>
-                                        <dd>{pkg.supplier || '—'}</dd>
-                                      </div>
+                                      {pkg.purpose?.trim() && (
+                                        <div>
+                                          <dt>Purpose</dt>
+                                          <dd>{pkg.purpose}</dd>
+                                        </div>
+                                      )}
+                                      {pkg.supplier?.trim() && (
+                                        <div>
+                                          <dt>Supplier</dt>
+                                          <dd>{pkg.supplier}</dd>
+                                        </div>
+                                      )}
                                     </dl>
                                   </td>
                                   <td className="govuk-table__cell app-tabs__repos-cell">
@@ -418,68 +408,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                       </div>
                     ) : (
                       <p className="govuk-body">No package data available. Package details are extracted when the catalog sync runs with a valid GitHub token.</p>
-                    ),
-                  },
-                  {
-                    id: 'summary',
-                    label: 'Summary',
-                    content: (
-                      <div>
-                        <table className="govuk-table">
-                          <tbody className="govuk-table__body">
-                            <tr className="govuk-table__row">
-                              <th className="govuk-table__header" scope="row">Completed</th>
-                              <td className="govuk-table__cell">
-                                <strong>{sbom.completedRepositories || 0}</strong> {(sbom.completedRepositories || 0) === 1 ? 'repository' : 'repositories'}
-                              </td>
-                            </tr>
-                            <tr className="govuk-table__row">
-                              <th className="govuk-table__header" scope="row">Failed</th>
-                              <td className="govuk-table__cell">
-                                <strong>{sbom.failedRepositories || 0}</strong> {(sbom.failedRepositories || 0) === 1 ? 'repository' : 'repositories'}
-                              </td>
-                            </tr>
-                            <tr className="govuk-table__row">
-                              <th className="govuk-table__header" scope="row">Pending</th>
-                              <td className="govuk-table__cell">
-                                <strong>{sbom.pendingRepositories || 0}</strong> {(sbom.pendingRepositories || 0) === 1 ? 'repository' : 'repositories'}
-                              </td>
-                            </tr>
-                            <tr className="govuk-table__row">
-                              <th className="govuk-table__header" scope="row">Total packages</th>
-                              <td className="govuk-table__cell">
-                                <strong>{sbom.packageCount || 0}</strong> packages
-                              </td>
-                            </tr>
-                            <tr className="govuk-table__row">
-                              <th className="govuk-table__header" scope="row">Unique licenses</th>
-                              <td className="govuk-table__cell">
-                                <strong>{sortedLicenses.length}</strong>
-                              </td>
-                            </tr>
-                            <tr className="govuk-table__row">
-                              <th className="govuk-table__header" scope="row">Unique ecosystems</th>
-                              <td className="govuk-table__cell">
-                                <strong>{sortedEcosystems.length}</strong>
-                              </td>
-                            </tr>
-                            {hasVulns && (
-                              <>
-                                <tr className="govuk-table__row">
-                                  <th className="govuk-table__header" scope="row">Vulnerabilities (open)</th>
-                                  <td className="govuk-table__cell">
-                                    <strong>{vulnerabilities!.total}</strong> total —{' '}
-                                    <strong className="govuk-!-colour-red">{vulnerabilities!.critical}</strong> critical,{' '}
-                                    <strong>{vulnerabilities!.high}</strong> high,{' '}
-                                    <strong>{vulnerabilities!.medium}</strong> medium,{' '}
-                                    <strong>{vulnerabilities!.low}</strong> low
-                                  </td>
-                                </tr>
-                              </>
-                            )}
-                          </tbody>
-                        </table>
-                      </div>
                     ),
                   },
                 ]}

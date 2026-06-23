@@ -84,9 +84,15 @@ export interface VulnerabilityAlert {
   cvss?: number;
   package?: string;
   ecosystem?: string;
+  manifestPath?: string;
+  scope?: string;
   vulnerableRange?: string;
   fixedIn?: string;
   url?: string;
+  observedVersions?: string[];
+  matchQuality?: 'exact' | 'inferred';
+  currentVersion?: string;
+  currentVersionReason?: string;
   _repo?: string;
 }
 

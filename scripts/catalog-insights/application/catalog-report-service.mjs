@@ -66,7 +66,26 @@ export function buildCatalogReport({ products, sbomReports, packageJson, workflo
       }
       const packages = Array.from(packageMap.values());
 
-      // Aggregate vulnerability counts across all repos
+      // Build repo-scoped package lookup for version resolution
+      // Map: ecosystem:packageName → [versions]
+      const packageLookup = new Map();
+      for (const repo of repositoryInsights) {
+        if (!Array.isArray(repo.packages)) continue;
+        for (const pkg of repo.packages) {
+          const pkgName = pkg?.name?.trim().toLowerCase();
+          const pkgEcosystem = (pkg?.ecosystem ?? '').trim().toLowerCase();
+          if (!pkgName) continue;
+
+          const key = `${repo.repo}:${pkgEcosystem}:${pkgName}`;
+          const versions = packageLookup.get(key) || new Set();
+          if (pkg.version?.trim()) {
+            versions.add(pkg.version.trim());
+          }
+          packageLookup.set(key, versions);
+        }
+      }
+
+      // Aggregate vulnerability counts across all repos, enriching alerts with current version
       const vulnTotals = { critical: 0, high: 0, medium: 0, low: 0, total: 0 };
       const allAlerts = [];
       for (const repo of repositoryInsights) {
@@ -78,7 +97,35 @@ export function buildCatalogReport({ products, sbomReports, packageJson, workflo
         vulnTotals.total += repo.vulnerabilities.total || 0;
         if (Array.isArray(repo.vulnerabilities.alerts)) {
           for (const alert of repo.vulnerabilities.alerts) {
-            allAlerts.push({ ...alert, _repo: repo.repo });
+            const alertEcosystem = (alert?.ecosystem ?? '').trim().toLowerCase();
+            const alertPackage = alert?.package?.trim().toLowerCase();
+            const lookupKey = `${repo.repo}:${alertEcosystem}:${alertPackage}`;
+            const versions = packageLookup.get(lookupKey);
+
+            let currentVersion;
+            let currentVersionReason;
+            let observedVersions;
+            let matchQuality;
+            if (versions && versions.size > 0) {
+              const sortedVersions = Array.from(versions).sort();
+              observedVersions = sortedVersions;
+              currentVersion = sortedVersions[sortedVersions.length - 1];
+              matchQuality = 'inferred';
+              currentVersionReason = undefined;
+            } else if (!alertPackage) {
+              currentVersionReason = 'no_package_name';
+            } else {
+              currentVersionReason = 'no_match';
+            }
+
+            allAlerts.push({
+              ...alert,
+              _repo: repo.repo,
+              observedVersions,
+              matchQuality,
+              currentVersion,
+              currentVersionReason,
+            });
           }
         }
       }
