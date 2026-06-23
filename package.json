@@ -63,7 +63,7 @@
     "@types/react": "^19.2.14",
     "@vitest/coverage-v8": "^4.1.8",
     "@vitest/ui": "^4.1.8",
-    "cspell": "^10.0.0",
+    "cspell": "^10.0.1",
     "jsdom": "^29.1.1",
     "markdownlint-cli": "^0.48.0",
     "pagefind": "^1.5.2",
