@@ -61,7 +61,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^25.9.4",
     "@types/react": "^19.2.17",
-    "@vitest/coverage-v8": "^4.1.8",
+    "@vitest/coverage-v8": "^4.1.9",
     "@vitest/ui": "^4.1.8",
     "cspell": "^10.0.1",
     "jsdom": "^29.1.1",
