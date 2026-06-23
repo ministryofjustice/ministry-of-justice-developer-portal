@@ -21,7 +21,7 @@ jobs:
           cache: npm
 
       - name: SLSA supply chain protection
-        uses: ministryofjustice/devsecops-actions/sca/slsa@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # 9ec6779d39e07ca69ecf17baf5208a4b0095c10b
+        uses: ministryofjustice/devsecops-actions/sca/slsa@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # v1.6.0
 
       - name: Install dependencies
         run: npm ci
