@@ -120,7 +120,7 @@ jobs:
 
     steps:
       - name: Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Dependencies
         uses: ministryofjustice/devsecops-actions/sca/dependencies@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # v1.6.0
@@ -141,7 +141,7 @@ jobs:
 
     steps:
       - name: Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: OWASP
         uses: ministryofjustice/devsecops-actions/sca/owasp@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # v1.6.0
@@ -163,7 +163,7 @@ jobs:
 
     steps:
       - name: Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: MoJ
         uses: ministryofjustice/devsecops-actions/sca/moj@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # v1.6.0
@@ -185,7 +185,7 @@ jobs:
 
     steps:
       - name: Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: CodeQL
         uses: ministryofjustice/devsecops-actions/sca/codeql@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # v1.6.0
@@ -203,7 +203,7 @@ jobs:
 
     steps:
       - name: Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: OpenSSF
         uses: ministryofjustice/devsecops-actions/sca/ossf@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # v1.6.0
@@ -221,7 +221,7 @@ jobs:
 
     steps:
       - name: Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: SBOM
         uses: ministryofjustice/devsecops-actions/sca/sbom@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # v1.6.0
