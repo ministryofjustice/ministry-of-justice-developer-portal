@@ -46,6 +46,9 @@ updates:
       semver-major-days: 8
       semver-minor-days: 4
       semver-patch-days: 3
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
   - package-ecosystem: "gomod"
     directory: "/"
     schedule:
