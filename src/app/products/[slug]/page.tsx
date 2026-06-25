@@ -65,6 +65,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
   const vulnerabilities = sbom?.vulnerabilities;
   const vulnAlerts = vulnerabilities?.alerts ?? [];
   const hasVulnerabilities = (vulnerabilities?.total ?? 0) > 0;
+  const codeScanning = sbom?.codeScanning;
+  const hasCodeScanning = (codeScanning?.total ?? 0) > 0;
   const severityOrder = ['critical', 'high', 'medium', 'low'] as const;
 
   // Product-level ecosystem and license totals (aggregated server-side in the report)
@@ -209,6 +211,18 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                                 </td>
                               </tr>
                             )}
+                            {hasCodeScanning && (
+                              <tr className="govuk-table__row">
+                                <th className="govuk-table__header" scope="row">Code scanning (open)</th>
+                                <td className="govuk-table__cell">
+                                  <strong>{codeScanning!.total}</strong> total —{' '}
+                                  <strong className="govuk-!-colour-red">{codeScanning!.critical}</strong> critical,{' '}
+                                  <strong>{codeScanning!.high}</strong> high,{' '}
+                                  <strong>{codeScanning!.medium}</strong> medium,{' '}
+                                  <strong>{codeScanning!.low}</strong> low
+                                </td>
+                              </tr>
+                            )}
                             {sbom.error && (
                               <tr className="govuk-table__row">
                                 <th className="govuk-table__header" scope="row">Error</th>
@@ -333,6 +347,48 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                       </div>
                     ) : (
                       <p className="govuk-body">No open Dependabot vulnerability alerts found. This may mean the repositories are secure, Dependabot is not enabled, or the token lacks <code>security_events</code> scope.</p>
+                    ),
+                  },
+                  {
+                    id: 'code-scanning',
+                    label: hasCodeScanning
+                      ? `Code scanning (${codeScanning!.total})`
+                      : 'Code scanning',
+                    content: hasCodeScanning ? (
+                      <div>
+                        <table className="govuk-table">
+                          <tbody className="govuk-table__body">
+                            <tr className="govuk-table__row">
+                              <th className="govuk-table__header" scope="row">Open alerts</th>
+                              <td className="govuk-table__cell">
+                                {codeScanning!.total} total ({codeScanning!.critical} critical, {codeScanning!.high} high, {codeScanning!.medium} medium, {codeScanning!.low} low)
+                              </td>
+                            </tr>
+                            <tr className="govuk-table__row">
+                              <th className="govuk-table__header" scope="row">Last analyzed</th>
+                              <td className="govuk-table__cell">{codeScanning!.lastAnalyzedAt || 'Not available'}</td>
+                            </tr>
+                            <tr className="govuk-table__row">
+                              <th className="govuk-table__header" scope="row">Rule types</th>
+                              <td className="govuk-table__cell">
+                                {Object.keys(codeScanning!.byRuleType).length > 0
+                                  ? Object.entries(codeScanning!.byRuleType).map(([name, count]) => `${name}: ${count}`).join(', ')
+                                  : 'Not available'}
+                              </td>
+                            </tr>
+                            <tr className="govuk-table__row">
+                              <th className="govuk-table__header" scope="row">Languages</th>
+                              <td className="govuk-table__cell">
+                                {Object.keys(codeScanning!.byLanguage).length > 0
+                                  ? Object.entries(codeScanning!.byLanguage).map(([name, count]) => `${name}: ${count}`).join(', ')
+                                  : 'Not available'}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <p className="govuk-body">No open code scanning alerts found. This may mean the repositories are secure, code scanning is not enabled, or the token lacks code scanning permissions.</p>
                     ),
                   },
                   {

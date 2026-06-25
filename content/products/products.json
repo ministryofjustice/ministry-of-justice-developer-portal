@@ -109,5 +109,17 @@
     "externalUrl": "https://www.forms.service.gov.uk/",
     "status": "live",
     "tags": ["forms", "no-code", "service-design"]
+  },
+  {
+    "slug": "hmpps-sre",
+    "name": "HMPPS SRE",
+    "category": "platforms",
+    "description": "Site reliability engineering team supporting HMPPS platforms and services.",
+    "owner": "HMPPS SRE",
+    "teamName": "hmpps-sre",
+    "teamOrg": "ministryofjustice",
+    "slackChannel": "#hmpps-sre",
+    "status": "live",
+    "tags": ["sre", "platform", "operations", "reliability"]
   }
 ]
