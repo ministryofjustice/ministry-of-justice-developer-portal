@@ -96,6 +96,7 @@ jobs:
         with:
           app-id: ${{ secrets.DEV_PORTAL_GH_APP_ID }}
           private-key: ${{ steps.gh-app-key.outputs.private_key }}
+          owner: ${{ github.repository_owner }}
 
       - name: Build and push image
         id: build-push
