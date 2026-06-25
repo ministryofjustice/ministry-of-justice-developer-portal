@@ -10,12 +10,18 @@
  * @property {string} owner
  * @property {string} repo
  * @property {string} status
+ * @property {string | undefined} sbomRef
+ * @property {'deployment_sha' | 'default_branch' | undefined} sbomRefType
+ * @property {string | undefined} deploymentRef
+ * @property {'sha' | 'branch' | 'tag' | 'unknown' | undefined} deploymentRefKind
+ * @property {string | undefined} deploymentEnvironment
  * @property {string | undefined} generatedAt
  * @property {number | undefined} packageCount
  * @property {string | undefined} reportUrl
  * @property {Record<string, number> | undefined} ecosystems
  * @property {Record<string, number> | undefined} licenses
  * @property {{ critical: number, high: number, medium: number, low: number, total: number, alerts?: Array<object> } | undefined} vulnerabilities
+ * @property {{ critical: number, high: number, medium: number, low: number, total: number, byRuleType: Record<string, number>, byLanguage: Record<string, number>, lastAnalyzedAt?: string } | undefined} codeScanning
  * @property {string | undefined} error
  */
 
@@ -36,6 +42,7 @@
  * @property {string} token
  * @property {string} apiVersion
  * @property {string} userAgent
+ * @property {string | undefined} [deploymentEnvironment]
  */
 
 /**

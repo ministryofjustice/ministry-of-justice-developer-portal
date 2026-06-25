@@ -77,6 +77,7 @@ export async function run({
       token,
       apiVersion,
       userAgent,
+      deploymentEnvironment: process.env.CATALOG_DEPLOYMENT_ENV,
     };
 
     const sources = await resolveCatalogSourcesFromProducts({

@@ -8,6 +8,7 @@
     "postinstall": "npm run sync:design-system-assets",
     "dev": "npm run sync:design-system-assets && next dev",
     "catalog:sync": "node scripts/get_catalog_insights.mjs",
+    "token:app": "node scripts/create_github_app_token.mjs",
     "build": "npm run sync:design-system-assets && npm run catalog:sync && next build && npx pagefind --site out",
     "start": "next start",
     "lint": "npm run validate:ts",

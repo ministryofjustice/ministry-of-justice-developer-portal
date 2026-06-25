@@ -6,6 +6,8 @@
 import {
   fetchSbomByRepository,
   fetchVulnerabilityAlerts,
+  fetchCodeScanningAlerts,
+  fetchLatestSuccessfulDeploymentRef,
   fetchTeamRepositories,
   toFailureSummary,
   toSbomSummary,
@@ -13,6 +15,7 @@ import {
   extractLicenses,
   extractTopPackages,
   normaliseVulnerabilityAlerts,
+  normaliseCodeScanningAlerts,
 } from './application-dependencies.mjs';
 import { hasCatalogTeam, resolveCatalogTeam } from '../shared/index.mjs';
 
@@ -57,11 +60,21 @@ export async function resolveCatalogSourcesFromProducts({ products, options }) {
  * @returns {Promise<RepositoryInsight>}
  */
 export async function buildCatalogInsightForSource(source, options) {
-  const { endpoint, payload } = await fetchSbomByRepository(
+  const deploymentRef = await fetchLatestSuccessfulDeploymentRef(
     { owner: source.owner, repo: source.repo },
     options,
   );
+  const sbomRef = deploymentRef?.sha;
+
+  const { endpoint, payload } = await fetchSbomByRepository(
+    { owner: source.owner, repo: source.repo, ref: sbomRef },
+    options,
+  );
   const rawAlerts = await fetchVulnerabilityAlerts(
+    { owner: source.owner, repo: source.repo },
+    options,
+  );
+  const rawCodeScanningAlerts = await fetchCodeScanningAlerts(
     { owner: source.owner, repo: source.repo },
     options,
   );
@@ -71,11 +84,19 @@ export async function buildCatalogInsightForSource(source, options) {
   const licenses = extractLicenses(summary.sbom);
   const packages = extractTopPackages(summary.sbom);
   const vulnerabilities = rawAlerts.length > 0 ? normaliseVulnerabilityAlerts(rawAlerts) : undefined;
+  const codeScanning = rawCodeScanningAlerts.length > 0
+    ? normaliseCodeScanningAlerts(rawCodeScanningAlerts)
+    : undefined;
 
   return {
     owner: source.owner,
     repo: source.repo,
     status: summary.status,
+    sbomRef,
+    sbomRefType: sbomRef ? 'deployment_sha' : 'default_branch',
+    deploymentRef: deploymentRef?.ref,
+    deploymentRefKind: deploymentRef?.refKind,
+    deploymentEnvironment: deploymentRef?.environment,
     generatedAt: summary.generatedAt,
     packageCount: summary.packageCount,
     reportUrl: summary.reportUrl,
@@ -83,6 +104,7 @@ export async function buildCatalogInsightForSource(source, options) {
     licenses: Object.keys(licenses).length > 0 ? licenses : undefined,
     packages: packages.length > 0 ? packages : undefined,
     vulnerabilities,
+    codeScanning,
     error: undefined,
   };
 }
@@ -114,9 +136,15 @@ export async function generateCatalogInsights({ sources, options }) {
         owner: source.owner,
         repo: source.repo,
         status: failure.status,
+        sbomRef: undefined,
+        sbomRefType: undefined,
+        deploymentRef: undefined,
+        deploymentRefKind: undefined,
+        deploymentEnvironment: undefined,
         generatedAt: undefined,
         packageCount: undefined,
         reportUrl: undefined,
+        codeScanning: undefined,
         error: failure.error,
       });
     }

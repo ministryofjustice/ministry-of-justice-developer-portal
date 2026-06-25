@@ -57,10 +57,15 @@ export interface ProductSbomSummary {
   completedRepositories?: number;
   failedRepositories?: number;
   pendingRepositories?: number;
+  sbomRefCoverage?: {
+    deploymentShaRepositories: number;
+    defaultBranchRepositories: number;
+  };
   ecosystems?: Record<string, number>;
   licenses?: Record<string, number>;
   packages?: SbomPackageLite[];
   vulnerabilities?: VulnerabilitySummary;
+  codeScanning?: CodeScanningSummary;
   repositories?: ProductRepositoryInsight[];
   sbom?: SbomDocument;
 }
@@ -105,16 +110,33 @@ export interface VulnerabilitySummary {
   alerts?: VulnerabilityAlert[];
 }
 
+export interface CodeScanningSummary {
+  critical: number;
+  high: number;
+  medium: number;
+  low: number;
+  total: number;
+  byRuleType: Record<string, number>;
+  byLanguage: Record<string, number>;
+  lastAnalyzedAt?: string;
+}
+
 export interface ProductRepositoryInsight {
   owner: string;
   repo: string;
   status: string;
+  sbomRef?: string;
+  sbomRefType?: 'deployment_sha' | 'default_branch';
+  deploymentRef?: string;
+  deploymentRefKind?: 'sha' | 'branch' | 'tag' | 'unknown';
+  deploymentEnvironment?: string;
   generatedAt?: string;
   packageCount?: number;
   reportUrl?: string;
   ecosystems?: Record<string, number>;
   licenses?: Record<string, number>;
   vulnerabilities?: Omit<VulnerabilitySummary, 'alerts'>;
+  codeScanning?: CodeScanningSummary;
   error?: string;
 }
 

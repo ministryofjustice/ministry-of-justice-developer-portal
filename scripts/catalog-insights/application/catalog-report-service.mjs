@@ -32,6 +32,12 @@ export function buildCatalogReport({ products, sbomReports, packageJson, workflo
       const completedCount = repositoryInsights.filter((repo) => repo.status === 'completed').length;
       const failedCount = repositoryInsights.filter((repo) => repo.status === 'failed').length;
       const pendingCount = repositoryCount - completedCount - failedCount;
+      const deploymentBackedCount = repositoryInsights.filter(
+        (repo) => repo.sbomRefType === 'deployment_sha',
+      ).length;
+      const defaultBranchBackedCount = repositoryInsights.filter(
+        (repo) => repo.sbomRefType === 'default_branch',
+      ).length;
       const packageCount = repositoryInsights.reduce(
         (total, repo) => total + (typeof repo.packageCount === 'number' ? repo.packageCount : 0),
         0,
@@ -140,6 +146,37 @@ export function buildCatalogReport({ products, sbomReports, packageJson, workflo
         ? { ...vulnTotals, alerts: allAlerts }
         : undefined;
 
+      const codeScanningTotals = { critical: 0, high: 0, medium: 0, low: 0, total: 0 };
+      const codeScanningByRuleType = {};
+      const codeScanningByLanguage = {};
+      const codeScanningTimestamps = [];
+      for (const repo of repositoryInsights) {
+        if (!repo.codeScanning) continue;
+        codeScanningTotals.critical += repo.codeScanning.critical || 0;
+        codeScanningTotals.high += repo.codeScanning.high || 0;
+        codeScanningTotals.medium += repo.codeScanning.medium || 0;
+        codeScanningTotals.low += repo.codeScanning.low || 0;
+        codeScanningTotals.total += repo.codeScanning.total || 0;
+        if (repo.codeScanning.byRuleType) {
+          Object.assign(codeScanningByRuleType, mergeCountMaps(codeScanningByRuleType, repo.codeScanning.byRuleType));
+        }
+        if (repo.codeScanning.byLanguage) {
+          Object.assign(codeScanningByLanguage, mergeCountMaps(codeScanningByLanguage, repo.codeScanning.byLanguage));
+        }
+        if (typeof repo.codeScanning.lastAnalyzedAt === 'string') {
+          codeScanningTimestamps.push(repo.codeScanning.lastAnalyzedAt);
+        }
+      }
+
+      const codeScanning = codeScanningTotals.total > 0
+        ? {
+          ...codeScanningTotals,
+          byRuleType: codeScanningByRuleType,
+          byLanguage: codeScanningByLanguage,
+          lastAnalyzedAt: latestTimestamp(codeScanningTimestamps),
+        }
+        : undefined;
+
       // Strip packages + vulnerabilities.alerts from per-repo entries to avoid duplication
       const repositoriesForOutput = repositoryInsights.map(({ packages: _p, vulnerabilities: repoVuln, ...rest }) => ({
         ...rest,
@@ -156,10 +193,15 @@ export function buildCatalogReport({ products, sbomReports, packageJson, workflo
         completedRepositories: completedCount,
         failedRepositories: failedCount,
         pendingRepositories: pendingCount,
+        sbomRefCoverage: {
+          deploymentShaRepositories: deploymentBackedCount,
+          defaultBranchRepositories: defaultBranchBackedCount,
+        },
         ecosystems: Object.keys(ecosystems).length > 0 ? ecosystems : undefined,
         licenses: Object.keys(licenses).length > 0 ? licenses : undefined,
         packages: packages.length > 0 ? packages : undefined,
         vulnerabilities,
+        codeScanning,
         repositories: repositoriesForOutput,
         catalog: {
           slug: product.slug,

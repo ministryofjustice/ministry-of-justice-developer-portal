@@ -8,6 +8,9 @@ COPY package*.json ./
 COPY scripts ./scripts
 RUN npm ci
 
+ARG CATALOG_DEPLOYMENT_ENV=
+ENV CATALOG_DEPLOYMENT_ENV=${CATALOG_DEPLOYMENT_ENV}
+
 COPY . .
 RUN npm run ingest
 RUN --mount=type=secret,id=github_token \

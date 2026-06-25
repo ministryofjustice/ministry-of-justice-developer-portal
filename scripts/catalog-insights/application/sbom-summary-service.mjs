@@ -325,3 +325,85 @@ export function normaliseVulnerabilityAlerts(alerts) {
     alerts: normalised,
   };
 }
+
+function normaliseCodeScanningSeverity(alert) {
+  const securitySeverity = alert?.rule?.security_severity_level;
+  if (typeof securitySeverity === 'string' && securitySeverity.trim().length > 0) {
+    const value = securitySeverity.trim().toLowerCase();
+    if (value === 'critical' || value === 'high' || value === 'medium' || value === 'low') {
+      return value;
+    }
+  }
+
+  const genericSeverity = (alert?.rule?.severity ?? '').toString().toLowerCase();
+  if (genericSeverity === 'error') return 'high';
+  if (genericSeverity === 'warning') return 'medium';
+  if (genericSeverity === 'note') return 'low';
+  return 'low';
+}
+
+function classifyRuleType(tags) {
+  if (!Array.isArray(tags)) return 'other';
+  const loweredTags = tags
+    .filter((tag) => typeof tag === 'string')
+    .map((tag) => tag.toLowerCase());
+
+  if (loweredTags.some((tag) => tag.includes('security'))) return 'security';
+  if (loweredTags.some((tag) => tag.includes('correctness'))) return 'correctness';
+  if (loweredTags.some((tag) => tag.includes('maintainability'))) return 'maintainability';
+  if (loweredTags.some((tag) => tag.includes('performance'))) return 'performance';
+  if (loweredTags.some((tag) => tag.includes('style'))) return 'style';
+  return 'other';
+}
+
+function extractLanguageFromTags(tags) {
+  if (!Array.isArray(tags)) return 'unknown';
+  for (const tag of tags) {
+    if (typeof tag !== 'string') continue;
+    const lowered = tag.toLowerCase();
+    if (lowered.startsWith('language:')) {
+      const value = lowered.slice('language:'.length).trim();
+      if (value) return value;
+    }
+  }
+  return 'unknown';
+}
+
+/**
+ * Normalises raw code scanning alerts into compact aggregate metrics.
+ * @param {Array<object>} alerts
+ * @returns {{ critical: number, high: number, medium: number, low: number, total: number, byRuleType: Record<string, number>, byLanguage: Record<string, number>, lastAnalyzedAt?: string }}
+ */
+export function normaliseCodeScanningAlerts(alerts) {
+  const counts = { critical: 0, high: 0, medium: 0, low: 0 };
+  const byRuleType = {};
+  const byLanguage = {};
+  const analyzedAt = [];
+
+  for (const alert of alerts) {
+    const severity = normaliseCodeScanningSeverity(alert);
+    counts[severity] = (counts[severity] || 0) + 1;
+
+    const ruleType = classifyRuleType(alert?.rule?.tags);
+    byRuleType[ruleType] = (byRuleType[ruleType] || 0) + 1;
+
+    const language = extractLanguageFromTags(alert?.rule?.tags);
+    byLanguage[language] = (byLanguage[language] || 0) + 1;
+
+    const mostRecent = alert?.most_recent_instance?.analysis?.created_at
+      ?? alert?.most_recent_instance?.created_at
+      ?? alert?.updated_at
+      ?? alert?.created_at;
+    if (typeof mostRecent === 'string' && mostRecent.trim().length > 0) {
+      analyzedAt.push(mostRecent);
+    }
+  }
+
+  return {
+    ...counts,
+    total: alerts.length,
+    byRuleType,
+    byLanguage,
+    lastAnalyzedAt: analyzedAt.length > 0 ? analyzedAt.sort((a, b) => b.localeCompare(a))[0] : undefined,
+  };
+}
