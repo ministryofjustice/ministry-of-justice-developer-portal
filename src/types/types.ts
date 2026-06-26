@@ -323,6 +323,8 @@ export interface Product {
   owner: string;
   teamName?: string;
   teamOrg?: string;
+  catalogDeploymentEnvironment?: string;
+  deploymentEnvironment?: string;
   slackChannel?: string;
   docsUrl?: string;
   externalUrl?: string;

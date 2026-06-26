@@ -29,6 +29,16 @@ export async function resolveCatalogSourcesFromProducts({ products, options }) {
   if (!Array.isArray(products)) return [];
 
   const sources = [];
+  const defaultDeploymentEnvironment =
+    typeof options?.deploymentEnvironment === 'string' && options.deploymentEnvironment.trim().length > 0
+      ? options.deploymentEnvironment.trim().toLowerCase()
+      : 'prod';
+
+  const normaliseDeploymentEnvironment = (value) => {
+    if (typeof value !== 'string' || value.trim().length === 0) return undefined;
+    const normalised = value.trim().toLowerCase();
+    return normalised === 'none' ? undefined : normalised;
+  };
 
   for (const product of products) {
     if (typeof product?.slug !== 'string' || product.slug.trim().length === 0) continue;
@@ -42,12 +52,28 @@ export async function resolveCatalogSourcesFromProducts({ products, options }) {
       options,
     );
 
+    const hasExplicitNoneOverride =
+      (typeof product?.catalogDeploymentEnvironment === 'string'
+        && product.catalogDeploymentEnvironment.trim().toLowerCase() === 'none')
+      || (typeof product?.deploymentEnvironment === 'string'
+        && product.deploymentEnvironment.trim().toLowerCase() === 'none');
+
+    const configuredDeploymentEnvironment =
+      normaliseDeploymentEnvironment(product?.catalogDeploymentEnvironment)
+      ?? normaliseDeploymentEnvironment(product?.deploymentEnvironment);
+
     for (const repository of repositories) {
       sources.push({
         productSlug: product.slug,
         owner: repository.owner,
         repo: repository.repo,
         visibility: repository.visibility,
+        deploymentEnvironment:
+          hasExplicitNoneOverride
+            ? undefined
+            : configuredDeploymentEnvironment !== undefined
+            ? configuredDeploymentEnvironment
+            : defaultDeploymentEnvironment,
       });
     }
   }
@@ -62,9 +88,21 @@ export async function resolveCatalogSourcesFromProducts({ products, options }) {
  * @returns {Promise<RepositoryInsight>}
  */
 export async function buildCatalogInsightForSource(source, options) {
+  const sourceOptions = {
+    ...options,
+    deploymentEnvironment:
+      typeof source?.deploymentEnvironment === 'string' && source.deploymentEnvironment.trim().length > 0
+        ? source.deploymentEnvironment
+        : (
+          typeof options?.deploymentEnvironment === 'string' && options.deploymentEnvironment.trim().length > 0
+            ? options.deploymentEnvironment
+            : 'prod'
+        ),
+  };
+
   const deploymentRef = await fetchLatestSuccessfulDeploymentRef(
     { owner: source.owner, repo: source.repo },
-    options,
+    sourceOptions,
   );
   const sbomRef = deploymentRef?.sha;
 

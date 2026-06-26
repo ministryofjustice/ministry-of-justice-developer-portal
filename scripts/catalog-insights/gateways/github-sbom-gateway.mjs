@@ -247,11 +247,16 @@ export async function fetchCodeScanningAlerts({ owner, repo }, options) {
  */
 export async function fetchLatestSuccessfulDeploymentRef({ owner, repo }, options) {
   const environmentsToTry = [];
+  const explicitEnvironment =
+    typeof options?.deploymentEnvironment === 'string' && options.deploymentEnvironment.trim().length > 0
+      ? options.deploymentEnvironment.trim()
+      : undefined;
 
-  if (typeof options?.deploymentEnvironment === 'string' && options.deploymentEnvironment.trim().length > 0) {
-    environmentsToTry.push(options.deploymentEnvironment.trim());
+  if (explicitEnvironment) {
+    environmentsToTry.push(explicitEnvironment);
+  } else {
+    environmentsToTry.push(undefined);
   }
-  environmentsToTry.push(undefined);
 
   for (const environment of environmentsToTry) {
     let deployments;

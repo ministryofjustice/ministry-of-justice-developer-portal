@@ -4,6 +4,7 @@
  * @property {string} owner
  * @property {string} repo
  * @property {'public' | 'private' | 'internal' | 'unknown' | undefined} visibility
+ * @property {string | undefined} deploymentEnvironment
  */
 
 /**

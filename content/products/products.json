@@ -6,6 +6,7 @@
     "owner": "Cloud Platform team",
     "teamName": "cloud-platform-engineers",
     "teamOrg": "ministryofjustice",
+    "catalogDeploymentEnvironment": "none",
     "slackChannel": "#cloud-platform",
     "docsUrl": "/docs/cloud-platform",
     "status": "live",
@@ -19,6 +20,7 @@
     "owner": "Modernisation Platform team",
     "teamName": "modernisation-platform",
     "teamOrg": "ministryofjustice",
+    "catalogDeploymentEnvironment": "none",
     "slackChannel": "#modernisation-platform",
     "docsUrl": "/docs/modernisation-platform",
     "status": "live",
@@ -118,6 +120,7 @@
     "owner": "HMPPS SRE",
     "teamName": "hmpps-sre",
     "teamOrg": "ministryofjustice",
+    "catalogDeploymentEnvironment": "none",
     "slackChannel": "#hmpps-sre",
     "status": "live",
     "tags": ["sre", "platform", "operations", "reliability"]
