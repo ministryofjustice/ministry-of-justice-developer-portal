@@ -119,12 +119,33 @@ export interface CodeScanningSummary {
   byRuleType: Record<string, number>;
   byLanguage: Record<string, number>;
   lastAnalyzedAt?: string;
+  alerts?: CodeScanningAlert[];
+}
+
+export interface CodeScanningAlert {
+  number?: number;
+  severity: string;
+  ruleId?: string;
+  ruleName?: string;
+  ruleDescription?: string;
+  ruleType?: string;
+  language?: string;
+  tool?: string;
+  state?: string;
+  dismissedReason?: string;
+  path?: string;
+  line?: number;
+  htmlUrl?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  _repo?: string;
 }
 
 export interface ProductRepositoryInsight {
   owner: string;
   repo: string;
   status: string;
+  visibility?: 'public' | 'private' | 'internal' | 'unknown';
   sbomRef?: string;
   sbomRefType?: 'deployment_sha' | 'default_branch';
   deploymentRef?: string;

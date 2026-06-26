@@ -8,6 +8,7 @@ import {
   fetchVulnerabilityAlerts,
   fetchCodeScanningAlerts,
   fetchLatestSuccessfulDeploymentRef,
+  fetchRepositoryMetadata,
   fetchTeamRepositories,
   toFailureSummary,
   toSbomSummary,
@@ -46,6 +47,7 @@ export async function resolveCatalogSourcesFromProducts({ products, options }) {
         productSlug: product.slug,
         owner: repository.owner,
         repo: repository.repo,
+        visibility: repository.visibility,
       });
     }
   }
@@ -92,6 +94,7 @@ export async function buildCatalogInsightForSource(source, options) {
     owner: source.owner,
     repo: source.repo,
     status: summary.status,
+    visibility: source.visibility,
     sbomRef,
     sbomRefType: sbomRef ? 'deployment_sha' : 'default_branch',
     deploymentRef: deploymentRef?.ref,
@@ -129,13 +132,30 @@ export async function generateCatalogInsights({ sources, options }) {
       output.reports[source.productSlug].push(summary);
     } catch (error) {
       const failure = toFailureSummary(error);
+      let status = failure.status;
+      let errorMessage = failure.error;
+
+      try {
+        const repoMetadata = await fetchRepositoryMetadata(
+          { owner: source.owner, repo: source.repo },
+          options,
+        );
+        if (repoMetadata.archived) {
+          status = 'archived';
+          errorMessage = undefined;
+        }
+      } catch {
+        // Silently ignore metadata fetch errors, use original error status
+      }
+
       if (!Array.isArray(output.reports[source.productSlug])) {
         output.reports[source.productSlug] = [];
       }
       output.reports[source.productSlug].push({
         owner: source.owner,
         repo: source.repo,
-        status: failure.status,
+        status,
+        visibility: source.visibility,
         sbomRef: undefined,
         sbomRefType: undefined,
         deploymentRef: undefined,
@@ -145,7 +165,7 @@ export async function generateCatalogInsights({ sources, options }) {
         packageCount: undefined,
         reportUrl: undefined,
         codeScanning: undefined,
-        error: failure.error,
+        error: errorMessage,
       });
     }
   }

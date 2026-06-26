@@ -150,6 +150,7 @@ export function buildCatalogReport({ products, sbomReports, packageJson, workflo
       const codeScanningByRuleType = {};
       const codeScanningByLanguage = {};
       const codeScanningTimestamps = [];
+      const codeScanningAlerts = [];
       for (const repo of repositoryInsights) {
         if (!repo.codeScanning) continue;
         codeScanningTotals.critical += repo.codeScanning.critical || 0;
@@ -166,7 +167,21 @@ export function buildCatalogReport({ products, sbomReports, packageJson, workflo
         if (typeof repo.codeScanning.lastAnalyzedAt === 'string') {
           codeScanningTimestamps.push(repo.codeScanning.lastAnalyzedAt);
         }
+        if (Array.isArray(repo.codeScanning.alerts)) {
+          for (const alert of repo.codeScanning.alerts) {
+            codeScanningAlerts.push({
+              ...alert,
+              _repo: repo.repo,
+            });
+          }
+        }
       }
+
+      codeScanningAlerts.sort((a, b) => {
+        const ai = SEVERITY_ORDER.indexOf(a.severity);
+        const bi = SEVERITY_ORDER.indexOf(b.severity);
+        return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+      });
 
       const codeScanning = codeScanningTotals.total > 0
         ? {
@@ -174,14 +189,27 @@ export function buildCatalogReport({ products, sbomReports, packageJson, workflo
           byRuleType: codeScanningByRuleType,
           byLanguage: codeScanningByLanguage,
           lastAnalyzedAt: latestTimestamp(codeScanningTimestamps),
+          alerts: codeScanningAlerts,
         }
         : undefined;
 
-      // Strip packages + vulnerabilities.alerts from per-repo entries to avoid duplication
-      const repositoriesForOutput = repositoryInsights.map(({ packages: _p, vulnerabilities: repoVuln, ...rest }) => ({
+      // Strip packages + vulnerabilities.alerts + codeScanning.alerts from per-repo entries to avoid duplication
+      const repositoriesForOutput = repositoryInsights.map(({ packages: _p, vulnerabilities: repoVuln, codeScanning: repoCodeScanning, ...rest }) => ({
         ...rest,
         vulnerabilities: repoVuln
           ? { critical: repoVuln.critical, high: repoVuln.high, medium: repoVuln.medium, low: repoVuln.low, total: repoVuln.total }
+          : undefined,
+        codeScanning: repoCodeScanning
+          ? {
+            critical: repoCodeScanning.critical,
+            high: repoCodeScanning.high,
+            medium: repoCodeScanning.medium,
+            low: repoCodeScanning.low,
+            total: repoCodeScanning.total,
+            byRuleType: repoCodeScanning.byRuleType,
+            byLanguage: repoCodeScanning.byLanguage,
+            lastAnalyzedAt: repoCodeScanning.lastAnalyzedAt,
+          }
           : undefined,
       }));
 

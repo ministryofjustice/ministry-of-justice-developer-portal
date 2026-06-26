@@ -12,6 +12,8 @@ import { TagList } from '@/components/templateRender/TagList';
 import { Section } from '@/components/templateRender/Section';
 import { Tabs } from '@/components/templateRender/Tabs';
 import { VulnerabilitiesTable } from '@/components/VulnerabilitiesTable';
+import { CodeScanningTable } from '@/components/CodeScanningTable';
+import { PackagesTable } from '@/components/PackagesTable';
 import { loadCatalogReportEntryBySlug } from '@/lib/catalogReports';
 import products from '../../../../content/products/products.json';
 import sources from '../../../../sources.json';
@@ -66,7 +68,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
   const vulnAlerts = vulnerabilities?.alerts ?? [];
   const hasVulnerabilities = (vulnerabilities?.total ?? 0) > 0;
   const codeScanning = sbom?.codeScanning;
+  const codeScanningAlerts = codeScanning?.alerts ?? [];
   const hasCodeScanning = (codeScanning?.total ?? 0) > 0;
+  const archivedRepositories = repositoryInsights.filter((repository) => repository.status === 'archived').length;
+  const publicRepositories = repositoryInsights.filter((repository) => repository.visibility === 'public').length;
+  const internalRepositories = repositoryInsights.filter((repository) => repository.visibility === 'internal').length;
+  const privateRepositories = repositoryInsights.filter((repository) => repository.visibility === 'private').length;
   const severityOrder = ['critical', 'high', 'medium', 'low'] as const;
 
   // Product-level ecosystem and license totals (aggregated server-side in the report)
@@ -176,8 +183,14 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                               <td className="govuk-table__cell">{sbomGeneratedAt || 'Not available'}</td>
                             </tr>
                             <tr className="govuk-table__row">
-                              <th className="govuk-table__header" scope="row">Total repositories</th>
-                              <td className="govuk-table__cell">{sbom.repositoryCount || 0}</td>
+                              <th className="govuk-table__header" scope="row">Repositories</th>
+                              <td className="govuk-table__cell">
+                                <strong>{sbom.repositoryCount || 0}</strong> total -{' '}
+                                <strong>{archivedRepositories}</strong> archived,{' '}
+                                <strong>{publicRepositories}</strong> public,{' '}
+                                <strong>{internalRepositories}</strong> internal,{' '}
+                                <strong>{privateRepositories}</strong> private
+                              </td>
                             </tr>
                             <tr className="govuk-table__row">
                               <th className="govuk-table__header" scope="row">Total packages</th>
@@ -191,12 +204,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                               <th className="govuk-table__header" scope="row">Unique licenses</th>
                               <td className="govuk-table__cell">
                                 <strong>{sortedLicenses.length}</strong>
-                              </td>
-                            </tr>
-                            <tr className="govuk-table__row">
-                              <th className="govuk-table__header" scope="row">Unique ecosystems</th>
-                              <td className="govuk-table__cell">
-                                <strong>{sortedEcosystems.length}</strong>
                               </td>
                             </tr>
                             {hasVulnerabilities && (
@@ -328,9 +335,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                   },
                   {
                     id: 'vulnerabilities',
-                    label: hasVulnerabilities
-                      ? `Vulnerabilities (${vulnerabilities!.total})`
-                      : 'Vulnerabilities',
+                    label: 'Vulnerabilities',
                     content: hasVulnerabilities ? (
                       <div style={{ minWidth: 0, overflow: 'hidden' }}>
                         <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
@@ -351,9 +356,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                   },
                   {
                     id: 'code-scanning',
-                    label: hasCodeScanning
-                      ? `Code scanning (${codeScanning!.total})`
-                      : 'Code scanning',
+                    label: 'Code scanning',
                     content: hasCodeScanning ? (
                       <div>
                         <table className="govuk-table">
@@ -386,6 +389,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                             </tr>
                           </tbody>
                         </table>
+
+                        <CodeScanningTable alerts={codeScanningAlerts} />
                       </div>
                     ) : (
                       <p className="govuk-body">No open code scanning alerts found. This may mean the repositories are secure, code scanning is not enabled, or the token lacks code scanning permissions.</p>
@@ -393,75 +398,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                   },
                   {
                     id: 'packages',
-                    label: `Packages (${allPackages.length})`,
+                    label: 'Packages',
                     content: allPackages.length > 0 ? (
-                      <div>
-                        <div className="app-tabs__table-wrapper">
-                          <table className="govuk-table govuk-!-margin-bottom-0 app-tabs__table app-tabs__table--packages">
-                            <thead className="govuk-table__head">
-                              <tr className="govuk-table__row">
-                                <th className="govuk-table__header" scope="col">Package</th>
-                                <th className="govuk-table__header" scope="col">Details</th>
-                                <th className="govuk-table__header" scope="col">Repositories</th>
-                              </tr>
-                            </thead>
-                            <tbody className="govuk-table__body">
-                              {allPackages.map((pkg, i) => (
-                                <tr className="govuk-table__row" key={`${pkg.name}@${pkg.version ?? ''}-${i}`}>
-                                  <td className="govuk-table__cell app-tabs__package-name-cell">
-                                    {pkg.purl ? (
-                                      <a className="govuk-link app-tabs__package-name" href={`https://deps.dev/${pkg.purl}`} target="_blank" rel="noreferrer">
-                                        {pkg.name}
-                                      </a>
-                                    ) : (
-                                      <span className="app-tabs__package-name">{pkg.name}</span>
-                                    )}
-                                    <div className="govuk-body-s govuk-!-colour-secondary govuk-!-margin-top-1">
-                                      {pkg.version || 'Version not available'}
-                                    </div>
-                                  </td>
-                                  <td className="govuk-table__cell">
-                                    <dl className="app-tabs__meta-list">
-                                      <div>
-                                        <dt>Ecosystem</dt>
-                                        <dd>{pkg.ecosystem || '—'}</dd>
-                                      </div>
-                                      <div>
-                                        <dt>License</dt>
-                                        <dd>{pkg.license || '—'}</dd>
-                                      </div>
-                                      {pkg.purpose?.trim() && (
-                                        <div>
-                                          <dt>Purpose</dt>
-                                          <dd>{pkg.purpose}</dd>
-                                        </div>
-                                      )}
-                                      {pkg.supplier?.trim() && (
-                                        <div>
-                                          <dt>Supplier</dt>
-                                          <dd>{pkg.supplier}</dd>
-                                        </div>
-                                      )}
-                                    </dl>
-                                  </td>
-                                  <td className="govuk-table__cell app-tabs__repos-cell">
-                                    {pkg.repos.length === 1
-                                      ? <span className="govuk-body-s">{pkg.repos[0]}</span>
-                                      : (
-                                        <details className="app-tabs__details">
-                                          <summary className="govuk-body-s">{pkg.repos.length} repositories</summary>
-                                          <ul className="govuk-list govuk-list--bullet govuk-!-margin-top-1 govuk-!-margin-bottom-0">
-                                            {pkg.repos.map((r, repoIndex) => <li key={`${r}-${repoIndex}`}><span className="govuk-body-s">{r}</span></li>)}
-                                          </ul>
-                                        </details>
-                                      )}
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
+                      <PackagesTable packages={allPackages} />
                     ) : (
                       <p className="govuk-body">No package data available. Package details are extracted when the catalog sync runs with a valid GitHub token.</p>
                     ),

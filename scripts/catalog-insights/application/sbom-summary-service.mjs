@@ -372,13 +372,14 @@ function extractLanguageFromTags(tags) {
 /**
  * Normalises raw code scanning alerts into compact aggregate metrics.
  * @param {Array<object>} alerts
- * @returns {{ critical: number, high: number, medium: number, low: number, total: number, byRuleType: Record<string, number>, byLanguage: Record<string, number>, lastAnalyzedAt?: string }}
+ * @returns {{ critical: number, high: number, medium: number, low: number, total: number, byRuleType: Record<string, number>, byLanguage: Record<string, number>, lastAnalyzedAt?: string, alerts: Array<object> }}
  */
 export function normaliseCodeScanningAlerts(alerts) {
   const counts = { critical: 0, high: 0, medium: 0, low: 0 };
   const byRuleType = {};
   const byLanguage = {};
   const analyzedAt = [];
+  const normalisedAlerts = [];
 
   for (const alert of alerts) {
     const severity = normaliseCodeScanningSeverity(alert);
@@ -397,7 +398,31 @@ export function normaliseCodeScanningAlerts(alerts) {
     if (typeof mostRecent === 'string' && mostRecent.trim().length > 0) {
       analyzedAt.push(mostRecent);
     }
+
+    normalisedAlerts.push({
+      number: alert?.number,
+      severity,
+      ruleId: alert?.rule?.id,
+      ruleName: alert?.rule?.name,
+      ruleDescription: alert?.rule?.description,
+      ruleType,
+      language,
+      tool: alert?.tool?.name,
+      state: alert?.state,
+      dismissedReason: alert?.dismissed_reason,
+      path: alert?.most_recent_instance?.location?.path,
+      line: alert?.most_recent_instance?.location?.start_line,
+      htmlUrl: alert?.html_url,
+      createdAt: alert?.created_at,
+      updatedAt: alert?.updated_at,
+    });
   }
+
+  normalisedAlerts.sort((a, b) => {
+    const ai = SEVERITY_ORDER.indexOf(a.severity);
+    const bi = SEVERITY_ORDER.indexOf(b.severity);
+    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+  });
 
   return {
     ...counts,
@@ -405,5 +430,6 @@ export function normaliseCodeScanningAlerts(alerts) {
     byRuleType,
     byLanguage,
     lastAnalyzedAt: analyzedAt.length > 0 ? analyzedAt.sort((a, b) => b.localeCompare(a))[0] : undefined,
+    alerts: normalisedAlerts,
   };
 }

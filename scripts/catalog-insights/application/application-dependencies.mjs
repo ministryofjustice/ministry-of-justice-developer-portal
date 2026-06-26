@@ -5,6 +5,7 @@ export {
 	fetchLatestSuccessfulDeploymentRef,
 } from '../gateways/github-sbom-gateway.mjs';
 export { fetchTeamRepositories } from '../gateways/github-sbom-gateway.mjs';
+export { fetchRepositoryMetadata } from '../gateways/github-sbom-gateway.mjs';
 export {
 	toFailureSummary,
 	toSbomSummary,

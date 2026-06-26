@@ -3,13 +3,15 @@
  * @property {string} productSlug
  * @property {string} owner
  * @property {string} repo
+ * @property {'public' | 'private' | 'internal' | 'unknown' | undefined} visibility
  */
 
 /**
  * @typedef {Object} RepositoryInsight
  * @property {string} owner
  * @property {string} repo
- * @property {string} status
+ * @property {string} status can be 'success', 'archived', or 'error'
+ * @property {'public' | 'private' | 'internal' | 'unknown' | undefined} visibility
  * @property {string | undefined} sbomRef
  * @property {'deployment_sha' | 'default_branch' | undefined} sbomRefType
  * @property {string | undefined} deploymentRef
@@ -21,7 +23,7 @@
  * @property {Record<string, number> | undefined} ecosystems
  * @property {Record<string, number> | undefined} licenses
  * @property {{ critical: number, high: number, medium: number, low: number, total: number, alerts?: Array<object> } | undefined} vulnerabilities
- * @property {{ critical: number, high: number, medium: number, low: number, total: number, byRuleType: Record<string, number>, byLanguage: Record<string, number>, lastAnalyzedAt?: string } | undefined} codeScanning
+ * @property {{ critical: number, high: number, medium: number, low: number, total: number, byRuleType: Record<string, number>, byLanguage: Record<string, number>, lastAnalyzedAt?: string, alerts?: Array<object> } | undefined} codeScanning
  * @property {string | undefined} error
  */
 

@@ -98,6 +98,13 @@ jobs:
           private-key: ${{ steps.gh-app-key.outputs.private_key }}
           owner: ${{ github.repository_owner }}
 
+      - name: Restore catalog insights cache
+        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        with:
+          path: content/products/catalog_reports/
+          key: catalog-insights-
+          restore-keys: catalog-insights-
+
       - name: Build and push image
         id: build-push
         shell: bash

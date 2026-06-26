@@ -323,7 +323,7 @@ export async function fetchLatestSuccessfulDeploymentRef({ owner, repo }, option
  * Fetches all repositories visible to a GitHub team.
  * @param {{ org: string, teamSlug: string }} team
  * @param {FetchOptions} options
- * @returns {Promise<Array<{ owner: string, repo: string }>>}
+ * @returns {Promise<Array<{ owner: string, repo: string, visibility?: 'public' | 'private' | 'internal' | 'unknown' }>>}
  */
 export async function fetchTeamRepositories({ org, teamSlug }, options) {
   const repositories = [];
@@ -347,7 +347,16 @@ export async function fetchTeamRepositories({ org, teamSlug }, options) {
       const name = repo?.name;
       if (typeof owner !== 'string' || typeof name !== 'string') continue;
 
-      repositories.push({ owner, repo: name });
+      const visibility =
+        typeof repo?.visibility === 'string' && repo.visibility.trim().length > 0
+          ? repo.visibility.trim().toLowerCase()
+          : (repo?.private === true ? 'private' : 'public');
+
+      repositories.push({
+        owner,
+        repo: name,
+        visibility: ['public', 'private', 'internal'].includes(visibility) ? visibility : 'unknown',
+      });
     }
 
     if (payload.length < 100) {
@@ -358,4 +367,33 @@ export async function fetchTeamRepositories({ org, teamSlug }, options) {
   }
 
   return repositories;
+
+}
+
+/**
+ * Builds the repository metadata endpoint.
+ * @param {{ owner: string, repo: string }} args
+ * @returns {string}
+ */
+export function buildRepositoryMetadataEndpoint({ owner, repo }) {
+  return `https://api.github.com/repos/${owner}/${repo}`;
+}
+
+/**
+ * Fetches repository metadata to check if archived.
+ * @param {{ owner: string, repo: string }} repository
+ * @param {FetchOptions} options
+ * @returns {Promise<{ archived: boolean }>}
+ */
+export async function fetchRepositoryMetadata({ owner, repo }, options) {
+  const endpoint = buildRepositoryMetadataEndpoint({ owner, repo });
+  const metadata = await requestGithubJson({
+    endpoint,
+    token: options.token,
+    apiVersion: options.apiVersion,
+    userAgent: options.userAgent,
+  });
+  return {
+    archived: Boolean(metadata?.archived),
+  };
 }
