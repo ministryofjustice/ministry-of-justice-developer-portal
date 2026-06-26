@@ -18,6 +18,7 @@
  * @property {string | undefined} deploymentRef
  * @property {'sha' | 'branch' | 'tag' | 'unknown' | undefined} deploymentRefKind
  * @property {string | undefined} deploymentEnvironment
+ * @property {string | undefined} deploymentDate
  * @property {string | undefined} generatedAt
  * @property {number | undefined} packageCount
  * @property {string | undefined} reportUrl

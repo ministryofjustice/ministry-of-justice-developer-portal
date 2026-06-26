@@ -243,7 +243,7 @@ export async function fetchCodeScanningAlerts({ owner, repo }, options) {
  * Falls back silently when deployments are unavailable or inaccessible.
  * @param {{ owner: string, repo: string }} repository
  * @param {FetchOptions} options
- * @returns {Promise<{ sha: string, ref?: string, refKind: 'sha' | 'branch' | 'tag' | 'unknown', environment?: string } | undefined>}
+ * @returns {Promise<{ sha: string, ref?: string, refKind: 'sha' | 'branch' | 'tag' | 'unknown', environment?: string, deployedAt?: string } | undefined>}
  */
 export async function fetchLatestSuccessfulDeploymentRef({ owner, repo }, options) {
   const environmentsToTry = [];
@@ -313,6 +313,13 @@ export async function fetchLatestSuccessfulDeploymentRef({ owner, repo }, option
               typeof deployment?.environment === 'string' && deployment.environment.trim().length > 0
                 ? deployment.environment.trim()
                 : undefined,
+            deployedAt:
+              (typeof latestStatus?.created_at === 'string' && latestStatus.created_at.trim().length > 0
+                ? latestStatus.created_at.trim()
+                : undefined)
+              ?? (typeof deployment?.created_at === 'string' && deployment.created_at.trim().length > 0
+                ? deployment.created_at.trim()
+                : undefined),
           };
         }
       } catch {

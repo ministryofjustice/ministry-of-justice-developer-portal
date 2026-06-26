@@ -14,6 +14,7 @@ import { Tabs } from '@/components/templateRender/Tabs';
 import { VulnerabilitiesTable } from '@/components/VulnerabilitiesTable';
 import { CodeScanningTable } from '@/components/CodeScanningTable';
 import { PackagesTable } from '@/components/PackagesTable';
+import { RepositoriesTable } from '@/components/RepositoriesTable';
 import { loadCatalogReportEntryBySlug } from '@/lib/catalogReports';
 import products from '../../../../content/products/products.json';
 import sources from '../../../../sources.json';
@@ -245,42 +246,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                     id: 'repositories',
                     label: 'Repositories',
                     content: repositoryInsights.length > 0 ? (
-                      <table className="govuk-table govuk-!-margin-bottom-0">
-                        <thead className="govuk-table__head">
-                          <tr className="govuk-table__row">
-                            <th className="govuk-table__header" scope="col">Repository</th>
-                            <th className="govuk-table__header" scope="col">Status</th>
-                            <th className="govuk-table__header" scope="col">Packages</th>
-                            <th className="govuk-table__header" scope="col">Ecosystems</th>
-                            <th className="govuk-table__header" scope="col">Updated</th>
-                          </tr>
-                        </thead>
-                        <tbody className="govuk-table__body">
-                          {repositoryInsights.map((repository) => (
-                            <tr className="govuk-table__row" key={`${repository.owner}/${repository.repo}`}>
-                              <td className="govuk-table__cell">
-                                {repository.reportUrl ? (
-                                  <a className="govuk-link" href={repository.reportUrl} target="_blank" rel="noreferrer">
-                                    {repository.repo}
-                                  </a>
-                                ) : (
-                                  repository.repo
-                                )}
-                              </td>
-                              <td className="govuk-table__cell">{formatSbomStatus(repository.status)}</td>
-                              <td className="govuk-table__cell">
-                                {typeof repository.packageCount === 'number' ? repository.packageCount : '—'}
-                              </td>
-                              <td className="govuk-table__cell">
-                                {repository.ecosystems
-                                  ? Object.keys(repository.ecosystems).join(', ')
-                                  : '—'}
-                              </td>
-                              <td className="govuk-table__cell">{repository.generatedAt || '—'}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                      <RepositoriesTable repositories={repositoryInsights} />
                     ) : (
                       <p className="govuk-body">No team repositories were returned for this product.</p>
                     ),

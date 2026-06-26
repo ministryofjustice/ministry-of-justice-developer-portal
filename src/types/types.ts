@@ -151,6 +151,7 @@ export interface ProductRepositoryInsight {
   deploymentRef?: string;
   deploymentRefKind?: 'sha' | 'branch' | 'tag' | 'unknown';
   deploymentEnvironment?: string;
+  deploymentDate?: string;
   generatedAt?: string;
   packageCount?: number;
   reportUrl?: string;
