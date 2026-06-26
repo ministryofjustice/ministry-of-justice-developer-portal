@@ -2,6 +2,7 @@
   "ignorePaths": [
     "dist/",
     "out/",
+    "content/products/catalog_reports/**",
     "content/docs/**",
     "**/node_modules/**",
     "**/*.drawio",
@@ -44,6 +45,7 @@
     "kdev",
     "kprod",
     "webp",
+    "octo",
     "ahostsv",
     "pypi",
     "SPDXID"
