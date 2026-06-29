@@ -70,6 +70,17 @@
       "enabled": true
     },
     {
+      "id": "codespaces-user-guide",
+      "name": "Justice Engineering Codespaces Guidance",
+      "description": "Documentation for access and usage of Github Codespaces",
+      "category": "documentation",
+      "repo": "ministryofjustice/github-codespaces-documentation",
+      "branch": "main",
+      "docsPath": "docs",
+      "format": "markdown",
+      "enabled": true
+    },
+    {
       "id": "ministry-of-justice-technical-guidance",
       "name": "Ministry of Justice Technical Guidance",
       "description": "How we build and operate products at the Ministry of Justice",
