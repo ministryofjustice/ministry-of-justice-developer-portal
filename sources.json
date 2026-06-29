@@ -77,7 +77,7 @@
       "repo": "ministryofjustice/github-codespaces-documentation",
       "branch": "main",
       "docsPath": "docs",
-      "format": "tech-docs-template",
+      "format": "markdown",
       "enabled": true
     },
     {
