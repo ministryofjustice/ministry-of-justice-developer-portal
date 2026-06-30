@@ -17,7 +17,7 @@ RUN --mount=type=secret,id=github_token \
     GITHUB_TOKEN=$(cat /run/secrets/github_token 2>/dev/null || true) \
     npm run build
 
-FROM nginx:1.29-alpine
+FROM nginx:1.31.2-alpine
 
 # Create nginx cache directories and set ownership for non-root user (101)
 RUN mkdir -p /var/cache/nginx/client_temp \

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { SearchWidgetResult } from '@/types/types';
+import { SearchWidgetResult } from '@/types';
 
 export default function SearchWidget() {
   const [query, setQuery] = useState('');

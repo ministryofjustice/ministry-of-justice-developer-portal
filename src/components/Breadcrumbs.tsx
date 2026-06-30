@@ -1,4 +1,4 @@
-import { BreadcrumbItem } from '@/types/types';
+import { BreadcrumbItem } from '@/types';
 import Link from 'next/link';
 
 export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {

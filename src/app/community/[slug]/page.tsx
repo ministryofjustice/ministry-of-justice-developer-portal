@@ -13,7 +13,7 @@ import { Section } from '@/components/templateRender/Section';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
 import community from '../../../../content/community/community.json';
-import { StatusTagValue } from '@/types/types';
+import { StatusTagValue } from '@/types';
 
 type CommunityParams = { slug: string };
 

@@ -1,5 +1,5 @@
 import { StatusTag } from '@/components/templateRender/StatusTag';
-import { TagRowProps } from '@/types/types';
+import { TagRowProps } from '@/types';
 
 export function TagRow({ kicker, categoryTag, status, children }: TagRowProps) {
   if (!kicker && !categoryTag && !status && !children) {

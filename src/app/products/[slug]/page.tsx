@@ -3,10 +3,10 @@ import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { ChatBot } from '@/components/ChatBot';
 import { getProductCategoryLabel } from '@/lib/categoryLabels';
-import { ActionLinks} from '@/components/templateRender/ActionLinks';
+import { ActionLinks } from '@/components/templateRender/ActionLinks';
 import { MetaBar } from '@/components/templateRender/MetaBar';
 import { PageIntro } from '@/components/templateRender/PageIntro';
-import { StatusTag} from '@/components/templateRender/StatusTag';
+import { StatusTag } from '@/components/templateRender/StatusTag';
 import { TagRow } from '@/components/templateRender/TagRow';
 import { TagList } from '@/components/templateRender/TagList';
 import { Section } from '@/components/templateRender/Section';
@@ -19,8 +19,7 @@ import { loadCatalogReportEntryBySlug } from '@/lib/catalogReports';
 import products from '../../../../content/products/products.json';
 import sources from '../../../../sources.json';
 import { ActionLink, Product, ProductSbomSummary } from '@/types/types';
-
-
+import { ActionLink } from '@/types';
 
 type Params = { slug: string };
 

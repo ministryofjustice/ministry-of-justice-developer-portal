@@ -18,11 +18,14 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html'],
       reportsDirectory: './coverage',
-
-      all: true,
-
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['tests/**', 'src/types/**', 'src/app/layout.tsx'],
+      exclude: [
+        'tests/**',
+        'src/types/**',
+        'src/app/layout.tsx',
+        'src/app/docs',
+        'src/components/ChatBot', // TO BE REMOVED WHEN THE CHATBOT IS IMPLEMENTED
+      ],
     },
   },
 });

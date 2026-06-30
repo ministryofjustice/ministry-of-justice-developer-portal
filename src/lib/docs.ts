@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { DocPage, DocSource, NavItem } from '@/types/types';
+import { DocPage, DocSource, NavItem } from '@/types';
 import { normaliseDateValue } from '@/lib/date';
 
 const GUIDELINES_DIR = path.join(process.cwd(), 'content', 'guidelines');
@@ -12,14 +12,14 @@ const GUIDELINES_DIR = path.join(process.cwd(), 'content', 'guidelines');
  */
 export function getGuidelinePage(slug: string): { content: string } | null {
   let filePath = path.join(GUIDELINES_DIR, `${slug}.mdx`);
-  
+
   if (fs.existsSync(filePath)) {
     const raw = fs.readFileSync(filePath, 'utf-8');
     const { content } = matter(raw);
     return { content };
   }
   filePath = path.join(GUIDELINES_DIR, `${slug}.md`);
-  
+
   if (fs.existsSync(filePath)) {
     const raw = fs.readFileSync(filePath, 'utf-8');
     const { content } = matter(raw);

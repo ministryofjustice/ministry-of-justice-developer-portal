@@ -2,31 +2,33 @@
 #
 # Purpose:
 #   Performs automated security composition analysis to identify vulnerabilities
-#   in project dependencies and container images.
+#   in project dependencies and container images. Checks run in parallel for
+#   faster feedback on pull requests.
 #
 # Triggers:
 #   - schedule: Daily at midnight (00:00 UTC)
-#   - pull_request: When PRs target the any branch
+#   - pull_request: When PRs target any branch
 #   - workflow_dispatch: Manual workflow execution
 #   - branch_protection_rule: When branch protection rules are modified
 #
 # Permissions:
-#   - contents: write - Required for updating dependency graphs
-#   - pull-requests: write - Required for creating dependency review comments
-#   - issues: write - Required for creating security advisories
-#   - security-events: write - Required for uploading security scan results
-#   - actions: read - Required for reading workflow run data
+#   Defined per-job with least-privilege permissions.
 #
 # Jobs:
 #   setup:
-#     - Prepares the infrastructure and environment configuration
+#     - Prepares the environment configuration
 #     - Outputs: environment name and timezone for downstream jobs
 #
-#   sca:
+#   base:
 #     - Checks out the repository code
 #     - Configures Node.js environment
+#     - Runs SLSA supply chain protection
 #     - Installs project dependencies
-#     - Executes SCA scan with dependency review and container image scanning
+#     - Required by all parallel jobs
+#
+#   dependencies, owasp, secrets, codeql, openssf, sbom:
+#     - All run in parallel after base completes
+#     - Each performs a specific SCA check
 #
 # Configuration:
 #   - Environment: base (configurable via env vars)
@@ -38,8 +40,8 @@
 #   - TIMEZONE: Repository variable defining the timezone for operations
 #   - NODE_VERSION: Node.js version for the runtime environment
 
-name: SCA ⚡️
-run-name: Software Composition Analysis ⚡️
+name: SCA
+run-name: Software Composition Analysis
 
 on:
   schedule:
@@ -54,32 +56,33 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: sca-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 env:
   environment: base
   timezone: ${{ vars.TIMEZONE }}
 
 jobs:
   setup:
-    name: Infrastructure 🔧
+    name: Infrastructure
     runs-on: ["ubuntu-latest"]
     outputs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
     steps:
-      - name: Environment 🧪
+      - name: Environment
         run: echo "Environment set to ${{ env.environment }}"
 
-      - name: Timezone 🌐
+      - name: Timezone
         run: echo "Timezone set to ${{ env.timezone }}"
-  sca:
-    permissions:
-      contents: write
-      pull-requests: write
-      issues: write
-      security-events: write
-      actions: read
 
-    name: Execute ⚙️
+  base:
+    permissions:
+      contents: read
+
+    name: Base
     runs-on: ["ubuntu-latest"]
     needs: setup
     environment:
@@ -87,24 +90,138 @@ jobs:
 
     steps:
       - name: Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Node
-        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.1.0
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: ${{ vars.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: ${{ github.workspace }}/package-lock.json
 
       - name: SLSA supply chain protection
-        uses: ministryofjustice/devsecops-actions/sca/slsa@a600477f79bedf31163091fad08150ab8b0b5be0
+        uses: ministryofjustice/devsecops-actions/sca/slsa@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # v1.6.0
 
       - name: Install
         shell: bash
         run: npm ci --ignore-scripts --omit=dev
 
-      - name: ⚡️ SCA
-        uses: ministryofjustice/devsecops-actions/sca@a600477f79bedf31163091fad08150ab8b0b5be0 # v1.4.0
+  dependencies:
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: write
+
+    name: Dependencies
+    runs-on: ["ubuntu-latest"]
+    needs: [setup, base]
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+
+    steps:
+      - name: Repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Dependencies
+        uses: ministryofjustice/devsecops-actions/sca/dependencies@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # v1.6.0
         with:
-          token: "${{ secrets.GITHUB_TOKEN }}" # Mandatory
-          dependency-review-config-file: "./.github/dependency-review-config.yml" # Optional
-          dependency-check-suppression-file: "dependency-check-suppression.xml" # Optional
+          dependency-review-config-file: "./.github/dependency-review-config.yml"
+
+  owasp:
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+
+    name: OWASP
+    runs-on: ["ubuntu-latest"]
+    needs: [setup, base]
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+
+    steps:
+      - name: Repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: OWASP
+        uses: ministryofjustice/devsecops-actions/sca/owasp@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # v1.6.0
+        with:
+          dependency-check-suppression-file: "dependency-check-suppression.xml"
           disable-node-audit: "true" # Avoid CI failures when npm audit API is unavailable in dependency-check
+
+  secrets:
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+
+    name: Secrets
+    runs-on: ["ubuntu-latest"]
+    needs: [setup, base]
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+
+    steps:
+      - name: Repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: MoJ
+        uses: ministryofjustice/devsecops-actions/sca/moj@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # v1.6.0
+
+      - name: TruffleHog
+        uses: ministryofjustice/devsecops-actions/sca/trufflehog@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # v1.6.0
+
+  codeql:
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+
+    name: CodeQL
+    runs-on: ["ubuntu-latest"]
+    needs: [setup, base]
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+
+    steps:
+      - name: Repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: CodeQL
+        uses: ministryofjustice/devsecops-actions/sca/codeql@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # v1.6.0
+
+  openssf:
+    permissions:
+      contents: read
+      actions: read
+
+    name: OpenSSF
+    runs-on: ["ubuntu-latest"]
+    needs: [setup, base]
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+
+    steps:
+      - name: Repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: OpenSSF
+        uses: ministryofjustice/devsecops-actions/sca/ossf@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # v1.6.0
+
+  sbom:
+    permissions:
+      contents: read
+      actions: read
+
+    name: SBOM
+    runs-on: ["ubuntu-latest"]
+    needs: [setup, base]
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+
+    steps:
+      - name: Repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: SBOM
+        uses: ministryofjustice/devsecops-actions/sca/sbom@9ec6779d39e07ca69ecf17baf5208a4b0095c10b # v1.6.0

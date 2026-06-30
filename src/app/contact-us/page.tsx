@@ -3,22 +3,7 @@ import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { ChatBot } from '@/components/ChatBot';
 import { PageIntro } from '@/components/templateRender/PageIntro';
 import contactOptions from '../../../content/contact/contacts.json';
-
-type ContactOption = {
-  slug: string;
-  title: string;
-  description: string;
-  linkText: string;
-  href: string;
-  cssModifier?: string;
-  isCopyOnly?: boolean;
-};
-
-type ContactPageData = {
-  title: string;
-  summary: string;
-  items: ContactOption[];
-};
+import { ContactPageData } from '@/types/contact';
 
 export default function ContactPage() {
   const contact = contactOptions as ContactPageData;
@@ -27,11 +12,7 @@ export default function ContactPage() {
     <div className="govuk-width-container">
       <Breadcrumbs items={[{ label: 'Contact us' }]} />
 
-      <PageIntro
-        title={contactOptions.title}
-        summary={contactOptions.summary}
-        summaryClassName="govuk-body-l"
-      />
+      <PageIntro title={contact.title} summary={contact.summary} summaryClassName="govuk-body-l" />
 
       {contact.items.map((item) => (
         <section

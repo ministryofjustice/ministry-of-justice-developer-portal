@@ -1,6 +1,4 @@
-export interface TagListProps {
-  tags: string[];
-}
+import { TagListProps } from '@/types';
 
 export function TagList({ tags }: TagListProps) {
   if (tags.length === 0) return null;
