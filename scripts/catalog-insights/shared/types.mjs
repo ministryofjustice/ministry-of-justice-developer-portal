@@ -5,6 +5,8 @@
  * @property {string} repo
  * @property {'public' | 'private' | 'internal' | 'unknown' | undefined} visibility
  * @property {string | undefined} deploymentEnvironment
+ * @property {boolean} includeVulnerabilities
+ * @property {boolean} includeCodeScanning
  */
 
 /**

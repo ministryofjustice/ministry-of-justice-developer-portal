@@ -6,7 +6,11 @@
  * @returns {boolean}
  */
 export function hasCatalogTeam(product) {
-  return typeof product?.teamName === 'string' && product.teamName.trim().length > 0;
+  return (
+    product?.catalogInsightsEnabled === true
+    && typeof product?.teamName === 'string'
+    && product.teamName.trim().length > 0
+  );
 }
 
 /**

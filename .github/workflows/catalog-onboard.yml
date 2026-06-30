@@ -1,0 +1,190 @@
+name: Catalog Onboarding
+
+on:
+  workflow_dispatch:
+    inputs:
+      gh_team:
+        description: >
+          GitHub team slug to onboard (e.g. cloud-platform-engineers).
+          Must belong to the ministryofjustice organisation.
+        required: true
+        type: string
+      product_slug:
+        description: >
+          Unique product slug — used as the portal URL segment and report filename
+          (e.g. my-team). Must be lowercase, hyphen-separated, no spaces.
+        required: true
+        type: string
+      product_name:
+        description: Human-readable product display name (e.g. My Team)
+        required: true
+        type: string
+      product_category:
+        description: Product category shown in the portal filter panel
+        required: true
+        type: choice
+        options:
+          - platforms
+          - apis
+          - tools
+          - documentation
+          - security
+        default: tools
+      product_description:
+        description: One-sentence description shown on the product card
+        required: true
+        type: string
+      product_owner:
+        description: Owning team or person shown in the product detail page
+        required: true
+        type: string
+      catalog_deployment_environment:
+        description: Which deployment environment to resolve for SBOM refs
+        required: true
+        type: choice
+        options:
+          - none
+          - prod
+          - dev
+        default: none
+      include_vulnerabilities:
+        description: Show Dependabot vulnerability data on the portal
+        required: true
+        type: choice
+        options:
+          - "yes"
+          - "no"
+        default: "no"
+      include_code_scanning:
+        description: Show code scanning alert data on the portal
+        required: true
+        type: choice
+        options:
+          - "yes"
+          - "no"
+        default: "no"
+      create_pr:
+        description: Raise a pull request with the generated catalog report and products.json changes
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  onboard:
+    name: Onboard ${{ inputs.product_slug }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.1.0
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Prepare GitHub App private key
+        id: gh-app-key
+        shell: bash
+        run: |
+          set -euo pipefail
+          raw_key='${{ secrets.DEV_PORTAL_GH_APP_PRIVATE_KEY }}'
+          raw_key="${raw_key#\"}"
+          raw_key="${raw_key%\"}"
+
+          printf '%s' "$raw_key" | perl -pe 's/\\n/\n/g; s/\r$//' > gh-app-private-key.pem
+
+          if ! grep -q 'BEGIN .*PRIVATE KEY' gh-app-private-key.pem; then
+            printf '%s' "$raw_key" | tr -d '\r\n ' | base64 --decode > gh-app-private-key.pem 2>/dev/null || true
+          fi
+
+          if ! openssl pkey -in gh-app-private-key.pem -noout >/dev/null 2>&1; then
+            echo "Invalid DEV_PORTAL_GH_APP_PRIVATE_KEY format."
+            exit 1
+          fi
+          delimiter="PRIVATE_KEY_$(openssl rand -hex 8)"
+          {
+            echo "private_key<<${delimiter}"
+            cat gh-app-private-key.pem
+            printf '\n%s\n' "${delimiter}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Generate GitHub App token
+        id: gh-app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v2
+        with:
+          app-id: ${{ secrets.DEV_PORTAL_GH_APP_ID }}
+          private-key: ${{ steps.gh-app-key.outputs.private_key }}
+          owner: ${{ github.repository_owner }}
+
+      - name: Upsert product entry in products.json
+        shell: bash
+        run: node scripts/catalog-onboard.mjs
+        env:
+          PRODUCT_SLUG: ${{ inputs.product_slug }}
+          PRODUCT_NAME: ${{ inputs.product_name }}
+          PRODUCT_CATEGORY: ${{ inputs.product_category }}
+          PRODUCT_DESCRIPTION: ${{ inputs.product_description }}
+          PRODUCT_OWNER: ${{ inputs.product_owner }}
+          GH_TEAM: ${{ inputs.gh_team }}
+          GH_TEAM_ORG: ministryofjustice
+          CATALOG_DEPLOYMENT_ENVIRONMENT: ${{ inputs.catalog_deployment_environment }}
+          INCLUDE_VULNERABILITIES: ${{ inputs.include_vulnerabilities }}
+          INCLUDE_CODE_SCANNING: ${{ inputs.include_code_scanning }}
+
+      - name: Generate catalog insights for product
+        env:
+          GITHUB_TOKEN: ${{ steps.gh-app-token.outputs.token }}
+        run: npm run catalog:sync
+
+      - name: Create pull request
+        if: ${{ inputs.create_pr == true && github.actor != 'nektos/act' }}
+        uses: peter-evans/create-pull-request@4320041ed380b20e97d388d56a7fb4f9b8c20e79 # v7.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: catalog-onboard/${{ inputs.product_slug }}-${{ github.run_id }}
+          base: ${{ github.ref_name }}
+          title: "feat(catalog): onboard ${{ inputs.product_slug }}"
+          body: |
+            ## Catalog onboarding: `${{ inputs.product_slug }}`
+
+            This PR was generated by the **Catalog Onboarding** workflow.
+
+            | Field | Value |
+            |---|---|
+            | Product slug | `${{ inputs.product_slug }}` |
+            | GitHub team | `${{ inputs.gh_team }}` |
+            | Deployment environment | ${{ inputs.catalog_deployment_environment }} |
+            | Vulnerabilities | ${{ inputs.include_vulnerabilities }} |
+            | Code scanning | ${{ inputs.include_code_scanning }} |
+
+            ### Changes
+            - `content/products/products.json` — new/updated product entry with feature flags
+            - `content/products/catalog_reports/${{ inputs.product_slug }}.json` — generated catalog report
+            - `content/products/catalog_reports/index.json` — updated index
+
+            Review the generated report and merge when ready.
+          commit-message: "feat(catalog): onboard ${{ inputs.product_slug }}"
+          labels: catalog,automated
+
+      - name: Skip PR creation — changes left on current branch
+        if: ${{ inputs.create_pr != true || github.actor == 'nektos/act' }}
+        run: |
+          if [ "${ACT:-}" = "true" ]; then
+            echo "Running under act; skipping PR creation."
+          else
+            echo "create_pr=false — no PR raised."
+          fi
+          echo "Generated files:"
+          ls -lh content/products/catalog_reports/

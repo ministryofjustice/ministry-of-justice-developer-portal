@@ -20,6 +20,10 @@ import {
 } from './application-dependencies.mjs';
 import { hasCatalogTeam, resolveCatalogTeam } from '../shared/index.mjs';
 
+function isFeatureEnabled(value) {
+  return value === true;
+}
+
 /**
  * Resolves all repository sources for team-enabled products.
  * @param {{ products: Array<object>, options: FetchOptions }} args
@@ -61,6 +65,8 @@ export async function resolveCatalogSourcesFromProducts({ products, options }) {
     const configuredDeploymentEnvironment =
       normaliseDeploymentEnvironment(product?.catalogDeploymentEnvironment)
       ?? normaliseDeploymentEnvironment(product?.deploymentEnvironment);
+    const includeVulnerabilities = isFeatureEnabled(product?.catalogShowVulnerabilities);
+    const includeCodeScanning = isFeatureEnabled(product?.catalogShowCodeScanning);
 
     for (const repository of repositories) {
       sources.push({
@@ -68,6 +74,8 @@ export async function resolveCatalogSourcesFromProducts({ products, options }) {
         owner: repository.owner,
         repo: repository.repo,
         visibility: repository.visibility,
+        includeVulnerabilities,
+        includeCodeScanning,
         deploymentEnvironment:
           hasExplicitNoneOverride
             ? undefined
@@ -110,14 +118,18 @@ export async function buildCatalogInsightForSource(source, options) {
     { owner: source.owner, repo: source.repo, ref: sbomRef },
     options,
   );
-  const rawAlerts = await fetchVulnerabilityAlerts(
-    { owner: source.owner, repo: source.repo },
-    options,
-  );
-  const rawCodeScanningAlerts = await fetchCodeScanningAlerts(
-    { owner: source.owner, repo: source.repo },
-    options,
-  );
+  const rawAlerts = source.includeVulnerabilities
+    ? await fetchVulnerabilityAlerts(
+      { owner: source.owner, repo: source.repo },
+      options,
+    )
+    : [];
+  const rawCodeScanningAlerts = source.includeCodeScanning
+    ? await fetchCodeScanningAlerts(
+      { owner: source.owner, repo: source.repo },
+      options,
+    )
+    : [];
 
   const summary = toSbomSummary(payload, endpoint);
   const ecosystems = extractEcosystems(summary.sbom);

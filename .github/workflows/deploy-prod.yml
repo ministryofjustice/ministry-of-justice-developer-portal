@@ -33,14 +33,6 @@ jobs:
             echo "Missing required secret: PROD_ECR_ROLE_TO_ASSUME"
             exit 1
           fi
-          if [[ -z "${{ secrets.DEV_PORTAL_GH_APP_ID }}" ]]; then
-            echo "Missing required secret: DEV_PORTAL_GH_APP_ID"
-            exit 1
-          fi
-          if [[ -z "${{ secrets.DEV_PORTAL_GH_APP_PRIVATE_KEY }}" ]]; then
-            echo "Missing required secret: DEV_PORTAL_GH_APP_PRIVATE_KEY"
-            exit 1
-          fi
           if [[ -z "${{ vars.ECR_REGION }}" ]]; then
             echo "Missing required variable: ECR_REGION"
             exit 1
@@ -60,56 +52,13 @@ jobs:
         id: ecr-login
         uses: aws-actions/amazon-ecr-login@d539f0932e70871a027e9d5a9d8fc38589180a64 # v2.1.6
 
-      - name: Prepare GitHub App private key
-        id: gh-app-key
-        shell: bash
-        run: |
-          set -euo pipefail
-          raw_key='${{ secrets.DEV_PORTAL_GH_APP_PRIVATE_KEY }}'
-          raw_key="${raw_key#\"}"
-          raw_key="${raw_key%\"}"
-
-          printf '%s' "$raw_key" | perl -pe 's/\\n/\n/g; s/\r$//' > gh-app-private-key.pem
-
-          if ! grep -q 'BEGIN .*PRIVATE KEY' gh-app-private-key.pem; then
-            printf '%s' "$raw_key" | tr -d '\r\n ' | base64 --decode > gh-app-private-key.pem 2>/dev/null || true
-          fi
-
-          if ! openssl pkey -in gh-app-private-key.pem -noout >/dev/null 2>&1; then
-            echo "Invalid DEV_PORTAL_GH_APP_PRIVATE_KEY format. Provide a valid PEM private key (multiline PEM, escaped-newline PEM, or base64-encoded PEM)."
-            exit 1
-          fi
-          delimiter="PRIVATE_KEY_$(openssl rand -hex 8)"
-          {
-            echo "private_key<<${delimiter}"
-            cat gh-app-private-key.pem
-            printf '\n%s\n' "${delimiter}"
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Generate GitHub App token for catalog insights
-        id: gh-app-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v2
-        with:
-          app-id: ${{ secrets.DEV_PORTAL_GH_APP_ID }}
-          private-key: ${{ steps.gh-app-key.outputs.private_key }}
-          owner: ${{ github.repository_owner }}
-
-      - name: Restore catalog insights cache
-        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
-        with:
-          path: content/products/catalog_reports/
-          key: catalog-insights-
-          restore-keys: catalog-insights-
-
       - name: Build and push image
         id: build-push
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ steps.gh-app-token.outputs.token }}
         run: |
           set -euo pipefail
           IMAGE_URI="${{ steps.ecr-login.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${IMAGE_TAG}"
-          docker buildx build --platform linux/amd64 --load --secret id=github_token,env=GITHUB_TOKEN -t "${IMAGE_URI}" .
+          docker buildx build --platform linux/amd64 --load -t "${IMAGE_URI}" .
           docker push "${IMAGE_URI}"
           echo "image_uri=${IMAGE_URI}" >> "$GITHUB_OUTPUT"
 

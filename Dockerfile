@@ -8,14 +8,9 @@ COPY package*.json ./
 COPY scripts ./scripts
 RUN npm ci
 
-ARG CATALOG_DEPLOYMENT_ENV=
-ENV CATALOG_DEPLOYMENT_ENV=${CATALOG_DEPLOYMENT_ENV}
-
 COPY . .
 RUN npm run ingest
-RUN --mount=type=secret,id=github_token \
-    GITHUB_TOKEN=$(cat /run/secrets/github_token 2>/dev/null || true) \
-    npm run build
+RUN npm run build-no-catalog
 
 FROM nginx:1.31.2-alpine
 

@@ -10,6 +10,7 @@ import {
   generateCatalogInsights,
   resolveCatalogSourcesFromProducts,
 } from './catalog-insights/application/index.mjs';
+import { applyCatalogDisplayFlags } from './catalog-insights/application/catalog-display-policy.mjs';
 import { fileSystemDependency } from './catalog-insights/infrastructure/filesystem-dependency.mjs';
 import {
   writePerProductCatalogReports,
@@ -104,6 +105,8 @@ export async function run({
     packageJson,
     workflowFiles,
   });
+
+  applyCatalogDisplayFlags(catalogReport, products);
 
   writePerProductCatalogReports({
     outputDirectory: catalogReportsDirectory,

@@ -20,7 +20,18 @@ export function writePerProductCatalogReports({ outputDirectory, catalogReport }
   for (const [slug, report] of Object.entries(catalogReport.reports || {})) {
     const fileName = `${slug}.json`;
     validFileNames.add(fileName);
-    reports[slug] = report;
+    reports[slug] = {
+      status: report.status,
+      generatedAt: report.generatedAt,
+      packageCount: report.packageCount,
+      repositoryCount: report.repositoryCount,
+      completedRepositories: report.completedRepositories,
+      failedRepositories: report.failedRepositories,
+      pendingRepositories: report.pendingRepositories,
+      sbomRefCoverage: report.sbomRefCoverage,
+      error: report.error,
+      reportUrl: report.reportUrl,
+    };
 
     fileSystemDependency.writeJson(path.join(outputDirectory, fileName), {
       generatedAt: catalogReport.generatedAt,

@@ -53,7 +53,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
     product.docsUrl && (!isDocsSourceLink || (docsSourceId && sourceIds.has(docsSourceId))),
   );
   const hasInternalServiceLink = Boolean(product.externalUrl?.startsWith('/'));
-  const hasCatalogInsights = typeof product.teamName === 'string' && product.teamName.trim().length > 0;
+  const hasCatalogInsights = product.catalogInsightsEnabled === true;
   const reportFile = await loadCatalogReportEntryBySlug(product.slug);
   const sbomEntry = reportFile?.report;
   const sbom = sbomEntry?.status ? (sbomEntry as unknown as ProductSbomSummary) : undefined;
@@ -66,10 +66,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
   // Product-level vulnerability data
   const vulnerabilities = sbom?.vulnerabilities;
   const vulnAlerts = vulnerabilities?.alerts ?? [];
-  const hasVulnerabilities = (vulnerabilities?.total ?? 0) > 0;
+  const showVulnerabilities = product.catalogShowVulnerabilities === true;
+  const hasVulnerabilities = showVulnerabilities && (vulnerabilities?.total ?? 0) > 0;
   const codeScanning = sbom?.codeScanning;
   const codeScanningAlerts = codeScanning?.alerts ?? [];
-  const hasCodeScanning = (codeScanning?.total ?? 0) > 0;
+  const showCodeScanning = product.catalogShowCodeScanning === true;
+  const hasCodeScanning = showCodeScanning && (codeScanning?.total ?? 0) > 0;
   const archivedRepositories = repositoryInsights.filter((repository) => repository.status === 'archived').length;
   const publicRepositories = repositoryInsights.filter((repository) => repository.visibility === 'public').length;
   const internalRepositories = repositoryInsights.filter((repository) => repository.visibility === 'internal').length;
@@ -152,7 +154,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
         </div>
       </div>
 
-      {sbom && (
+      {hasCatalogInsights && sbom && (
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-full">
             <Section heading="Catalog insights">
@@ -298,69 +300,73 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                       <p className="govuk-body">No license data available.</p>
                     ),
                   },
-                  {
-                    id: 'vulnerabilities',
-                    label: 'Vulnerabilities',
-                    content: hasVulnerabilities ? (
-                      <div style={{ minWidth: 0, overflow: 'hidden' }}>
-                        <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-                          {(['critical', 'high', 'medium', 'low'] as const).map((sev) => (
-                            <div key={sev}>
-                              <p className="govuk-body-s govuk-!-margin-bottom-1" style={{ textTransform: 'capitalize' }}>{sev}</p>
-                              <strong className="govuk-tag">
-                                {vulnerabilities![sev]}
-                              </strong>
-                            </div>
-                          ))}
+                  ...(showVulnerabilities
+                    ? [{
+                      id: 'vulnerabilities',
+                      label: 'Vulnerabilities',
+                      content: hasVulnerabilities ? (
+                        <div style={{ minWidth: 0, overflow: 'hidden' }}>
+                          <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+                            {(['critical', 'high', 'medium', 'low'] as const).map((sev) => (
+                              <div key={sev}>
+                                <p className="govuk-body-s govuk-!-margin-bottom-1" style={{ textTransform: 'capitalize' }}>{sev}</p>
+                                <strong className="govuk-tag">
+                                  {vulnerabilities![sev]}
+                                </strong>
+                              </div>
+                            ))}
+                          </div>
+                          <VulnerabilitiesTable alerts={vulnAlerts} />
                         </div>
-                        <VulnerabilitiesTable alerts={vulnAlerts} />
-                      </div>
-                    ) : (
-                      <p className="govuk-body">No open Dependabot vulnerability alerts found. This may mean the repositories are secure, Dependabot is not enabled, or the token lacks <code>security_events</code> scope.</p>
-                    ),
-                  },
-                  {
-                    id: 'code-scanning',
-                    label: 'Code scanning',
-                    content: hasCodeScanning ? (
-                      <div>
-                        <table className="govuk-table">
-                          <tbody className="govuk-table__body">
-                            <tr className="govuk-table__row">
-                              <th className="govuk-table__header" scope="row">Open alerts</th>
-                              <td className="govuk-table__cell">
-                                {codeScanning!.total} total ({codeScanning!.critical} critical, {codeScanning!.high} high, {codeScanning!.medium} medium, {codeScanning!.low} low)
-                              </td>
-                            </tr>
-                            <tr className="govuk-table__row">
-                              <th className="govuk-table__header" scope="row">Last analyzed</th>
-                              <td className="govuk-table__cell">{codeScanning!.lastAnalyzedAt || 'Not available'}</td>
-                            </tr>
-                            <tr className="govuk-table__row">
-                              <th className="govuk-table__header" scope="row">Rule types</th>
-                              <td className="govuk-table__cell">
-                                {Object.keys(codeScanning!.byRuleType).length > 0
-                                  ? Object.entries(codeScanning!.byRuleType).map(([name, count]) => `${name}: ${count}`).join(', ')
-                                  : 'Not available'}
-                              </td>
-                            </tr>
-                            <tr className="govuk-table__row">
-                              <th className="govuk-table__header" scope="row">Languages</th>
-                              <td className="govuk-table__cell">
-                                {Object.keys(codeScanning!.byLanguage).length > 0
-                                  ? Object.entries(codeScanning!.byLanguage).map(([name, count]) => `${name}: ${count}`).join(', ')
-                                  : 'Not available'}
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
+                      ) : (
+                        <p className="govuk-body">No open Dependabot vulnerability alerts found. This may mean the repositories are secure, Dependabot is not enabled, or the token lacks <code>security_events</code> scope.</p>
+                      ),
+                    }]
+                    : []),
+                  ...(showCodeScanning
+                    ? [{
+                      id: 'code-scanning',
+                      label: 'Code scanning',
+                      content: hasCodeScanning ? (
+                        <div>
+                          <table className="govuk-table">
+                            <tbody className="govuk-table__body">
+                              <tr className="govuk-table__row">
+                                <th className="govuk-table__header" scope="row">Open alerts</th>
+                                <td className="govuk-table__cell">
+                                  {codeScanning!.total} total ({codeScanning!.critical} critical, {codeScanning!.high} high, {codeScanning!.medium} medium, {codeScanning!.low} low)
+                                </td>
+                              </tr>
+                              <tr className="govuk-table__row">
+                                <th className="govuk-table__header" scope="row">Last analyzed</th>
+                                <td className="govuk-table__cell">{codeScanning!.lastAnalyzedAt || 'Not available'}</td>
+                              </tr>
+                              <tr className="govuk-table__row">
+                                <th className="govuk-table__header" scope="row">Rule types</th>
+                                <td className="govuk-table__cell">
+                                  {Object.keys(codeScanning!.byRuleType).length > 0
+                                    ? Object.entries(codeScanning!.byRuleType).map(([name, count]) => `${name}: ${count}`).join(', ')
+                                    : 'Not available'}
+                                </td>
+                              </tr>
+                              <tr className="govuk-table__row">
+                                <th className="govuk-table__header" scope="row">Languages</th>
+                                <td className="govuk-table__cell">
+                                  {Object.keys(codeScanning!.byLanguage).length > 0
+                                    ? Object.entries(codeScanning!.byLanguage).map(([name, count]) => `${name}: ${count}`).join(', ')
+                                    : 'Not available'}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
 
-                        <CodeScanningTable alerts={codeScanningAlerts} />
-                      </div>
-                    ) : (
-                      <p className="govuk-body">No open code scanning alerts found. This may mean the repositories are secure, code scanning is not enabled, or the token lacks code scanning permissions.</p>
-                    ),
-                  },
+                          <CodeScanningTable alerts={codeScanningAlerts} />
+                        </div>
+                      ) : (
+                        <p className="govuk-body">No open code scanning alerts found. This may mean the repositories are secure, code scanning is not enabled, or the token lacks code scanning permissions.</p>
+                      ),
+                    }]
+                    : []),
                   {
                     id: 'packages',
                     label: 'Packages',
