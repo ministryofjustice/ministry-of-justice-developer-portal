@@ -11,6 +11,7 @@ tsconfig.tsbuildinfo
 .env
 .env.local
 .env.*.local
+.secrets
 
 # OS
 .DS_Store

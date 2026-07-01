@@ -16,6 +16,7 @@ import { CodeScanningTable } from '@/components/CodeScanningTable';
 import { PackagesTable } from '@/components/PackagesTable';
 import { RepositoriesTable } from '@/components/RepositoriesTable';
 import { loadCatalogReportEntryBySlug } from '@/lib/catalogReports';
+import { formatEventDateTime } from '@/lib/date';
 import products from '../../../../content/products/products.json';
 import sources from '../../../../sources.json';
 import { ActionLink, Product, ProductSbomSummary } from '@/types/types';
@@ -59,6 +60,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
   const sbom = sbomEntry?.status ? (sbomEntry as unknown as ProductSbomSummary) : undefined;
   const repositoryInsights = sbom?.repositories || [];
   const sbomGeneratedAt = sbom?.generatedAt;
+  const catalogGenerationDate = sbomGeneratedAt ? formatEventDateTime(sbomGeneratedAt) : '';
 
   // Product-level deduplicated packages (aggregated by catalog-report-service)
   const allPackages = sbom?.packages ?? [];
@@ -181,8 +183,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
                               <td className="govuk-table__cell">{product.teamName || 'Not configured'}</td>
                             </tr>
                             <tr className="govuk-table__row">
-                              <th className="govuk-table__header" scope="row">Last updated</th>
-                              <td className="govuk-table__cell">{sbomGeneratedAt || 'Not available'}</td>
+                              <th className="govuk-table__header" scope="row">Catalog generation date</th>
+                              <td className="govuk-table__cell">{catalogGenerationDate || 'Not available'}</td>
                             </tr>
                             <tr className="govuk-table__row">
                               <th className="govuk-table__header" scope="row">Repositories</th>

@@ -22,9 +22,43 @@ function formatRef(ref?: string, refKind?: ProductRepositoryInsight['deploymentR
   return ref;
 }
 
-function shortSha(sha?: string) {
+function formatSha(sha?: string) {
   if (!sha) return '—';
-  return sha.slice(0, 12);
+  return sha;
+}
+
+function formatDeploymentRef(repository: ProductRepositoryInsight) {
+  if (repository.deploymentRef) {
+    return formatRef(repository.deploymentRef, repository.deploymentRefKind);
+  }
+  return 'Not specified';
+}
+
+function formatDeploymentEnvironment(repository: ProductRepositoryInsight) {
+  if (
+    typeof repository.deploymentEnvironment === 'string'
+    && repository.deploymentEnvironment.trim().length > 0
+  ) {
+    return repository.deploymentEnvironment;
+  }
+  return 'Not specified';
+}
+
+function formatDeploymentDate(value?: string) {
+  if (!value) return '—';
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  return new Intl.DateTimeFormat('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
+    hour12: false,
+  }).format(date);
 }
 
 export function RepositoriesTable({ repositories }: Props) {
@@ -64,14 +98,14 @@ export function RepositoriesTable({ repositories }: Props) {
         Showing <strong>{filteredRepositories.length}</strong> of <strong>{repositories.length}</strong> repositories.
       </p>
 
-      <table className="govuk-table govuk-!-margin-bottom-0">
+      <table className="govuk-table govuk-!-margin-bottom-0 app-repositories-table">
         <thead className="govuk-table__head">
           <tr className="govuk-table__row">
             <th className="govuk-table__header" scope="col">Repository</th>
             <th className="govuk-table__header" scope="col">Repo status</th>
             <th className="govuk-table__header" scope="col">Packages</th>
             <th className="govuk-table__header" scope="col">Ecosystems</th>
-            <th className="govuk-table__header" scope="col">Last deployment</th>
+            <th className="govuk-table__header app-repositories-table__deployment-header" scope="col">Last deployment</th>
           </tr>
         </thead>
         <tbody className="govuk-table__body">
@@ -96,10 +130,14 @@ export function RepositoriesTable({ repositories }: Props) {
                   <td className="govuk-table__cell">
                     {repository.ecosystems ? Object.keys(repository.ecosystems).join(', ') : '—'}
                   </td>
-                  <td className="govuk-table__cell govuk-body-s">
-                    <div><strong>SHA:</strong> {shortSha(repository.sbomRef)}</div>
-                    <div><strong>Branch/Tag:</strong> {formatRef(repository.deploymentRef, repository.deploymentRefKind)}</div>
-                      <div><strong>Date:</strong> {repository.deploymentDate || repository.generatedAt || '—'}</div>
+                  <td className="govuk-table__cell govuk-body-s app-repositories-table__deployment-cell">
+                    <div>
+                      <strong className="app-repositories-table__deployment-label">SHA:</strong>{' '}
+                      <span className="app-repositories-table__sha-value">{formatSha(repository.sbomRef)}</span>
+                    </div>
+                    <div><strong className="app-repositories-table__deployment-label">Branch/Tag:</strong> {formatDeploymentRef(repository)}</div>
+                    <div><strong className="app-repositories-table__deployment-label">Environment:</strong> {formatDeploymentEnvironment(repository)}</div>
+                    <div><strong className="app-repositories-table__deployment-label">Deployment date:</strong> {formatDeploymentDate(repository.deploymentDate)}</div>
                   </td>
                 </tr>
               );

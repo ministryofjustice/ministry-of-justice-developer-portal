@@ -26,12 +26,13 @@ export function buildTeamRepositoriesEndpoint({ org, teamSlug, page }) {
 
 /**
  * Builds the endpoint used to list deployments for a repository.
- * @param {{ owner: string, repo: string, environment?: string }} args
+ * @param {{ owner: string, repo: string, environment?: string, page?: number }} args
  * @returns {string}
  */
-export function buildDeploymentsEndpoint({ owner, repo, environment }) {
+export function buildDeploymentsEndpoint({ owner, repo, environment, page = 1 }) {
   const endpoint = new URL(`https://api.github.com/repos/${owner}/${repo}/deployments`);
-  endpoint.searchParams.set('per_page', '20');
+  endpoint.searchParams.set('per_page', '100');
+  endpoint.searchParams.set('page', String(page));
   if (typeof environment === 'string' && environment.trim().length > 0) {
     endpoint.searchParams.set('environment', environment.trim());
   }
@@ -44,7 +45,7 @@ export function buildDeploymentsEndpoint({ owner, repo, environment }) {
  * @returns {string}
  */
 export function buildDeploymentStatusesEndpoint({ owner, repo, deploymentId }) {
-  return `https://api.github.com/repos/${owner}/${repo}/deployments/${deploymentId}/statuses?per_page=1`;
+  return `https://api.github.com/repos/${owner}/${repo}/deployments/${deploymentId}/statuses?per_page=100`;
 }
 
 /**
@@ -254,77 +255,86 @@ export async function fetchLatestSuccessfulDeploymentRef({ owner, repo }, option
 
   if (explicitEnvironment) {
     environmentsToTry.push(explicitEnvironment);
-  } else {
-    environmentsToTry.push(undefined);
   }
+  environmentsToTry.push(undefined);
 
   for (const environment of environmentsToTry) {
-    let deployments;
-    try {
-      deployments = await requestGithubJson({
-        endpoint: buildDeploymentsEndpoint({ owner, repo, environment }),
-        token: options.token,
-        apiVersion: options.apiVersion,
-        userAgent: options.userAgent,
-      });
-    } catch (error) {
-      const status = typeof error?.status === 'number' ? error.status : undefined;
-      if (status === 403 || status === 404) {
-        continue;
-      }
-      throw error;
-    }
+    let page = 1;
 
-    if (!Array.isArray(deployments) || deployments.length === 0) {
-      continue;
-    }
-
-    for (const deployment of deployments) {
-      const deploymentId = deployment?.id;
-      const sha = deployment?.sha;
-      if (typeof deploymentId !== 'number' || typeof sha !== 'string' || sha.trim().length === 0) {
-        continue;
-      }
-
+    while (true) {
+      let deployments;
       try {
-        const statuses = await requestGithubJson({
-          endpoint: buildDeploymentStatusesEndpoint({ owner, repo, deploymentId }),
+        deployments = await requestGithubJson({
+          endpoint: buildDeploymentsEndpoint({ owner, repo, environment, page }),
           token: options.token,
           apiVersion: options.apiVersion,
           userAgent: options.userAgent,
         });
+      } catch (error) {
+        const status = typeof error?.status === 'number' ? error.status : undefined;
+        if (status === 403 || status === 404) {
+          break;
+        }
+        throw error;
+      }
 
-        if (!Array.isArray(statuses) || statuses.length === 0) {
+      if (!Array.isArray(deployments) || deployments.length === 0) {
+        break;
+      }
+
+      for (const deployment of deployments) {
+        const deploymentId = deployment?.id;
+        const sha = deployment?.sha;
+        if (typeof deploymentId !== 'number' || typeof sha !== 'string' || sha.trim().length === 0) {
           continue;
         }
 
-        const latestStatus = statuses[0];
-        if (latestStatus?.state === 'success') {
-          const deploymentRef =
-            typeof deployment?.ref === 'string' && deployment.ref.trim().length > 0
-              ? deployment.ref.trim()
-              : undefined;
+        try {
+          const statuses = await requestGithubJson({
+            endpoint: buildDeploymentStatusesEndpoint({ owner, repo, deploymentId }),
+            token: options.token,
+            apiVersion: options.apiVersion,
+            userAgent: options.userAgent,
+          });
 
-          return {
-            sha: sha.trim(),
-            ref: deploymentRef,
-            refKind: inferDeploymentRefKind(deploymentRef),
-            environment:
-              typeof deployment?.environment === 'string' && deployment.environment.trim().length > 0
-                ? deployment.environment.trim()
-                : undefined,
-            deployedAt:
-              (typeof latestStatus?.created_at === 'string' && latestStatus.created_at.trim().length > 0
-                ? latestStatus.created_at.trim()
-                : undefined)
-              ?? (typeof deployment?.created_at === 'string' && deployment.created_at.trim().length > 0
-                ? deployment.created_at.trim()
-                : undefined),
-          };
+          if (!Array.isArray(statuses) || statuses.length === 0) {
+            continue;
+          }
+
+          const successfulStatus = statuses.find((status) => status?.state === 'success');
+          if (successfulStatus) {
+            const deploymentRef =
+              typeof deployment?.ref === 'string' && deployment.ref.trim().length > 0
+                ? deployment.ref.trim()
+                : undefined;
+
+            return {
+              sha: sha.trim(),
+              ref: deploymentRef,
+              refKind: inferDeploymentRefKind(deploymentRef),
+              environment:
+                typeof deployment?.environment === 'string' && deployment.environment.trim().length > 0
+                  ? deployment.environment.trim()
+                  : undefined,
+              deployedAt:
+                (typeof successfulStatus?.created_at === 'string' && successfulStatus.created_at.trim().length > 0
+                  ? successfulStatus.created_at.trim()
+                  : undefined)
+                ?? (typeof deployment?.created_at === 'string' && deployment.created_at.trim().length > 0
+                  ? deployment.created_at.trim()
+                  : undefined),
+            };
+          }
+        } catch {
+          continue;
         }
-      } catch {
-        continue;
       }
+
+      if (deployments.length < 100) {
+        break;
+      }
+
+      page += 1;
     }
   }
 

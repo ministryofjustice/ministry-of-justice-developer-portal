@@ -96,16 +96,18 @@ export async function resolveCatalogSourcesFromProducts({ products, options }) {
  * @returns {Promise<RepositoryInsight>}
  */
 export async function buildCatalogInsightForSource(source, options) {
+  const hasSourceDeploymentEnvironment = Object.prototype.hasOwnProperty.call(source, 'deploymentEnvironment');
+
   const sourceOptions = {
     ...options,
-    deploymentEnvironment:
-      typeof source?.deploymentEnvironment === 'string' && source.deploymentEnvironment.trim().length > 0
-        ? source.deploymentEnvironment
-        : (
-          typeof options?.deploymentEnvironment === 'string' && options.deploymentEnvironment.trim().length > 0
-            ? options.deploymentEnvironment
-            : 'prod'
-        ),
+    // Respect source-level explicit overrides, including `undefined` for "none".
+    deploymentEnvironment: hasSourceDeploymentEnvironment
+      ? source.deploymentEnvironment
+      : (
+        typeof options?.deploymentEnvironment === 'string' && options.deploymentEnvironment.trim().length > 0
+          ? options.deploymentEnvironment
+          : 'prod'
+      ),
   };
 
   const deploymentRef = await fetchLatestSuccessfulDeploymentRef(

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-30T21:32:06.284Z",
+  "generatedAt": "2026-07-01T07:18:41.081Z",
   "repository": {
     "name": "ministry-of-justice-developer-experience",
     "url": "https://github.com/ministryofjustice/ministry-of-justice-developer-portal",
@@ -26,54 +26,54 @@
   "reports": {
     "cloud-platform": {
       "status": "completed",
-      "generatedAt": "2026-06-30T21:17:46Z",
+      "generatedAt": "2026-07-01T07:02:21Z",
       "packageCount": 716,
       "repositoryCount": 19,
       "completedRepositories": 19,
       "failedRepositories": 0,
       "pendingRepositories": 0,
       "sbomRefCoverage": {
-        "deploymentShaRepositories": 0,
-        "defaultBranchRepositories": 19
+        "deploymentShaRepositories": 5,
+        "defaultBranchRepositories": 14
       }
     },
     "modernisation-platform": {
       "status": "partial",
-      "generatedAt": "2026-06-30T21:19:40Z",
+      "generatedAt": "2026-07-01T07:04:21Z",
       "packageCount": 4260,
       "repositoryCount": 49,
       "completedRepositories": 42,
       "failedRepositories": 0,
       "pendingRepositories": 7,
       "sbomRefCoverage": {
-        "deploymentShaRepositories": 0,
-        "defaultBranchRepositories": 42
+        "deploymentShaRepositories": 5,
+        "defaultBranchRepositories": 37
       }
     },
     "developer-portal": {
       "status": "completed",
-      "generatedAt": "2026-06-30T21:19:54Z",
+      "generatedAt": "2026-07-01T07:04:46Z",
       "packageCount": 905,
       "repositoryCount": 7,
       "completedRepositories": 7,
       "failedRepositories": 0,
       "pendingRepositories": 0,
       "sbomRefCoverage": {
-        "deploymentShaRepositories": 1,
-        "defaultBranchRepositories": 6
+        "deploymentShaRepositories": 4,
+        "defaultBranchRepositories": 3
       }
     },
     "hmpps-sre": {
       "status": "partial",
-      "generatedAt": "2026-06-30T21:32:05Z",
-      "packageCount": 177002,
+      "generatedAt": "2026-07-01T07:18:40Z",
+      "packageCount": 178164,
       "repositoryCount": 520,
-      "completedRepositories": 410,
-      "failedRepositories": 1,
+      "completedRepositories": 411,
+      "failedRepositories": 0,
       "pendingRepositories": 109,
       "sbomRefCoverage": {
-        "deploymentShaRepositories": 230,
-        "defaultBranchRepositories": 180
+        "deploymentShaRepositories": 293,
+        "defaultBranchRepositories": 118
       }
     }
   }
