@@ -59,17 +59,6 @@
       "enabled": true
     },
     {
-      "id": "octo-strategic-docs",
-      "name": "OCTO Strategic Documentation",
-      "description": "Documentation source for OCTO Strategic Documentation.",
-      "category": "documentation",
-      "repo": "ministryofjustice/octo-strategic-docs",
-      "branch": "main",
-      "docsPath": "source",
-      "format": "tech-docs-template",
-      "enabled": true
-    },
-    {
       "id": "codespaces-user-guide",
       "name": "Justice Engineering Codespaces Guidance",
       "description": "Documentation for access and usage of Github Codespaces",
