@@ -2,6 +2,31 @@ function isFeatureEnabled(value) {
   return value === true;
 }
 
+function isDeveloperExperienceProduct(product) {
+  const teamName = typeof product?.teamName === 'string' ? product.teamName.trim().toLowerCase() : '';
+  const owner = typeof product?.owner === 'string' ? product.owner.trim().toLowerCase() : '';
+  const slackChannel =
+    typeof product?.slackChannel === 'string' ? product.slackChannel.trim().toLowerCase() : '';
+
+  return (
+    teamName === 'octo-developer-experience' ||
+    owner === 'developer experience' ||
+    slackChannel === '#developer-experience-team'
+  );
+}
+
+function resolveSecurityVisibility(product) {
+  // Security detail visibility is restricted to Developer Experience products.
+  if (!isDeveloperExperienceProduct(product)) {
+    return { showVulnerabilities: false, showCodeScanning: false };
+  }
+
+  return {
+    showVulnerabilities: isFeatureEnabled(product.catalogShowVulnerabilities),
+    showCodeScanning: isFeatureEnabled(product.catalogShowCodeScanning),
+  };
+}
+
 /**
  * Applies product-level display flags to generated catalog report content.
  * @param {{ reports?: Record<string, any> }} catalogReport
@@ -15,8 +40,7 @@ export function applyCatalogDisplayFlags(catalogReport, products) {
     const product = productBySlug.get(slug);
     if (!product) continue;
 
-    const showVulnerabilities = isFeatureEnabled(product.catalogShowVulnerabilities);
-    const showCodeScanning = isFeatureEnabled(product.catalogShowCodeScanning);
+    const { showVulnerabilities, showCodeScanning } = resolveSecurityVisibility(product);
 
     if (!showVulnerabilities) {
       report.vulnerabilities = undefined;
@@ -37,3 +61,5 @@ export function applyCatalogDisplayFlags(catalogReport, products) {
 
   return catalogReport;
 }
+
+export { isDeveloperExperienceProduct, resolveSecurityVisibility };

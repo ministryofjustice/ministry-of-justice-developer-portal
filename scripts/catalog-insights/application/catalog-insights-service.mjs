@@ -19,10 +19,7 @@ import {
   normaliseCodeScanningAlerts,
 } from './application-dependencies.mjs';
 import { hasCatalogTeam, resolveCatalogTeam } from '../shared/index.mjs';
-
-function isFeatureEnabled(value) {
-  return value === true;
-}
+import { resolveSecurityVisibility } from './catalog-display-policy.mjs';
 
 /**
  * Resolves all repository sources for team-enabled products.
@@ -65,8 +62,9 @@ export async function resolveCatalogSourcesFromProducts({ products, options }) {
     const configuredDeploymentEnvironment =
       normaliseDeploymentEnvironment(product?.catalogDeploymentEnvironment)
       ?? normaliseDeploymentEnvironment(product?.deploymentEnvironment);
-    const includeVulnerabilities = isFeatureEnabled(product?.catalogShowVulnerabilities);
-    const includeCodeScanning = isFeatureEnabled(product?.catalogShowCodeScanning);
+    const { showVulnerabilities, showCodeScanning } = resolveSecurityVisibility(product);
+    const includeVulnerabilities = showVulnerabilities;
+    const includeCodeScanning = showCodeScanning;
 
     for (const repository of repositories) {
       sources.push({
