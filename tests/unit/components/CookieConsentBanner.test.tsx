@@ -14,6 +14,7 @@ describe('CookieConsentBanner', () => {
     expect(screen.getByTestId('cookie-consent-banner')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /accept analytics cookies/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /reject analytics cookies/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /cookie policy/i })).toBeInTheDocument()
   })
 
   it('accepts analytics cookies and hides the banner', async () => {

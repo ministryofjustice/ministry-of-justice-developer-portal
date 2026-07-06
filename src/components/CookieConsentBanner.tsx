@@ -36,7 +36,10 @@ export function CookieConsentBanner() {
         We use cookies to improve and understand this service.
         Essential cookies are always used. Analytics cookies are optional and only used if you accept them.
         If accepted, we use PostHog to collect anonymous usage data such as page views, browser/device details, and survey interactions.
-        We do not collect personal identity data unless you choose to provide it. You can change your cookie settings at any time.
+        We do not collect personal identity data unless you choose to provide it.
+      </p>
+      <p className="govuk-body govuk-!-margin-top-2">
+        Read our <a href="/cookie-policy" className="govuk-link">cookie policy</a> for more information and to manage your cookie settings.
       </p>
       <div className="cookie-consent-banner__actions">
         <button type="button" className="govuk-button" onClick={acceptCookies}>
