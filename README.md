@@ -16,14 +16,15 @@ A cross-government developer portal inspired by [Singapore's Government Develope
 
 ## Tech stack
 
-| Component | Technology                                                                  |
-| --------- | --------------------------------------------------------------------------- |
-| Framework | [Next.js 16](https://nextjs.org/) (App Router, static export)               |
-| Styles    | [GOV.UK Frontend](https://frontend.design-system.service.gov.uk/) v6 + Sass |
-| Content   | Markdown with YAML frontmatter                                              |
-| Search    | [Pagefind](https://pagefind.app/) (client-side, zero-dependency)            |
-| Ingestion | Node.js script that clones repos and converts `.html.md.erb` → `.md`        |
-| Hosting   | Cloud Platform (containerised, Kubernetes)                                  |
+| Component    | Technology                                                                  |
+| ---------    | --------------------------------------------------------------------------- |
+| Framework    | [Next.js 16](https://nextjs.org/) (App Router, static export)               |
+| Styles       | [GOV.UK Frontend](https://frontend.design-system.service.gov.uk/) v6 + Sass |
+| Content      | Markdown with YAML frontmatter                                              |
+| Search       | [Pagefind](https://pagefind.app/) (client-side, zero-dependency)            |
+| Ingestion    | Node.js script that clones repos and converts `.html.md.erb` → `.md`        |
+| Hosting      | Cloud Platform (containerised, Kubernetes)                                  |
+| User Tracking| PostHog Cloud (Using native JS tooling)                                     |
 
 ## Getting started
 
@@ -104,6 +105,9 @@ npm run test:ui
 
 # # Run all unit tests with the runner remaining open and running continuously as files change.
 npm run test:watch
+
+# # Run all PostHog tests
+npx vitest run tests/unit/components/PostHog*.test.tsx
 ```
 
 ### E2E Testing
