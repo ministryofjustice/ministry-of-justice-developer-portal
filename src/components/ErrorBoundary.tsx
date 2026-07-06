@@ -1,5 +1,5 @@
 'use client'
-
+// This component is client-side only because it uses state and effects to manage cookie consent
 import { Component, type ReactNode } from 'react'
 import posthog from 'posthog-js'
 import { isCookieConsentAccepted } from '@/lib/cookieConsent'

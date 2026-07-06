@@ -1,5 +1,5 @@
 const COOKIE_CONSENT_NAME = 'moj_cookie_consent';
-
+// This module provides functions to manage cookie consent state, including getting and setting the consent value, checking if consent is accepted or rejected, and listening for changes in consent state. It uses a custom event to notify listeners of changes in cookie consent.
 export type CookieConsentValue = 'accepted' | 'rejected';
 
 function isClient() {

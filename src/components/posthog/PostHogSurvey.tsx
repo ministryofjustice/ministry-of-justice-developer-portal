@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import posthog from 'posthog-js'
 import { isCookieConsentAccepted, onCookieConsentChange } from '@/lib/cookieConsent'
-
+// This component is client-side only because it uses state and effects to manage cookie consent, this displays a PostHog survey after a period of user inactivity when the user has accepted cookies. It also listens for changes in cookie consent and starts the survey workflow if the user accepts cookies after initially rejecting them.
 export function PostHogSurvey() {
   useEffect(() => {
     const SURVEY_ID = '019f2899-14e8-0000-62d5-a37cff764a99'

@@ -1,5 +1,5 @@
 'use client'
-
+// This component is client-side only because it uses state and effects to manage cookie consent
 import { useEffect, useState } from 'react'
 import { getCookieConsent, setCookieConsent, type CookieConsentValue } from '@/lib/cookieConsent'
 

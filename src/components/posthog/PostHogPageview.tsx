@@ -4,7 +4,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import posthog from 'posthog-js'
 import { isCookieConsentAccepted, onCookieConsentChange } from '@/lib/cookieConsent'
-
+// This component is client-side only because it uses state and effects to manage cookie consent, this captures pageviews and sends them to PostHog when the user has accepted cookies. It also listens for changes in cookie consent and captures a pageview if the user accepts cookies after initially rejecting them.
 export function PostHogPageview() {
   const pathname = usePathname()
   const searchParams = useSearchParams()

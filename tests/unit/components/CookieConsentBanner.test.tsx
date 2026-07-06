@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, beforeEach } from 'vitest'
 import { CookieConsentBanner } from '@/components/CookieConsentBanner'
-
+// This test suite verifies the functionality of the CookieConsentBanner component, including rendering, accepting and rejecting analytics cookies, and hiding the banner after user interaction. It ensures that users can manage their cookie consent preferences effectively.
 describe('CookieConsentBanner', () => {
   beforeEach(() => {
     document.cookie = 'moj_cookie_consent=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/'

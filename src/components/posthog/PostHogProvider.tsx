@@ -4,7 +4,7 @@ import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
 import { useEffect, useState } from 'react'
 import { isCookieConsentAccepted, onCookieConsentChange } from '@/lib/cookieConsent'
-
+// This component is client-side only because it uses state and effects to manage cookie consent, this initializes PostHog when the user has accepted cookies. It also listens for changes in cookie consent and initializes PostHog if the user accepts cookies after initially rejecting them.
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   const [initialized, setInitialized] = useState(false)
 

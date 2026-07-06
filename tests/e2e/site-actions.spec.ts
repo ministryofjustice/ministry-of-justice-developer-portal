@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-
+// This test suite verifies the functionality of the Ministry of Justice Developer Portal, including navigation, content pages, product filters, search widget, PostHog analytics integration, and cookie consent management. It ensures that users can navigate through the site, interact with product filters, perform searches, and manage their cookie consent preferences effectively.
 async function getCookieValue(page: Page) {
   return page.evaluate(() => document.cookie);
 }
