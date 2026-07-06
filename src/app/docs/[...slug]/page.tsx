@@ -17,13 +17,13 @@ type Params = { slug: string[] };
 export const dynamic = 'force-static';
 export const dynamicParams = false;
 
-export async function generateStaticParams(): Promise<Params[]> {
+export async function generateStaticParams() {
   const slugs = getAllDocSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: Params }) {
-  const { slug } = params;
+export async function generateMetadata({ params }: { params: Promise<Params> }) {
+  const { slug } = await params;
   const page = getDocPage(slug);
   if (!page) return {};
   return { title: page.meta.title };
@@ -55,26 +55,19 @@ function SidebarNav({
         const itemPath = item.slug.join('/');
         const isActive = currentPath === itemPath;
         const isParent = hasActiveDescendant(item, currentPath);
-        const shouldShowChildren =
-          Boolean(item.children?.length) && (isActive || isParent);
+        const shouldShowChildren = Boolean(item.children?.length) && (isActive || isParent);
 
         return (
           <li key={itemPath} className="app-subnav__item">
             <Link
               href={`/docs/${itemPath}`}
-              className={`app-subnav__link${
-                isActive ? ' app-subnav__link--active' : ''
-              }${isParent ? ' app-subnav__link--parent-active' : ''}`}
+              className={`app-subnav__link${isActive ? ' app-subnav__link--active' : ''}${isParent ? ' app-subnav__link--parent-active' : ''}`}
               aria-current={isActive ? 'page' : undefined}
             >
               {item.title}
             </Link>
             {shouldShowChildren && (
-              <SidebarNav
-                items={item.children!}
-                currentSlug={currentSlug}
-                level={level + 1}
-              />
+              <SidebarNav items={item.children!} currentSlug={currentSlug} level={level + 1} />
             )}
           </li>
         );
@@ -83,29 +76,21 @@ function SidebarNav({
   );
 }
 
-export default async function DocPage({ params }: { params: Params }) {
-  const { slug } = params;
+export default async function DocPage({ params }: { params: Promise<Params> }) {
+  const { slug } = await params;
   const page = getDocPage(slug);
   if (!page) notFound();
 
   const sourceSlug = slug[0];
-  const htmlContent = await markdownToHtml(page.content, {
-    sourceSlug,
-    currentSlug: slug,
-  });
+  const htmlContent = await markdownToHtml(page.content, { sourceSlug, currentSlug: slug });
   const sources = getDocSources();
   const currentSource = sources.find((s) => s.slug === sourceSlug);
 
-  const reviewStatus = getReviewStatus(
-    page.meta.lastReviewedOn,
-    page.meta.reviewIn,
-  );
+  const reviewStatus = getReviewStatus(page.meta.lastReviewedOn, page.meta.reviewIn);
 
   const breadcrumbs = [
     { label: 'Documentation', href: '/docs' },
-    ...(currentSource
-      ? [{ label: currentSource.name, href: `/docs/${sourceSlug}` }]
-      : []),
+    ...(currentSource ? [{ label: currentSource.name, href: `/docs/${sourceSlug}` }] : []),
     { label: page.meta.title },
   ];
 
@@ -115,10 +100,7 @@ export default async function DocPage({ params }: { params: Params }) {
 
       <div className="app-layout">
         {currentSource && (
-          <nav
-            className="app-layout__sidebar"
-            aria-label="Documentation navigation"
-          >
+          <nav className="app-layout__sidebar" aria-label="Documentation navigation">
             <h2 className="app-subnav__section-title">{currentSource.name}</h2>
             <SidebarNav items={currentSource.items} currentSlug={slug} />
           </nav>
@@ -127,24 +109,17 @@ export default async function DocPage({ params }: { params: Params }) {
         <div className="app-layout__content">
           <h1 className="govuk-heading-xl">{page.meta.title}</h1>
 
-          <div
-            className="app-prose-scope"
-            dangerouslySetInnerHTML={{ __html: htmlContent }}
-          />
+          <div className="app-prose-scope" dangerouslySetInnerHTML={{ __html: htmlContent }} />
 
           <MetaBar
             items={[
               {
                 label: 'Last reviewed',
-                value: page.meta.lastReviewedOn
-                  ? formatLongDate(page.meta.lastReviewedOn)
-                  : null,
+                value: page.meta.lastReviewedOn ? formatLongDate(page.meta.lastReviewedOn) : null,
               },
               {
                 label: 'Review status',
-                value: reviewStatus ? (
-                  <ReviewBadge status={reviewStatus as ReviewStatus} />
-                ) : null,
+                value: reviewStatus ? <ReviewBadge status={reviewStatus as ReviewStatus} /> : null,
               },
               { label: 'Owner', value: page.meta.ownerSlack || null },
               {
@@ -152,9 +127,7 @@ export default async function DocPage({ params }: { params: Params }) {
                 value: page.meta.sourceRepo ? (
                   <a
                     className="govuk-link"
-                    href={`https://github.com/${page.meta.sourceRepo}/blob/main/${
-                      page.meta.sourcePath || ''
-                    }`}
+                    href={`https://github.com/${page.meta.sourceRepo}/blob/main/${page.meta.sourcePath || ''}`}
                     rel="noopener noreferrer"
                     target="_blank"
                   >

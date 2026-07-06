@@ -1,7 +1,12 @@
 import '../../styles/globals.scss';
 import '@ministryofjustice/frontend/moj/moj-frontend.min.css';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { LayoutShell } from '@/app/layoutShell';
+import { PostHogPageview } from '@/components/posthog/PostHogPageview';
+import { PostHogSurvey } from '@/components/posthog/PostHogSurvey';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { PostHogProvider } from '@/components/posthog/PostHogProvider';
 
 
 export const metadata: Metadata = {
@@ -20,7 +25,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{
     __html: `document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '')`
   }} />
-        <LayoutShell>{children}</LayoutShell>
+        <PostHogProvider>
+          <Suspense fallback={null}>
+            <PostHogPageview />
+            <PostHogSurvey />
+          </Suspense>
+          <ErrorBoundary>
+            <LayoutShell>{children}</LayoutShell>
+          </ErrorBoundary>
+        </PostHogProvider>
       </body>
     </html>
   );

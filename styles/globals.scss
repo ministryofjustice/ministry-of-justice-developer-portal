@@ -199,6 +199,39 @@ html {
   color: #0b0c0c;
 }
 
+.cookie-consent-banner {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 1000;
+  background: #ffffff;
+  border-top: 4px solid #1d70b8;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+  padding: 20px 20px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.cookie-consent-banner p {
+  margin: 0;
+  flex: 1 1 100%;
+  color: #0b0c0c;
+}
+
+.cookie-consent-banner__actions {
+  display: flex;
+  gap: 10px;
+  flex: 1 1 auto;
+  justify-content: flex-start;
+}
+
+@media (max-width: 640px) {
+  .cookie-consent-banner {
+    padding: 16px;
+  }
+}
+
 // Review status badges
 .app-review-badge {
   display: inline-block;
@@ -218,6 +251,7 @@ html {
   }
 
   &--overdue {
+
     background-color: #d4351c;
     color: white;
   }
