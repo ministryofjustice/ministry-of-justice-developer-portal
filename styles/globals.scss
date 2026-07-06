@@ -571,6 +571,39 @@ html {
   }
 }
 
+.app-repositories-table {
+  table-layout: fixed;
+  width: 100%;
+
+  .govuk-table__cell {
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+
+  .app-repositories-table__deployment-header,
+  .app-repositories-table__deployment-cell {
+    width: 28%;
+    min-width: 320px;
+  }
+
+  .app-repositories-table__deployment-cell {
+    font-size: 0.9375rem;
+    line-height: 1.25;
+  }
+
+  .app-repositories-table__deployment-label {
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  .app-repositories-table__sha-value {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+}
+
 // Search widget
 .portal-search-widget {
   position: relative;

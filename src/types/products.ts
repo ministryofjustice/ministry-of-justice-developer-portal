@@ -1,4 +1,5 @@
 import type { StatusTagValue } from './components';
+import type { ProductSbomSummary } from './types';
 
 export interface Product {
   slug: string;
@@ -20,4 +21,5 @@ export interface ProductCardProps {
   description: string;
   status: string;
   tags: string[];
+  sbom?: ProductSbomSummary;
 }

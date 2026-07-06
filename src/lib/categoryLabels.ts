@@ -2,6 +2,7 @@ export const PRODUCT_CATEGORY_LABELS: Record<string, string> = {
   platforms: 'Platform',
   apis: 'API',
   tools: 'Tool',
+  sbom: 'Catalog insights',
   security: 'Security',
   data: 'Data',
 };
