@@ -24,7 +24,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="govuk-template__body" suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{
     __html: `document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '')`
-  }} /> // Added PostHog provider to ensure PostHog is initialized before any pageviews are captured
+  }} />
+        {/* Added PostHog provider to ensure PostHog is initialized before any pageviews are captured */}
         <PostHogProvider>
           <Suspense fallback={null}>
             <PostHogPageview />
