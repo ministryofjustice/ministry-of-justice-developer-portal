@@ -66,4 +66,21 @@ describe('PostHogProvider', () => {
 
     expect((window as any).__posthog_initialized).not.toBe(true)
   })
+
+  it('skips initialization when the PostHog token is missing', async () => {
+    delete process.env.NEXT_PUBLIC_POSTHOG_KEY
+    mockedCookieConsent.isCookieConsentAccepted.mockReturnValue(true)
+
+    render(
+      <PostHogProvider>
+        <div>child</div>
+      </PostHogProvider>,
+    )
+
+    await waitFor(() => {
+      expect(mockedPosthog.init).not.toHaveBeenCalled()
+    })
+
+    expect((window as any).__posthog_initialized).not.toBe(true)
+  })
 })

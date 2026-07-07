@@ -7,11 +7,18 @@ import { isCookieConsentAccepted, onCookieConsentChange } from '@/lib/cookieCons
 // This component is client-side only because it uses state and effects to manage cookie consent, this initializes PostHog when the user has accepted cookies. It also listens for changes in cookie consent and initializes PostHog if the user accepts cookies after initially rejecting them.
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   const [initialized, setInitialized] = useState(false)
+  const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY
+  const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST
 
   useEffect(() => {
     const initPosthog = () => {
-      posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
-        api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+      if (!posthogKey) {
+        setInitialized(true)
+        return
+      }
+
+      posthog.init(posthogKey, {
+        api_host: posthogHost,
         person_profiles: 'identified_only',
         capture_pageview: false,
         capture_exceptions: true,
