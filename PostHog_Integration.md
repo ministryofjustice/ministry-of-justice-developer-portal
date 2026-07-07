@@ -115,8 +115,3 @@ The `ErrorBoundary` component logs exceptions conditionally based on consent. Th
 
 ### Keep analytics implementation manageable
 The integration is isolated in dedicated components and utilities, reducing coupling with application logic. This makes it easier to maintain, audit, and update the analytics behaviour over time.
-
-## Recommended follow-up
-- Ensure environment variables are defined securely for production.
-- Confirm the cookie policy wording meets legal and privacy requirements.
-- Verify that production deployments do not initialize PostHog without user consent.
