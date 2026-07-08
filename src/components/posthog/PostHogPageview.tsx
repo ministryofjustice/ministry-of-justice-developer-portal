@@ -24,33 +24,39 @@ export function PostHogPageview() {
 
     const capturePageview = () => {
       if (!pathname || !isCookieConsentAccepted()) return
+
+      const win = window as any
+      if (!win.__posthog_initialized) return
+
       let url = window.origin + pathname
       if (searchParams.toString()) url += `?${searchParams.toString()}`
       posthog.capture('$pageview', { $current_url: url })
 
-      const win = window as any
       win.__posthog_pageview_count = (win.__posthog_pageview_count ?? 0) + 1
       win.__posthog_last_pageview = url
     }
 
-    capturePageview()
+    let attempts = 0
+    const attemptCapture = () => {
+      if (cancelled) return
+
+      const win = window as any
+      if (win.__posthog_initialized) {
+        capturePageview()
+        return
+      }
+
+      attempts += 1
+      if (attempts >= MAX_INIT_WAIT_ATTEMPTS) return
+      retryTimer = setTimeout(attemptCapture, INIT_WAIT_INTERVAL_MS)
+    }
+
+    if (isCookieConsentAccepted()) {
+      attemptCapture()
+    }
 
     const cleanupConsentListener = onCookieConsentChange((value) => {
       if (value !== 'accepted') return
-
-      let attempts = 0
-      const attemptCapture = () => {
-        if (cancelled) return
-        const win = window as any
-        if (win.__posthog_initialized) {
-          capturePageview()
-          return
-        }
-        attempts += 1
-        if (attempts >= MAX_INIT_WAIT_ATTEMPTS) return
-        retryTimer = setTimeout(attemptCapture, INIT_WAIT_INTERVAL_MS)
-      }
-
       attemptCapture()
     })
 

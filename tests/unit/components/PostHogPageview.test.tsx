@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import posthog from 'posthog-js'
 import { PostHogPageview } from '@/components/posthog/PostHogPageview'
 
+const INIT_WAIT_INTERVAL_MS = 50
 const mockUsePathname = vi.fn()
 const mockUseSearchParams = vi.fn()
 
@@ -80,6 +81,29 @@ describe('PostHogPageview', () => {
         $current_url: 'http://localhost/test-page?utm_source=unit-test',
       })
     })
+  })
+
+  it('captures a pageview after refresh when consent is already accepted but PostHog initializes later', async () => {
+    vi.useFakeTimers()
+    document.cookie = 'moj_cookie_consent=accepted'
+    delete (window as any).__posthog_initialized
+
+    render(<PostHogPageview />)
+
+    await waitFor(() => {
+      expect(mockedPosthog.capture).not.toHaveBeenCalled()
+    })
+
+    ;(window as any).__posthog_initialized = true
+    vi.advanceTimersByTime(INIT_WAIT_INTERVAL_MS)
+
+    await waitFor(() => {
+      expect(mockedPosthog.capture).toHaveBeenCalledWith('$pageview', {
+        $current_url: 'http://localhost/test-page?utm_source=unit-test',
+      })
+    })
+
+    vi.useRealTimers()
   })
 
   it('never captures a pageview when the PostHog key is missing, even if consent is accepted', async () => {
