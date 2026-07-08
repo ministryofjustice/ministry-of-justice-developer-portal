@@ -132,7 +132,16 @@ npm run test:e2e-headed
 npm run test:e2e-debug
 
 ```
+### Load Testing
 
+The portal employs Playwright for E2E testing. Tests should be named under the convention `*.spec.ts`.
+
+The following scripts are vital to know:
+
+```bash
+# Run traffic generation (see scripts/generate-pothog-traffic.mjs for details)
+npm run traffic:generate -- --url http://localhost:3000 --dry-run
+```
 ## Project structure
 
 The project is structured with source code and tests in parallel (as in the example below).
