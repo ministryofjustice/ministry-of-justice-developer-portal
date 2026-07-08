@@ -134,7 +134,7 @@ npm run test:e2e-debug
 ```
 ### Load Testing
 
-The portal employs Playwright for E2E testing. Tests should be named under the convention `*.spec.ts`.
+The portal employs traffic:generate for load testing.
 
 The following scripts are vital to know:
 
