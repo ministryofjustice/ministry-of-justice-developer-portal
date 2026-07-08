@@ -1,86 +1,71 @@
 import { render, waitFor } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import posthog from 'posthog-js'
-import * as cookieConsent from '@/lib/cookieConsent'
-import { PostHogProvider } from '@/components/posthog/PostHogProvider'
+import { PostHogSurvey } from '@/components/posthog/PostHogSurvey'
 
 vi.mock('posthog-js', () => ({
+  __esModule: true,
   default: {
-    init: vi.fn(),
+    displaySurvey: vi.fn(),
+    onSurveysLoaded: vi.fn(),
   },
 }))
 
-vi.mock('posthog-js/react', () => ({
-  PostHogProvider: ({ children }: any) => <>{children}</>,
-}))
-
-vi.mock('@/lib/cookieConsent', () => ({
-  isCookieConsentAccepted: vi.fn(),
-  onCookieConsentChange: vi.fn(() => () => undefined),
-}))
-
-describe('PostHogProvider', () => {
-  const mockedCookieConsent = vi.mocked(cookieConsent, true)
+describe('PostHogSurvey', () => {
   const mockedPosthog = vi.mocked(posthog, true)
 
   beforeEach(() => {
+    vi.useFakeTimers()
     vi.clearAllMocks()
-    delete (window as any).__posthog_initialized
     process.env.NEXT_PUBLIC_POSTHOG_KEY = 'test-key'
-    process.env.NEXT_PUBLIC_POSTHOG_HOST = 'https://posthog.test'
+    document.cookie = 'moj_cookie_consent=accepted'
+    mockedPosthog.onSurveysLoaded.mockImplementation((callback: () => void) => callback())
   })
 
-  it('initializes PostHog when consent is already accepted', async () => {
-    mockedCookieConsent.isCookieConsentAccepted.mockReturnValue(true)
-
-    render(
-      <PostHogProvider>
-        <div>child</div>
-      </PostHogProvider>,
-    )
-
-    await waitFor(() => {
-      expect(mockedPosthog.init).toHaveBeenCalledWith('test-key', {
-        api_host: 'https://posthog.test',
-        person_profiles: 'identified_only',
-        capture_pageview: false,
-        capture_exceptions: true,
-      })
-    })
-
-    expect((window as any).__posthog_initialized).toBe(true)
-  })
-
-  it('does not initialize PostHog when consent is not accepted', async () => {
-    mockedCookieConsent.isCookieConsentAccepted.mockReturnValue(false)
-
-    render(
-      <PostHogProvider>
-        <div>child</div>
-      </PostHogProvider>,
-    )
-
-    await waitFor(() => {
-      expect(mockedPosthog.init).not.toHaveBeenCalled()
-    })
-
-    expect((window as any).__posthog_initialized).not.toBe(true)
-  })
-
-  it('skips initialization when the PostHog token is missing', async () => {
+  afterEach(() => {
+    vi.useRealTimers()
     delete process.env.NEXT_PUBLIC_POSTHOG_KEY
-    mockedCookieConsent.isCookieConsentAccepted.mockReturnValue(true)
+  })
 
-    render(
-      <PostHogProvider>
-        <div>child</div>
-      </PostHogProvider>,
-    )
+  it('starts the survey workflow when consent is accepted', async () => {
+    const displaySurveySpy = vi.spyOn(mockedPosthog, 'displaySurvey')
 
-    await waitFor(() => {
-      expect(mockedPosthog.init).not.toHaveBeenCalled()
+    render(<PostHogSurvey />)
+
+    expect(mockedPosthog.onSurveysLoaded).toHaveBeenCalled()
+
+    vi.runAllTimers()
+
+    expect(displaySurveySpy).toHaveBeenCalledWith('019f2899-14e8-0000-62d5-a37cff764a99', {
+      ignoreConditions: true,
+      ignoreDelay: true,
     })
+  })
 
-    expect((window as any).__posthog_initialized).not.toBe(true)
+  it('starts the survey workflow after consent is accepted later', async () => {
+    document.cookie = 'moj_cookie_consent=rejected'
+    mockedPosthog.onSurveysLoaded.mockImplementation((callback: () => void) => callback())
+    const displaySurveySpy = vi.spyOn(mockedPosthog, 'displaySurvey')
+
+    render(<PostHogSurvey />)
+
+    document.cookie = 'moj_cookie_consent=accepted'
+    window.dispatchEvent(new CustomEvent('cookieConsentChange', { detail: 'accepted' }))
+
+    vi.runAllTimers()
+
+    expect(displaySurveySpy).toHaveBeenCalled()
+  })
+
+  it('never starts the survey workflow when the PostHog key is missing', async () => {
+    delete process.env.NEXT_PUBLIC_POSTHOG_KEY
+    document.cookie = 'moj_cookie_consent=accepted'
+
+    render(<PostHogSurvey />)
+
+    vi.runAllTimers()
+
+    expect(mockedPosthog.onSurveysLoaded).not.toHaveBeenCalled()
+    expect(mockedPosthog.displaySurvey).not.toHaveBeenCalled()
   })
 })

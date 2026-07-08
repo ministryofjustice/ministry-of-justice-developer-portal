@@ -17,13 +17,16 @@ describe('PostHogSurvey', () => {
   beforeEach(() => {
     vi.useFakeTimers()
     vi.clearAllMocks()
+    process.env.NEXT_PUBLIC_POSTHOG_KEY = 'test-key'
     document.cookie = 'moj_cookie_consent=accepted'
     mockedPosthog.onSurveysLoaded.mockImplementation((callback: () => void) => callback())
   })
 
   afterEach(() => {
     vi.useRealTimers()
+    delete process.env.NEXT_PUBLIC_POSTHOG_KEY
   })
+
 
   it('starts the survey workflow when consent is accepted', async () => {
     const displaySurveySpy = vi.spyOn(mockedPosthog, 'displaySurvey')

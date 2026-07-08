@@ -1,5 +1,5 @@
 import { render, waitFor } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import posthog from 'posthog-js'
 import { PostHogPageview } from '@/components/posthog/PostHogPageview'
 
@@ -24,6 +24,7 @@ describe('PostHogPageview', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockedPosthog.capture.mockClear()
+    process.env.NEXT_PUBLIC_POSTHOG_KEY = 'test-key'
     mockUsePathname.mockReturnValue('/test-page')
     mockUseSearchParams.mockReturnValue({
       toString: () => 'utm_source=unit-test',
@@ -32,6 +33,10 @@ describe('PostHogPageview', () => {
       value: 'http://localhost',
       configurable: true,
     })
+  })
+
+  afterEach(() => {
+    delete process.env.NEXT_PUBLIC_POSTHOG_KEY
   })
 
   it('captures a pageview when consent is already accepted', async () => {
@@ -75,5 +80,37 @@ describe('PostHogPageview', () => {
         $current_url: 'http://localhost/test-page?utm_source=unit-test',
       })
     })
+  })
+
+  it('never captures a pageview when the PostHog key is missing, even if consent is accepted', async () => {
+    delete process.env.NEXT_PUBLIC_POSTHOG_KEY
+    document.cookie = 'moj_cookie_consent=accepted'
+
+    render(<PostHogPageview />)
+
+    await new Promise((resolve) => setTimeout(resolve, 10))
+
+    expect(mockedPosthog.capture).not.toHaveBeenCalled()
+  })
+
+  it('gives up retrying (rather than polling forever) if PostHog never finishes initializing', async () => {
+    vi.useFakeTimers()
+    document.cookie = 'moj_cookie_consent=rejected'
+    // Deliberately leave __posthog_initialized unset to simulate init() never
+    // completing (e.g. a misconfigured host), and confirm the retry loop
+    // gives up instead of scheduling setTimeout calls indefinitely.
+    delete (window as any).__posthog_initialized
+
+    render(<PostHogPageview />)
+
+    document.cookie = 'moj_cookie_consent=accepted'
+    window.dispatchEvent(new CustomEvent('cookieConsentChange', { detail: 'accepted' }))
+
+    vi.advanceTimersByTime(50 * 100) // way past the retry cap
+
+    expect(mockedPosthog.capture).not.toHaveBeenCalled()
+    expect(vi.getTimerCount()).toBe(0)
+
+    vi.useRealTimers()
   })
 })
