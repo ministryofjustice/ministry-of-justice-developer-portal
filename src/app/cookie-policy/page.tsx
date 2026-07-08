@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { CookiePreferences } from '@/components/CookiePreferences'
 
 export default function CookiePolicyPage() {
   return (
@@ -24,9 +25,9 @@ export default function CookiePolicyPage() {
 
         <h2 className="govuk-heading-l">Managing your choices</h2>
         <p className="govuk-body">
-          You can accept or reject analytics cookies at any time using the cookie consent banner.
-          If you want to clear your current choice, delete the <code>moj_cookie_consent</code> cookie in your browser and refresh the page.
+          You can change your choice about analytics cookies at any time using the controls below.
         </p>
+        <CookiePreferences />
 
         <p className="govuk-body">
           Back to <Link href="/">home</Link>.
