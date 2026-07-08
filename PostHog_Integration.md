@@ -1,6 +1,6 @@
 # PostHog Integration
 
-This document describes the files changed for the PostHog integration, what was added, and why PostHog is a good fit for this project.
+This document describes the files changed for the PostHog integration.
 
 ## Summary of changes made
 
@@ -41,8 +41,17 @@ This document describes the files changed for the PostHog integration, what was 
   - New cookie policy page describing the analytics approach.
   - Clearly states that analytics are optional and that PostHog only runs after user consent.
   - Explains what is and is not collected by default (*NOTE* This needs to be made brand appropriate, and consistent accross the MoJ estate, this is a placeholder).
+  - Renders `CookiePreferences` so users can view and change their current choice on the page itself (see [Post-review fixes](#post-review-fixes)).
+
+- `src/components/CookiePreferences.tsx`
+  - New component, used on the cookie policy page.
+  - Shows the user's current consent choice and lets them accept or reject analytics cookies in place, using the same `getCookieConsent`/`setCookieConsent` helpers as the banner.
 
 ### 4. PostHog-specific components
+- `src/lib/posthogStatus.ts`
+  - New helper: `isPostHogConfigured()` — the single source of truth for whether `NEXT_PUBLIC_POSTHOG_KEY` is set.
+  - Used by `PostHogProvider`, `PostHogPageview`, and `PostHogSurvey` so they all agree on whether PostHog is actually usable, rather than each component making its own assumption (see [Post-review fixes](#post-review-fixes)).
+
 - `src/components/posthog/PostHogProvider.tsx`
   - Wraps the app with PostHog initialization.
   - Initializes PostHog only after analytics consent is accepted.
@@ -52,13 +61,13 @@ This document describes the files changed for the PostHog integration, what was 
 - `src/components/posthog/PostHogPageview.tsx`
   - Captures pageview events manually after consent.
   - Builds the current URL from `pathname` and search params.
-  - Avoids sending analytics if consent has not been granted.
-  - Retries capture if consent is accepted after the page is already loaded.
+  - Avoids sending analytics if consent has not been granted, or if PostHog has no key configured (see [Post-review fixes](#post-review-fixes)).
+  - Retries capture if consent is accepted after the page is already loaded, up to a bounded number of attempts.
 
 - `src/components/posthog/PostHogSurvey.tsx`
   - Displays PostHog surveys only after analytics consent is accepted.
   - Uses a 60-second inactivity timer to trigger the survey workflow.
-  - Ensures surveys are not shown without consent.
+  - Ensures surveys are not shown without consent, or without a configured PostHog key.
 
 ### 5. Error telemetry
 - `src/components/ErrorBoundary.tsx`
@@ -75,9 +84,9 @@ This document describes the files changed for the PostHog integration, what was 
   - `tests/unit/lib/cookieConsent.test.ts`
   - `tests/unit/components/CookieConsentBanner.test.tsx`
   - `tests/unit/components/ErrorBoundary.test.tsx`
-  - `tests/unit/components/PostHogPageview.test.tsx`
+  - `tests/unit/components/PostHogPageview.test.tsx` (includes regression tests for the missing-key case, see [Post-review fixes](#post-review-fixes))
   - `tests/unit/components/PostHogProvider.test.tsx`
-  - `tests/unit/components/PostHogSurvey.test.tsx`
+  - `tests/unit/components/PostHogSurvey.test.tsx` (includes a regression test for the missing-key case, see [Post-review fixes](#post-review-fixes))
 
 - Added end-to-end coverage in `tests/e2e/site-actions.spec.ts`:
   - Verifies the cookie banner appears on first visit.
@@ -92,26 +101,3 @@ This document describes the files changed for the PostHog integration, what was 
 
 - `CHANGELOG.md`
   - Included the new integration entry in project release notes.
-
-## Why integrate PostHog into this project?
-
-### Understand how the portal is used
-PostHog provides analytics for page views, navigation patterns, and feature interactions. This helps the project team understand which content, products, and documentation paths are most valuable.
-
-### Improve content and navigation decisions
-User behavior data allows the team to prioritize portal improvements with evidence instead of guesswork. Pageview and survey data can reveal broken workflows, confusing pages, and content gaps.
-
-### Collect user feedback more effectively
-The integration supports in-app surveys. This is useful for gathering direct feedback from developers using the portal, especially when the portal is still evolving.
-
-### Respect privacy and consent requirements
-The implementation only initializes PostHog after explicit analytics consent. Consent is managed through a banner and cookie policy page, and analytics are blocked until the user opts in.
-
-### Minimise unwanted data collection
-PostHog is configured with `person_profiles: 'identified_only'`, and pageviews are only manually captured after consent. The approach avoids automatic telemetry before consent.
-
-### Support error monitoring
-The `ErrorBoundary` component logs exceptions conditionally based on consent. This gives visibility into client-side issues while keeping telemetry aligned with user preferences.
-
-### Keep analytics implementation manageable
-The integration is isolated in dedicated components and utilities, reducing coupling with application logic. This makes it easier to maintain, audit, and update the analytics behaviour over time.
