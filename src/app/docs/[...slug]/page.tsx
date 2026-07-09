@@ -138,7 +138,7 @@ export default async function DocPage({ params }: { params: Promise<Params> }) {
             ]}
           />
 
-          <FeedbackWidget />
+          <FeedbackWidget /> {/*  Added FeedbackWidget to allow users to provide feedback on documentation pages */}
         </div>
       </div>
 
