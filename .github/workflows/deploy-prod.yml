@@ -79,6 +79,16 @@ jobs:
           # Make kubeconfig location available to subsequent steps
           echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
 
+      - name: Sync runtime config secret (PostHog)
+        shell: bash
+        run: |
+          set -euo pipefail
+          kubectl create secret generic developer-portal-runtime-config \
+            --namespace "${{ secrets.PROD_KUBE_NAMESPACE }}" \
+            --from-literal=NEXT_PUBLIC_POSTHOG_KEY="${{ secrets.NEXT_PUBLIC_POSTHOG_KEY }}" \
+            --from-literal=NEXT_PUBLIC_POSTHOG_HOST="${{ secrets.NEXT_PUBLIC_POSTHOG_HOST }}" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
       - name: Deploy manifests
         shell: bash
         run: |

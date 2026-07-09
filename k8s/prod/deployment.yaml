@@ -24,6 +24,17 @@ spec:
         - name: developer-portal
           image: IMAGE_PLACEHOLDER
           imagePullPolicy: IfNotPresent
+          env:
+            - name: NEXT_PUBLIC_POSTHOG_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: developer-portal-runtime-config
+                  key: NEXT_PUBLIC_POSTHOG_KEY
+            - name: NEXT_PUBLIC_POSTHOG_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: developer-portal-runtime-config
+                  key: NEXT_PUBLIC_POSTHOG_HOST
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

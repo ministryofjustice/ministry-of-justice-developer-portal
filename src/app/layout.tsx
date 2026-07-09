@@ -19,12 +19,15 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
+
   return (
     <html lang="en" className="govuk-template">
       <body className="govuk-template__body" suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{
     __html: `document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '')`
   }} />
+        <script src={`${basePath}/runtime-config.js`} />
         {/* Added PostHog provider to ensure PostHog is initialized before any pageviews are captured */}
         <PostHogProvider>
           <Suspense fallback={null}>
