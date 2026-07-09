@@ -27,6 +27,8 @@ RUN mkdir -p /var/cache/nginx/client_temp \
 # Copy custom nginx configs for non-root operation
 COPY .github/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY .github/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY .github/nginx/40-generate-runtime-config.sh /docker-entrypoint.d/40-generate-runtime-config.sh
+RUN chmod +x /docker-entrypoint.d/40-generate-runtime-config.sh
 
 # Copy built static site
 COPY --from=build /app/out /usr/share/nginx/html

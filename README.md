@@ -261,8 +261,8 @@ The deploy workflows expect separate Kubernetes credentials for dev and prod:
 
 | Environment | Required secrets                                                                                           |
 | ----------- | ---------------------------------------------------------------------------------------------------------- |
-| Dev         | `ECR_ROLE_TO_ASSUME`, `DEV_KUBE_CLUSTER`, `DEV_KUBE_NAMESPACE`, `DEV_KUBE_CERT`, `DEV_KUBE_TOKEN`          |
-| Prod        | `PROD_ECR_ROLE_TO_ASSUME`, `PROD_KUBE_CLUSTER`, `PROD_KUBE_NAMESPACE`, `PROD_KUBE_CERT`, `PROD_KUBE_TOKEN` |
+| Dev         | `ECR_ROLE_TO_ASSUME`, `DEV_KUBE_CLUSTER`, `DEV_KUBE_NAMESPACE`, `DEV_KUBE_CERT`, `DEV_KUBE_TOKEN`, `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST`          |
+| Prod        | `PROD_ECR_ROLE_TO_ASSUME`, `PROD_KUBE_CLUSTER`, `PROD_KUBE_NAMESPACE`, `PROD_KUBE_CERT`, `PROD_KUBE_TOKEN`, `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` |
 
 These are provided by Cloud Platform module configuration (for this repository) once the relevant Cloud Platform PRs are merged.
 
