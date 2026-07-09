@@ -3,6 +3,7 @@
 A cross-government developer portal inspired by [Singapore's Government Developer Portal](https://developer.tech.gov.sg/), built with GOV.UK styles.
 
 **Status:** Alpha — this is a proof of concept.
+**NOTE:** Current version of Node is pinned at 25.9.4 due to build issues with 25.9.5 (too new release)
 
 ## What it does
 
@@ -16,14 +17,15 @@ A cross-government developer portal inspired by [Singapore's Government Develope
 
 ## Tech stack
 
-| Component | Technology                                                                  |
-| --------- | --------------------------------------------------------------------------- |
-| Framework | [Next.js 16](https://nextjs.org/) (App Router, static export)               |
-| Styles    | [GOV.UK Frontend](https://frontend.design-system.service.gov.uk/) v6 + Sass |
-| Content   | Markdown with YAML frontmatter                                              |
-| Search    | [Pagefind](https://pagefind.app/) (client-side, zero-dependency)            |
-| Ingestion | Node.js script that clones repos and converts `.html.md.erb` → `.md`        |
-| Hosting   | Cloud Platform (containerised, Kubernetes)                                  |
+| Component    | Technology                                                                  |
+| ---------    | --------------------------------------------------------------------------- |
+| Framework    | [Next.js 16](https://nextjs.org/) (App Router, static export)               |
+| Styles       | [GOV.UK Frontend](https://frontend.design-system.service.gov.uk/) v6 + Sass |
+| Content      | Markdown with YAML frontmatter                                              |
+| Search       | [Pagefind](https://pagefind.app/) (client-side, zero-dependency)            |
+| Ingestion    | Node.js script that clones repos and converts `.html.md.erb` → `.md`        |
+| Hosting      | Cloud Platform (containerised, Kubernetes)                                  |
+| User Tracking| PostHog Cloud (Using native JS tooling)                                     |
 
 ## Getting started
 
@@ -104,6 +106,9 @@ npm run test:ui
 
 # # Run all unit tests with the runner remaining open and running continuously as files change.
 npm run test:watch
+
+# # Run all PostHog tests
+npx vitest run tests/unit/components/PostHog*.test.tsx
 ```
 
 ### E2E Testing
@@ -128,7 +133,16 @@ npm run test:e2e-headed
 npm run test:e2e-debug
 
 ```
+### Load Testing
 
+The portal employs traffic:generate for load testing.
+
+The following scripts are vital to know:
+
+```bash
+# Run traffic generation (see scripts/generate-pothog-traffic.mjs for details)
+npm run traffic:generate -- --url http://localhost:3000 --dry-run
+```
 ## Project structure
 
 The project is structured with source code and tests in parallel (as in the example below).

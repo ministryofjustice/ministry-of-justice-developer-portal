@@ -42,6 +42,11 @@ export function Footer() {
               © Crown copyright
             </a>
           </div>
+          <div className="govuk-footer__meta-item">
+            <a className="govuk-footer__link" href="/cookie-policy">
+              Cookie policy
+            </a>
+          </div>
         </div>
       </div>
     </footer>
