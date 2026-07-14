@@ -1,50 +1,30 @@
 ---
-name: "🎟️ Ticket Template"
-about: "🛠️ Agreed standard template for creating tickets"
-labels: []
-assignees: []
+name: "\U0001F39F️ Ticket Template"
+about: "\U0001F6E0️ Agreed standard template for creating tickets"
+title: ''
+labels: ''
+assignees: ''
 ---
 
-## 👥 Team
-<!-- Select the team this issue belongs to -->
-- [ ] Engineering Platform
-- [ ] Developer Portal
+## 👀 Why are we Doing this?
+<!-- Describe the purpose and value of the work. This can be a combination of: user needs, business needs and/or technical needs alongside the expected impact of the work being complete. An example user need template is provided to optionally complete. -->
 
-## 📊 Estimation
-<!-- Estimate the effort required (story points or t-shirt size) -->
-- [ ] 1 - XS
-- [ ] 2 - S
-- [ ] 3 - M
-- [ ] 5 - L
-- [ ] 8 - XL
-- [ ] 13 - XXL
+- **As a** - **I want** - **So That** -
+-
 
-## 🧑‍💼 User Need
-**As a**  
-**I want**  
-**so that**  
+## 🔧 Engineering Context and Background (Optional)
+<!-- Add technical guidance on any historical engineering context i.e. is there an existing PoC? Does a solution exist that solves some of the problem? Have we agreed any specifics about the implementation? -->
 
-## 💡 Value / Purpose
-Describe the value of delivering this story. Does this link to OKRs?
-- 
+- The solution should align with our teams agreed [Ways of Engineering](https://ministryofjustice.github.io/developer-experience-documentation/documentation/general-information/ways-of-engineering.html#our-ways-of-engineering).
+-
 
-## 🛠️ Description / Context
-What should the system do, and how should this be achieved?
-- 
+## 📝 Notes (Optional)
+<!-- Add any extra context, links, discussions, or implementation ideas -->
 
-## 🧪 Testing Steps
-What steps are needed to verify this works correctly?
-- [ ] 
+-
 
 ## ✅ Definition of Done
-What conditions must be met before this story is considered complete?
-- [ ] Document the work completed in Developer Experience Team SharePoint
-- [ ] Acceptance criteria are met
+<!-- What conditions must be met before this story is considered complete -->
 
-## ❓ Additional Information
-Add any risks, mitigation, assumptions, or constraints.
-- 
-
-## 📝 Notes
-Add any extra context, links, discussions, or implementation ideas.
-- 
+- [ ] Document outcome, where appropriate
+- [ ]
