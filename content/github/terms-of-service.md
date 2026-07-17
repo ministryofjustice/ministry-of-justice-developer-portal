@@ -1,4 +1,6 @@
-These are the official Terms of Service governing use of GitHub Enterprise Cloud by the Ministry of Justice. 
+# GitHub Terms of Service
+
+These are the official Terms of Service governing use of GitHub Enterprise Cloud by the Ministry of Justice.
 
 They define the mandatory security, compliance, and operational standards that **all users** must follow.
 
@@ -8,9 +10,14 @@ They define the mandatory security, compliance, and operational standards that *
 
 GitHub is a platform for collaborative development and version control of code. These Terms of Service establish three core principles:
 
-1. **Code only** — GitHub repositories **must only contain** source code and development artefacts. **Do not** store organisational, business, or operational data.
+1. **Code only** — GitHub repositories **must only contain** source code and
+   development artefacts. **Do not** store organisational, business, or operational
+   data.
 
-2. **Security first** — Repositories **must never contain** secrets, credentials, or sensitive information. **Do not** commit passwords, API keys, private keys, or regulated data such as PII (Personally Identifiable Information) and PCI (Payment Card Information).
+2. **Security first** — Repositories **must never contain** secrets, credentials,
+   or sensitive information. **Do not** commit passwords, API keys, private keys, or
+   regulated data such as PII (Personally Identifiable Information) and PCI
+   (Payment Card Information).
 
 3. **Compliance by design** — All users **must comply** with these standards to protect the organisation and the people we serve.
 
@@ -20,7 +27,9 @@ GitHub is a platform for collaborative development and version control of code. 
 
 This standard applies to **all staff and contributors** who can access or contribute to repositories used for MoJ work — regardless of role or seniority.
 
-**All repository visibility levels** (public, internal, and private) and **all repository content** (including code, configuration, commits, pull requests, issues, comments, logs, attachments, and generated artefacts) are covered.
+**All repository visibility levels** (public, internal, and private) and **all repository
+content** (including code, configuration, commits, pull requests, issues, comments, logs,
+attachments, and generated artefacts) are covered.
 
 Restrictions apply regardless of file format or how the data is stored - whether as structured files, plain text, compressed archives, or any other form.
 
@@ -43,9 +52,10 @@ Restrictions apply regardless of file format or how the data is stored - whether
 
 **Do not** store data covered by privacy or payment regulations, including:
 
-**PII (Personally Identifiable Information):** 
+**PII (Personally Identifiable Information):**
+
 - Full names
-- Home addresses 
+- Home addresses
 - Personal email addresses
 - Phone numbers
 - Dates of birth
@@ -55,7 +65,7 @@ Restrictions apply regardless of file format or how the data is stored - whether
 - Medical information
 - Biometric data
 
-**PCI (Payment Card Information):** 
+**PCI (Payment Card Information):**
 
 - Cardholder names
 - Primary account numbers (PAN)
@@ -67,7 +77,7 @@ Restrictions apply regardless of file format or how the data is stored - whether
 
 ### Secrets and credentials
 
-**Do not** store secrets in repositories, including: 
+**Do not** store secrets in repositories, including:
 
 - Passwords
 - API keys
@@ -108,7 +118,7 @@ These patterns are illustrative only — not official matching rules. Real produ
 When testing with MoJ-style identifiers, use visibly fake values with repeated digits or simple sequences:
 
 | Identifier | Format | Example |
-|---|---|---|
+| --- | --- | --- |
 | National Insurance number | 2 letters, 6 digits, suffix A–D | CD000000A |
 | PNC number | 4 digits/5–7 digits + letter | 0000/00000A |
 | CRO number | digits/2 digits + letter | 000/34B |
@@ -126,6 +136,7 @@ All teams and contributors **must**:
 - Treat AI-generated code and files as **untrusted** — review for data or secret leakage before committing
 
 In the event of a breach:
+
 - **Immediately remove and rotate** any exposed secret, and remove any accidentally committed PII, PCI, or organisational data
 - **Report** any exposure of secrets, PII, PCI, or organisational data as a security incident **immediately**
 
@@ -133,8 +144,12 @@ In the event of a breach:
 
 ## Compliance
 
-Any breach of these Terms of Service **must** be treated as a security and governance incident and escalated through the appropriate MoJ process. Repositories or workflows found to be non-compliant **may** be suspended until remediation is complete.
+Any breach of these Terms of Service **must** be treated as a security and governance
+incident and escalated through the appropriate MoJ process. Repositories or workflows
+found to be non-compliant **may** be suspended until remediation is complete.
 
 If you suspect a breach or security incident, [**report it immediately**](https://intranet.justice.gov.uk/guidance/security/report-a-security-incident/?agency=hq).
 
-If you are unsure whether something complies, contact the Developer Experience team via Slack [#ask-developer-experience-team](https://moj.enterprise.slack.com/archives/C0AJBK3P5A8) or email DeveloperExperienceTeam@justice.gov.uk.
+If you are unsure whether something complies, contact the Developer Experience team
+via Slack [#ask-developer-experience-team](https://moj.enterprise.slack.com/archives/C0AJBK3P5A8)
+or email <DeveloperExperienceTeam@justice.gov.uk>.

@@ -10,7 +10,7 @@ import { PageIntro } from '@/components/templateRender/PageIntro';
 import { TagRow } from '@/components/templateRender/TagRow';
 import guidelines from '../../../../content/guidelines/guidelines.json';
 import { markdownToHtml } from '@/lib/markdown/markdownToHtml';
-import { getGithubPage } from '@/lib/docs';
+import { getGuidelinePage } from '@/lib/docs';
 import { GuidelinesContent } from '@/types/guidelines';
 import { ReviewStatus } from '@/types';
 import { ReviewBadge } from '@/components/templateRender/ReviewBadge';
@@ -76,7 +76,7 @@ export default async function GuidelineDetailPage({ params }: { params: Promise<
     );
   }
 
-  const pageData = getGithubPage(guideline.slug);
+  const pageData = getGuidelinePage(guideline.slug);
 
   const content = pageData
     ? await markdownToHtml(pageData.content)
