@@ -1,0 +1,62 @@
+{
+  "title": "GitHub User Guide",
+  "summary": "Ministry of Justice standards and best practices for using GitHub. Learn how to effectively manage repositories, collaborate with teams, and follow our GitHub governance standards.",
+  "sections": [
+    {
+      "key": "getting-started",
+      "title": "Getting Started",
+      "description": "Essential information for new users — setting up your account, authentication, and basic repository access.",
+      "modifier": "inception"
+    },
+    {
+      "key": "best-practices",
+      "title": "Best Practices",
+      "description": "Recommended workflows, branching strategies, code review standards, and collaboration patterns.",
+      "modifier": "development"
+    },
+    {
+      "key": "governance",
+      "title": "Governance & Security",
+      "description": "Organisation standards, access control, security standards, and audit requirements.",
+      "modifier": "standards"
+    }
+  ],
+  "items": [
+        {
+    "slug": "terms-of-service",
+    "title": "GitHub Terms of Service",
+    "section": "governance",
+    "description": "Terms of Service for acceptable use of GitHub by Ministry of Justice teams.",
+    "owner": "Developer Experience team",
+    "lastReviewedOn": "2026-07-16",
+    "reviewIn": "12 months"
+    },
+    {
+      "slug": "github-setup",
+      "title": "Setting up GitHub",
+      "section": "getting-started",
+      "description": "Getting your GitHub account configured and accessing Ministry of Justice repositories.",
+      "owner": "Developer Experience team",
+      "lastReviewedOn": "2026-07-16",
+      "reviewIn": "6 months"
+    },
+    {
+      "slug": "branching-strategy",
+      "title": "Branching Strategy",
+      "section": "best-practices",
+      "description": "How we structure branches and manage feature development across MoJ projects.",
+      "owner": "Developer Experience team",
+      "lastReviewedOn": "2026-07-16",
+      "reviewIn": "6 months"
+    },
+    {
+      "slug": "code-review",
+      "title": "Code Review Standards",
+      "section": "best-practices",
+      "description": "Pull request process, review expectations, and approval workflows.",
+      "owner": "Developer Experience team",
+      "lastReviewedOn": "2026-07-16",
+      "reviewIn": "6 months"
+    }
+  ]
+}

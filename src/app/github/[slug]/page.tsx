@@ -8,7 +8,7 @@ import { getReviewStatus } from '@/lib/review';
 import { MetaBar } from '@/components/templateRender/MetaBar';
 import { PageIntro } from '@/components/templateRender/PageIntro';
 import { TagRow } from '@/components/templateRender/TagRow';
-import guidelines from '../../../../content/guidelines/guidelines.json';
+import github from '../../../../content/github/github.json';
 import { markdownToHtml } from '@/lib/markdown/markdownToHtml';
 import { getGithubPage } from '@/lib/docs';
 import { GuidelinesContent } from '@/types/guidelines';
@@ -17,7 +17,7 @@ import { ReviewBadge } from '@/components/templateRender/ReviewBadge';
 
 type Params = { slug: string };
 
-const pageContent = guidelines as GuidelinesContent;
+const pageContent = github as GuidelinesContent;
 
 export function generateStaticParams() {
   return pageContent.items
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return { title: guideline.title };
 }
 
-export default async function GuidelineDetailPage({ params }: { params: Promise<Params> }) {
+export default async function GithubDetailPage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
   const guideline = pageContent.items.find((item) => item.slug === slug);
 
@@ -50,7 +50,7 @@ export default async function GuidelineDetailPage({ params }: { params: Promise<
     return (
       <div className="govuk-width-container">
         <Breadcrumbs
-          items={[{ label: pageContent.title, href: '/guidelines' }, { label: guideline.title }]}
+          items={[{ label: pageContent.title, href: '/github' }, { label: guideline.title }]}
         />
 
         <div className="govuk-grid-row">
@@ -95,7 +95,7 @@ If you have questions, reach out to the ${guideline.owner} team.
   return (
     <div className="govuk-width-container">
       <Breadcrumbs
-        items={[{ label: pageContent.title, href: '/guidelines' }, { label: guideline.title }]}
+        items={[{ label: pageContent.title, href: '/github' }, { label: guideline.title }]}
       />
 
       <div className="govuk-grid-row">
