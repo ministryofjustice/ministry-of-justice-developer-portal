@@ -1,31 +1,30 @@
 # GitHub Terms of Service
 
-These are the official Terms of Service governing use of GitHub by the Ministry of Justice.
+These are the official terms of service governing use of GitHub by the Ministry of Justice (**MOJ**).
 
 They define the mandatory security, compliance, and operational standards that **all users** must follow.
 
 ---
 
-## Core Principles
+## Core principles
 
 GitHub is a platform for collaborative development and version control of code. These Terms of Service establish three core principles:
 
-1. **Code only** — GitHub repositories **must only contain** source code and
+**Code only** — GitHub repositories **must only contain** source code and
    development artefacts. **Do not** store organisational, business, or operational
    data.
 
-2. **Security first** — Repositories **must never contain** secrets, credentials,
+**Security first** — Repositories **must never contain** secrets, credentials,
    or sensitive information. **Do not** commit passwords, API keys, private keys, or
-   regulated data such as Personal Information and PCI
-   (Payment Card Information).
+   regulated data such as personal information and Payment Card Information (**PCI**).
 
-3. **Compliance by design** — All users **must comply** with these standards to protect the organisation and the people we serve.
+**Compliance by design** — All users **must comply** with these standards to protect the organisation and the people we serve.
 
 ---
 
 ## Scope
 
-This standard applies to **all staff and contributors** who can access or contribute to repositories used for MoJ work — regardless of role or seniority.
+This standard applies to **all staff and contributors** who can access or contribute to repositories used for MOJ work — regardless of role or seniority.
 
 **All repository visibility levels** (public, internal, and private) and **all repository
 content** (including code, configuration, commits, pull requests, issues, comments, logs,
@@ -35,83 +34,83 @@ Restrictions apply regardless of file format or how the data is stored - whether
 
 ---
 
-## What You Cannot Store
+## What you cannot store
 
 ### Organisational data
 
-**Do not** store organisation-specific data in repositories. This includes:
+**Do not** store organisation-specific data in repositories. This includes
 
-- Business, operational, or service data
-- Production data (including non-production copies)
-- Internal reports, extracts, or datasets
-- Data exports from internal systems
-- User, staff, or citizen records
-- Justice identifiers: Prisoner IDs, NOMIS IDs, PNC numbers, CRO numbers, CRNs, LAA Case Reference Numbers
+- business, operational, or service data
+- production data (including non-production copies)
+- internal reports, extracts, or datasets
+- data exports from internal systems
+- user, staff, or citizen records
+- justice identifiers: Prisoner IDs, NOMIS IDs, PNC numbers, CRO numbers, CRNs, LAA Case Reference Numbers
 
 ### Personal or regulated data
 
 **Do not** store data covered by privacy or payment regulations including, but not limited to:
 
-**Personal Information:**
+**Personal information**
 
-- Full names
-- Home addresses
-- Personal email addresses
-- Phone numbers
-- Dates of birth
-- National Insurance numbers
-- Passport numbers
-- Driving licence numbers
-- Medical information
-- Biometric data
+- full names
+- home addresses
+- personal email addresses
+- phone numbers
+- dates of birth
+- national Insurance numbers
+- passport numbers
+- driving licence numbers
+- medical information
+- biometric data
 
-**PCI (Payment Card Information):**
+**Payment card information**
 
-- Cardholder names
-- Primary account numbers (PAN)
-- Expiry dates
-- Service codes
-- Card verification values (CVV/CVC)
-- Magnetic stripe or chip track data
+- cardholder names
+- primary account numbers (**PAN**)
+- expiry dates
+- service codes
+- card verification values (**CVV**/**CVC**)
+- magnetic stripe or chip track data
 - PIN data
 
 ### Secrets and credentials
 
-**Do not** store secrets in repositories including, but not limited to:
+**Do not** store secrets in repositories including, but not limited to
 
-- Passwords
+- passwords
 - API keys
-- Private keys
-- Certificates
-- Connection strings
-- Credentials
-- Service account keys
+- private keys
+- certificates
+- connection strings
+- credentials
+- service account keys
 
 ---
 
-## What You Can Store
+## What you can store
 
-GitHub repositories are for development work. Acceptable content includes:
+GitHub repositories are for development work. Acceptable content includes
 
-- Source code and scripts
-- Configuration files and infrastructure as code
-- Documentation and technical guides
-- Automated test code and synthetic test fixtures
+- source code and scripts
+- configuration files and infrastructure as code
+- documentation and technical guides
+- automated test code and synthetic test fixtures
 - CI/CD pipeline definitions
-- Development tooling and build artefacts
+- development tooling and build artefacts
 
-### Synthetic Test Data
+### Synthetic test data
 
-The only permitted data-like content is synthetic test data required for automated testing. Test data **must**:
+The only permitted data-like content is synthetic test data required for automated testing. Test data **must**
 
-- Be obviously fake and non-real
-- Contain no organisational, Personal Information, or PCI data
-- Contain no secrets
-- Have a filename that clearly identifies it as test data (for example, `test-data.json`, `mock-users.test.json`)
+- be obviously fake and non-real
+- contain no organisational, Personal Information, or PCI data
+- contain no secrets
+- have a filename that clearly identifies it as test data (for example, `test-data.json`, `mock-users.test.json`)
 
 **Do not** use ambiguous names like `data.csv` or `users.json` for test datasets.
 
-### Synthetic Identifier Formats
+### Synthetic identifier formats
 
 These patterns are illustrative only — not official matching rules. Real production patterns may vary.
 
@@ -126,26 +125,26 @@ When testing, use visibly fake values with repeated digits or simple sequences:
 
 ---
 
-## Your Responsibilities
+## Your responsibilities
 
-All teams and contributors **must**:
+All teams and contributors **must**
 
-- Store secrets using **approved secret management tools** — never in repository files
-- Ensure **appropriate security and access controls** are configured for your repositories and in CI/CD pipelines
-- **Review all code** entering repositories (e.g. from pull requests, third-party libraries) for accidental data or secrets exposure
-- Treat AI-generated code and files as **untrusted** — review for data or secret leakage before committing
+- store secrets using **approved secret management tools** — never in repository files
+- ensure **appropriate security and access controls** are configured for your repositories and in CI/CD pipelines
+- **review all code** entering repositories (e.g. from pull requests, third-party libraries) for accidental data or secrets exposure
+- treat AI-generated code and files as **untrusted** — review for data or secret leakage before committing
 
 In the event of a breach:
 
-- **Immediately remove and rotate** any exposed secret, and remove any accidentally committed Personal Information, PCI, or organisational data
-- **Report** any exposure of secrets, Personal Information, PCI, or organisational data as a security incident **immediately**
+- **Immediately remove and rotate** any exposed secret, and remove any accidentally committed personal information, PCI, or organisational data
+- **Report** any exposure of secrets, personal information, PCI, or organisational data as a security incident **immediately**
 
 ---
 
 ## Compliance
 
 Any breach of these Terms of Service **must** be treated as a security and governance
-incident and escalated through the appropriate MoJ process. Repositories or workflows
+incident and escalated through the appropriate MOJ process. Repositories or workflows
 found to be non-compliant **may** be suspended until remediation is complete.
 
 If you suspect a breach or security incident, [**report it immediately**](https://intranet.justice.gov.uk/guidance/security/report-a-security-incident/?agency=hq).
