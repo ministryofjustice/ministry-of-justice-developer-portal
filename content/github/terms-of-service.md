@@ -1,6 +1,6 @@
 # GitHub Terms of Service
 
-These are the official Terms of Service governing use of GitHub Enterprise Cloud by the Ministry of Justice.
+These are the official Terms of Service governing use of GitHub by the Ministry of Justice.
 
 They define the mandatory security, compliance, and operational standards that **all users** must follow.
 
@@ -16,7 +16,7 @@ GitHub is a platform for collaborative development and version control of code. 
 
 2. **Security first** — Repositories **must never contain** secrets, credentials,
    or sensitive information. **Do not** commit passwords, API keys, private keys, or
-   regulated data such as PII (Personally Identifiable Information) and PCI
+   regulated data such as Personal Information and PCI
    (Payment Card Information).
 
 3. **Compliance by design** — All users **must comply** with these standards to protect the organisation and the people we serve.
@@ -50,9 +50,9 @@ Restrictions apply regardless of file format or how the data is stored - whether
 
 ### Personal or regulated data
 
-**Do not** store data covered by privacy or payment regulations, including:
+**Do not** store data covered by privacy or payment regulations including, but not limited to:
 
-**PII (Personally Identifiable Information):**
+**Personal Information:**
 
 - Full names
 - Home addresses
@@ -77,7 +77,7 @@ Restrictions apply regardless of file format or how the data is stored - whether
 
 ### Secrets and credentials
 
-**Do not** store secrets in repositories, including:
+**Do not** store secrets in repositories including, but not limited to:
 
 - Passwords
 - API keys
@@ -105,7 +105,7 @@ GitHub repositories are for development work. Acceptable content includes:
 The only permitted data-like content is synthetic test data required for automated testing. Test data **must**:
 
 - Be obviously fake and non-real
-- Contain no organisational, PII, or PCI data
+- Contain no organisational, Personal Information, or PCI data
 - Contain no secrets
 - Have a filename that clearly identifies it as test data (for example, `test-data.json`, `mock-users.test.json`)
 
@@ -115,7 +115,7 @@ The only permitted data-like content is synthetic test data required for automat
 
 These patterns are illustrative only — not official matching rules. Real production patterns may vary.
 
-When testing with MoJ-style identifiers, use visibly fake values with repeated digits or simple sequences:
+When testing, use visibly fake values with repeated digits or simple sequences:
 
 | Identifier | Format | Example |
 | --- | --- | --- |
@@ -131,14 +131,14 @@ When testing with MoJ-style identifiers, use visibly fake values with repeated d
 All teams and contributors **must**:
 
 - Store secrets using **approved secret management tools** — never in repository files
-- **Enable secret scanning** on repositories and in CI/CD pipelines
-- **Review pull requests** for accidental data or secret inclusion before merging
+- Ensure **appropriate security and access controls** are configured for your repositories and in CI/CD pipelines
+- **Review all code** entering repositories (e.g. from pull requests, third-party libraries) for accidental data or secrets exposure
 - Treat AI-generated code and files as **untrusted** — review for data or secret leakage before committing
 
 In the event of a breach:
 
-- **Immediately remove and rotate** any exposed secret, and remove any accidentally committed PII, PCI, or organisational data
-- **Report** any exposure of secrets, PII, PCI, or organisational data as a security incident **immediately**
+- **Immediately remove and rotate** any exposed secret, and remove any accidentally committed Personal Information, PCI, or organisational data
+- **Report** any exposure of secrets, Personal Information, PCI, or organisational data as a security incident **immediately**
 
 ---
 
