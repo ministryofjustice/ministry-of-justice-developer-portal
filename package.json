@@ -46,7 +46,7 @@
     "gray-matter": "4.0.3",
     "moment": "2.30.1",
     "next": "16.2.10",
-    "posthog-js": "1.396.6",
+    "posthog-js": "1.404.0",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "rehype-slug": "6.0.0",
