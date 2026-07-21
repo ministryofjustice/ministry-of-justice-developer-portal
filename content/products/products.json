@@ -3,7 +3,7 @@
     "slug": "github",
     "name": "GitHub",
     "category": "platforms",
-    "description": "GitHub Enterprise Cloud is a foundational platform for version control and collaboration across the Ministry of Justice. Provides centralised code repositories, code review, automated CI/CD, and AI-assisted development with GitHub Copilot.",
+    "description": "GitHub is a foundational platform for version control and collaboration across the Ministry of Justice. Provides centralised code repositories, code review, automated CI/CD, and AI-assisted development with GitHub Copilot.",
     "owner": "Developer Experience team",
     "slackChannel": "#developer-experience-team",
     "docsUrl": "/github",
