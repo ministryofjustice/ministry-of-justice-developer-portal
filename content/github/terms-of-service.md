@@ -51,7 +51,7 @@ Restrictions apply regardless of file format or how the data is stored - whether
 
 **Do not** store data covered by privacy or payment regulations including, but not limited to:
 
-**Personal information**
+#### Personal information
 
 - full names
 - home addresses
@@ -64,7 +64,7 @@ Restrictions apply regardless of file format or how the data is stored - whether
 - medical information
 - biometric data
 
-**Payment card information**
+#### Payment card information
 
 - cardholder names
 - primary account numbers (**PAN**)
