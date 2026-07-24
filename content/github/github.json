@@ -19,10 +19,16 @@
       "title": "Governance & Security",
       "description": "Organisation standards, access control, security standards, and audit requirements.",
       "modifier": "standards"
+    },
+    {
+      "key": "runbooks",
+      "title": "Runbooks",
+      "description": "Operational runbooks for common GitHub tasks and troubleshooting.",
+      "modifier": "runbooks"
     }
   ],
   "items": [
-        {
+    {
     "slug": "terms-of-service",
     "title": "GitHub Terms of Service",
     "section": "governance",
@@ -56,6 +62,33 @@
       "description": "Pull request process, review expectations, and approval workflows.",
       "owner": "Developer Experience team",
       "lastReviewedOn": "2026-07-16",
+      "reviewIn": "6 months"
+    },
+    {
+      "slug": "github-actions-cloud-credentials-standard",
+      "title": "GitHub Actions Cloud Credentials Standard",
+      "section": "governance",
+      "description": "Standards for managing cloud credentials in GitHub Actions workflows.",
+      "owner": "Developer Experience team",
+      "lastReviewedOn": "2026-07-24",
+      "reviewIn": "6 months"
+    },
+    {
+      "slug": "github-repository-archival-standard",
+      "title": "GitHub Repository Archival Standard",
+      "section": "governance",
+      "description": "Standards for archiving GitHub repositories.",
+      "owner": "Developer Experience team",
+      "lastReviewedOn": "2026-07-24",
+      "reviewIn": "6 months"
+    },
+    {
+      "slug": "github-repository-archival-runbook",
+      "title": "GitHub Repository Archival Runbook",
+      "section": "runbooks",
+      "description": "Operational runbook for archiving GitHub repositories.",
+      "owner": "Developer Experience team",
+      "lastReviewedOn": "2026-07-24",
       "reviewIn": "6 months"
     }
   ]
