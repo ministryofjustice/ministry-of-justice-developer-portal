@@ -29,6 +29,30 @@ export function getGuidelinePage(slug: string): { content: string } | null {
   return null;
 }
 
+const GITHUB_DIR = path.join(process.cwd(), 'content', 'github');
+
+/**
+ * Get a single GitHub guide page by slug
+ */
+export function getGithubPage(slug: string): { content: string } | null {
+  let filePath = path.join(GITHUB_DIR, `${slug}.mdx`);
+
+  if (fs.existsSync(filePath)) {
+    const raw = fs.readFileSync(filePath, 'utf-8');
+    const { content } = matter(raw);
+    return { content };
+  }
+  filePath = path.join(GITHUB_DIR, `${slug}.md`);
+
+  if (fs.existsSync(filePath)) {
+    const raw = fs.readFileSync(filePath, 'utf-8');
+    const { content } = matter(raw);
+    return { content };
+  }
+
+  return null;
+}
+
 const DOCS_DIR = path.join(process.cwd(), 'content', 'docs');
 
 /**
