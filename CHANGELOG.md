@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/compare/v1.0.0...v1.0.1) (2026-07-24)
+
+
+### Bug Fixes
+
+* resolve lint failures in changelog formatting ([#341](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/issues/341)) ([4a44c36](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/commit/4a44c36d0b24bc2d5683b419c0af4acfb2e2ad85))
+
 ## 1.0.0 (2026-06-29)
 
 ### Features
