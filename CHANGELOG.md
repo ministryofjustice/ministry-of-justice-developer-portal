@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/compare/v1.1.0...v1.2.0) (2026-07-24)
+
+
+### Features
+
+* add workflow to automatically add new issues to the project ([#385](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/issues/385)) ([f6ef250](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/commit/f6ef250e6fbce8b16141f611e2527ed9fdd186e4))
+
 ## [1.1.0](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/compare/v1.0.0...v1.1.0) (2026-07-24)
 
 ### Features
