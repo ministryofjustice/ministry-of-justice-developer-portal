@@ -1,6 +1,6 @@
 {
   "name": "ministry-of-justice-developer-experience",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Ministry of Justice Developer Experience Portal - Developer portal baseline security and compliance",
   "private": true,
   "scripts": {
