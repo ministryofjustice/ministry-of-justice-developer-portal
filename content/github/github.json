@@ -74,10 +74,28 @@
       "reviewIn": "6 months"
     },
     {
+      "slug": "github-alert-management-sla-standard",
+      "title": "GitHub Alert Management SLA Standard",
+      "section": "governance",
+      "description": "Standards for managing alert response times and service level agreements in GitHub.",
+      "owner": "Developer Experience team",
+      "lastReviewedOn": "2026-07-24",
+      "reviewIn": "6 months"
+    },
+    {
       "slug": "github-repository-archival-standard",
       "title": "GitHub Repository Archival Standard",
       "section": "governance",
       "description": "Standards for archiving GitHub repositories.",
+      "owner": "Developer Experience team",
+      "lastReviewedOn": "2026-07-24",
+      "reviewIn": "6 months"
+    },
+    {
+      "slug": "github-lfs-governance-standard",
+      "title": "GitHub LFS Governance Standard",
+      "section": "governance",
+      "description": "Standards for managing GitHub Large File Storage (LFS) usage.",
       "owner": "Developer Experience team",
       "lastReviewedOn": "2026-07-24",
       "reviewIn": "6 months"
