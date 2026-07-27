@@ -1,4 +1,4 @@
-# GitHub Security Alert Management and SLA Standard
+# GitHub Security Alert Management SLA Standard
 
 - [Summary](#summary)
 - [Objectives](#objectives)
@@ -311,13 +311,10 @@ Teams should prioritise improving ownership, triage, and automated enforcement t
 
 ## References
 
-- GitHub Advanced Security Documentation
-- NCSC Cyber Assessment Framework (CAF)
-- Government Cyber Security Standard
-- GovS 007 Security
-- GDS Service Standard
-- MoJ Vulnerability Management Guidance
-- MoJ Modernisation Platform Security Guidance
-- GitHub Secret Scanning Documentation
-- GitHub Dependabot Documentation
-- GitHub CodeQL Documentation
+- [GitHub Advanced Security Documentation](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security)
+- [NCSC Cyber Assessment Framework (CAF)](https://www.ncsc.gov.uk/collection/cyber-assessment-framework)
+- [Government Cyber Security Standard](https://www.security.gov.uk/policy-and-guidance/the-cyber-security-standard/)
+- [GovS 007 Security](https://www.gov.uk/government/publications/government-functional-standard-govs-007-security)
+- [GitHub Secret Scanning Documentation](https://docs.github.com/en/code-security/concepts/secret-security/secret-scanning)
+- [GitHub Dependabot Documentation](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart#about-dependabot)
+- [GitHub CodeQL Documentation](https://docs.github.com/en/code-security/concepts/code-scanning/codeql/codeql-code-scanning)

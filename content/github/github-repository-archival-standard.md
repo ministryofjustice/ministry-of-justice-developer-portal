@@ -1,6 +1,6 @@
-# GitHub Repository Archival
+# GitHub Repository Archival Standard
 
-- [GitHub Repository Archival](#github-repository-archival)
+- [GitHub Repository Archival Standard](#github-repository-archival-standard)
   - [Executive Summary](#executive-summary)
   - [Context and Problem Statement](#context-and-problem-statement)
   - [Objectives](#objectives)

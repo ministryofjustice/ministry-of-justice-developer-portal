@@ -1,4 +1,4 @@
-# Archiving a GitHub Repository Checklist
+# GitHub Repository Archival Runbook
 
 This runbook provides a checklist for archiving a GitHub repository.
 Archiving a repository makes it read-only and prevents any further changes, but it does not delete the repository or its contents.

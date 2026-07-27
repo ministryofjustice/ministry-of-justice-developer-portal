@@ -93,7 +93,7 @@
     },
     {
       "slug": "github-lfs-governance-standard",
-      "title": "GitHub LFS Governance Standard",
+      "title": "GitHub Large File Storage (LFS) Governance Standard",
       "section": "governance",
       "description": "Standards for managing GitHub Large File Storage (LFS) usage.",
       "owner": "Developer Experience team",

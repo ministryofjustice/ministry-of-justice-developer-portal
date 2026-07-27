@@ -1,12 +1,15 @@
 # GitHub Large File Storage (LFS) Governance Standard
 
-- #summary
-- #objectives
-- #scope
-- [1. Repository Size Management- [2. Largefile-thresholds
-- [3. Mandatory Requirements](#3-mandatory-requirementsnitoring and Enforcement](#5-monitoring-and-enforcement)
--. Ownership and Accountability](#7-ownership-and-accountabilitynd-reporting
-- #references
+- [Summary](#summary)
+- [Objectives](#objectives)
+- [Scope](#scope)
+- [1. Repository Size Management](#1-repository-size-management)
+- [2. Largefile-thresholds](#2-large-file-thresholds)
+- [3. Mandatory Requirements](#3-mandatory-requirements)
+- [4. Git LFS Usage](#4-git-lfs-usage)
+- [5. Monitoring and Enforcement](#5-monitoring-and-enforcement)
+- [7. Ownership and Accountability](#7-ownership-and-accountability)
+- [References](#references)
 
 ## Summary
 
@@ -252,10 +255,7 @@ Ongoing monitoring should be maintained to preserve this compliance position and
 
 ## References
 
-- GitHub Repository Limits Guidance
-- GitHub Large File Storage Documentation
-- GitHub Repository Health Guidance
-- Government Service Standard
-- NCSC Secure Development Guidance
-- MoJ Engineering Platform Standards
-- MoJ GitHub Governance Standards
+- [GitHub Repository Limits Guidance](https://docs.github.com/en/repositories/creating-and-managing-repositories/repository-limits)
+- [GitHub Large File Storage Documentation](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage)
+- [GitHub Repository Health Guidance](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file)
+- [NCSC Secure Development Guidance](https://www.ncsc.gov.uk/collection/developers-collection)
