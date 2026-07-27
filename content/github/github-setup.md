@@ -1,7 +1,7 @@
-# GitHub Starter Guide
+# Setting up GitHub
 
-This guide explains how to get set up with GitHub as a new starter at the Ministry of Justice. It covers account creation, joining
-the MOJ organisation, and the core setup steps needed before you can start contributing to repositories.
+This guide explains how to get set up with GitHub at the Ministry of Justice. It covers account creation, joining the MOJ
+organisation, and the core setup steps needed before you can start contributing to repositories.
 
 ---
 
@@ -44,7 +44,7 @@ delivery team, either directly or via a GitHub team.
 To request access to a specific repository:
 
 1. Check the repository's README or CODEOWNERS file for the responsible team
-2. Contact the team's Maintainer or Admin directly. If you're unsure who owns a repository, ask in `#ask-developer-experience`
+2. Contact the team's Maintainer or Admin directly. If you're unsure who owns a repository, ask in [#ask-developer-experience](https://moj.enterprise.slack.com/archives/C0AJBK3P5A8)
 
 Some teams manage onboarding access through a dedicated repository (for example, team-specific `-access` repos). Check your team's
 onboarding documentation or your lead for the exact process.
@@ -78,9 +78,8 @@ We **require** Git commit signing for all repositories.
 ## Using GitHub Apps for Automation
 
 If your team needs to authenticate GitHub Actions workflows (for example, for CI/CD or Terraform), MOJ recommends using a GitHub App
-rather than a personal access token. See the existing runbook for full setup steps:
-
-- [GitHub App Setup Guide](https://ministryofjustice.github.io/developer-experience-documentation/runbooks/github-app-setup.html)
+rather than a personal access token. Contact [#ask-developer-experience](https://moj.enterprise.slack.com/archives/C0AJBK3P5A8)
+for guidance.
 
 ---
 
@@ -116,9 +115,9 @@ collaborators when access is no longer required.
 
 ## Getting Help
 
-- General GitHub access or SSO issues: `#ask-developer-experience` or `#ask-about-github`
+- General GitHub access or SSO issues: [#ask-developer-experience](https://moj.enterprise.slack.com/archives/C0AJBK3P5A8) or [#ask-about-github](https://moj.enterprise.slack.com/archives/C08SV6MR2P7)
 - Team-specific access or repository questions: contact your team directly
-- Something not covered here: `#developer-experience-alerts` or email <DeveloperExperienceTeam@justice.gov.uk>
+- Something not covered here: email <DeveloperExperienceTeam@justice.gov.uk>
 
 ---
 
@@ -126,4 +125,5 @@ collaborators when access is no longer required.
 
 - [GitHub Terms of Service](https://developer-portal.service.justice.gov.uk/github/terms-of-service)
 - [MOJ GitHub Organisation](https://github.com/ministryofjustice)
+- [MoJ Analytical Services GitHub Organisation](https://github.com/moj-analytical-services)
 - [GitHub Docs](https://docs.github.com)
