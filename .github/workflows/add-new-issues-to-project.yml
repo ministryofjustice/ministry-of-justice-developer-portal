@@ -12,7 +12,7 @@ jobs:
   call-reusable-workflow:
     permissions:
       contents: read
-    uses: https://github.com/ministryofjustice/ministry-of-justice-engineering-platform/blob/main/.github/workflows/reusable-add-issue-to-project.yml
+    uses: ministryofjustice/ministry-of-justice-engineering-platform/.github/workflows/reusable-add-issue-to-project.yml@main
     with:
       project-title: "👩‍💻 Developer Experience Team"
       project-fields-json: >-
