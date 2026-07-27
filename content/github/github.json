@@ -65,28 +65,10 @@
       "reviewIn": "6 months"
     },
     {
-      "slug": "github-actions-cloud-credentials-standard",
-      "title": "GitHub Actions Cloud Credentials Standard",
-      "section": "governance",
-      "description": "Standards for managing cloud credentials in GitHub Actions workflows.",
-      "owner": "Developer Experience team",
-      "lastReviewedOn": "2026-07-24",
-      "reviewIn": "6 months"
-    },
-    {
       "slug": "github-alert-management-sla-standard",
       "title": "GitHub Alert Management SLA Standard",
       "section": "governance",
       "description": "Standards for managing alert response times and service level agreements in GitHub.",
-      "owner": "Developer Experience team",
-      "lastReviewedOn": "2026-07-24",
-      "reviewIn": "6 months"
-    },
-    {
-      "slug": "github-repository-archival-standard",
-      "title": "GitHub Repository Archival Standard",
-      "section": "governance",
-      "description": "Standards for archiving GitHub repositories.",
       "owner": "Developer Experience team",
       "lastReviewedOn": "2026-07-24",
       "reviewIn": "6 months"
