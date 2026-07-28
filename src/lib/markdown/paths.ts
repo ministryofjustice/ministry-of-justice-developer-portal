@@ -89,16 +89,6 @@ export function normalizeMalformedDocsPathsInHtml(html: string): string {
   return html.replace(/\/docs\/([^/"?#]+)\/documentation\//g, '/docs/$1/');
 }
 
-export function ensureDocsTrailingSlash(path: string): string {
-  if (!path.startsWith('/docs/')) return path;
-  if (path.endsWith('/')) return path;
-
-  const last = path.split('/').pop() || '';
-  if (last.includes('.')) return path;
-
-  return `${path}/`;
-}
-
 export function rewriteAbsoluteGithubPagesDocsHref(href: string): string | null {
   let parsed: URL;
   try {
@@ -120,9 +110,7 @@ export function rewriteAbsoluteGithubPagesDocsHref(href: string): string | null 
 
   if (!pathname.startsWith('/docs/')) return null;
 
-  return `${withBasePath(
-    ensureDocsTrailingSlash(normalizeMalformedDocsHref(pathname)),
-  )}${parsed.search}${parsed.hash}`;
+  return `${withBasePath(normalizeMalformedDocsHref(pathname))}${parsed.search}${parsed.hash}`;
 }
 
 function escapeRegExp(value: string): string {

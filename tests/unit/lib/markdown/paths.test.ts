@@ -8,7 +8,6 @@ import {
   isBasePathPrefixed,
   withBasePath,
   stripBasePath,
-  ensureDocsTrailingSlash,
   normalizeMalformedDocsHref,
 } from '@/lib/markdown/paths';
 
@@ -103,14 +102,6 @@ describe('base path helpers', () => {
 });
 
 describe('docs helpers', () => {
-  it('ensures trailing slash for docs paths', () => {
-    expect(ensureDocsTrailingSlash('/docs/test/page')).toBe('/docs/test/page/');
-  });
-
-  it('does not modify file paths', () => {
-    expect(ensureDocsTrailingSlash('/docs/test/file.pdf')).toBe('/docs/test/file.pdf');
-  });
-
   it('normalizes malformed docs href', () => {
     expect(normalizeMalformedDocsHref('/docs/test/documentation/page')).toBe('/docs/test/page');
   });
