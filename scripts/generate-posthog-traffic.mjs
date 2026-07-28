@@ -3,8 +3,9 @@
  * scripts/generate-posthog-traffic.mjs
  *
  * Drives a headless (or headed) browser through the deployed Developer Portal
- * to generate real, consented PostHog traffic — pageviews, and occasionally
- * the inactivity survey — so there's data to look at in the PostHog project.
+ * to generate real, consented PostHog traffic — pageviews, pageleave events,
+ * and occasionally the inactivity survey — so there's data to look at in the
+ * PostHog project.
  *
  * Usage:
  *   node scripts/generate-posthog-traffic.mjs --url https://your-env.example.com [options]
@@ -32,6 +33,10 @@
  *                            default)
  *   --dry-run                Print the planned sessions without launching a
  *                            browser or making any requests
+ *   --debug-payload-limit <n> Max number of payload samples to print
+ *                            (default: 3)
+ *   --debug-event-wire       Print wire-level diagnostics for PostHog /e/
+ *                            requests (headers + first payload bytes)
  *   --help                   Show this help
  *
  * Examples:
@@ -65,6 +70,8 @@ function parseArgs(argv) {
     headless: true,
     stealth: true,
     dryRun: false,
+    debugPayloadLimit: 3,
+    debugEventWire: false,
     help: false,
   }
 
@@ -87,6 +94,8 @@ function parseArgs(argv) {
       case '--headed': args.headless = false; break
       case '--no-stealth': args.stealth = false; break
       case '--dry-run': args.dryRun = true; break
+      case '--debug-payload-limit': args.debugPayloadLimit = Number(next()); break
+      case '--debug-event-wire': args.debugEventWire = true; break
       case '--help': args.help = true; break
       default:
         console.warn(`Unknown argument: ${arg}`)
@@ -119,6 +128,8 @@ Options:
   --headed                 Show the browser instead of running headless
   --no-stealth             Disable automation-mitigation tweaks (enabled by default)
   --dry-run                Print the planned sessions, make no requests
+  --debug-payload-limit <n> Max number of payload samples to print (default: 3)
+  --debug-event-wire       Print PostHog /e/ wire diagnostics (headers + first payload bytes)
   --help                   Show this help
 `)
 }
@@ -149,6 +160,77 @@ function randomItem(list) {
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+function toHexPrefix(buffer, byteCount = 16) {
+  if (!buffer || buffer.length === 0) return 'none'
+  return buffer.subarray(0, Math.min(byteCount, buffer.length)).toString('hex')
+}
+
+function normalizePathname(pathname) {
+  if (!pathname) return '/'
+  if (pathname === '/') return pathname
+  return pathname.endsWith('/') ? pathname.slice(0, -1) : pathname
+}
+
+async function navigateToRoute(page, baseUrl, route) {
+  const targetUrl = new URL(route, baseUrl).toString()
+  const targetPathname = normalizePathname(new URL(targetUrl).pathname)
+
+  const candidateHref = await page.evaluate((desiredPathname) => {
+    const normalize = (pathname) => {
+      if (!pathname) return '/'
+      if (pathname === '/') return pathname
+      return pathname.endsWith('/') ? pathname.slice(0, -1) : pathname
+    }
+
+    const links = Array.from(document.querySelectorAll('a[href]'))
+    for (const link of links) {
+      try {
+        const href = link.getAttribute('href')
+        if (!href || href.startsWith('#')) continue
+
+        const resolved = new URL(href, window.location.href)
+        if (resolved.origin !== window.location.origin) continue
+        if (normalize(resolved.pathname) === desiredPathname) {
+          return href
+        }
+      } catch {
+        // Ignore malformed link hrefs while searching for a route match.
+      }
+    }
+
+    return null
+  }, targetPathname)
+
+  if (candidateHref) {
+    const escapedHref = candidateHref.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
+    const link = page.locator(`a[href="${escapedHref}"]`).first()
+    const canClick = await link.isVisible().catch(() => false)
+    if (canClick) {
+      await link.click().catch(() => {})
+      const reachedPath = await page.waitForFunction(
+        (expectedPathname) => {
+          const normalize = (pathname) => {
+            if (!pathname) return '/'
+            if (pathname === '/') return pathname
+            return pathname.endsWith('/') ? pathname.slice(0, -1) : pathname
+          }
+
+          return normalize(window.location.pathname) === expectedPathname
+        },
+        targetPathname,
+        { timeout: 5_000 },
+      ).then(() => true).catch(() => false)
+
+      if (reachedPath) {
+        await page.waitForLoadState('domcontentloaded').catch(() => {})
+        return
+      }
+    }
+  }
+
+  await page.goto(targetUrl, { waitUntil: 'domcontentloaded' })
 }
 
 async function sleepWithSurveySuppression(page, totalMs, intervalMs = 500) {
@@ -368,6 +450,7 @@ async function runSession(browser, baseUrl, sessionIndex, config) {
     trackedPageviews: 0,
     posthogFlagPosts: 0,
     posthogEventPosts: 0,
+    posthogEventWireSamples: [],
     posthogRecordingPosts: 0,
     posthogEvent2xx: 0,
     posthogRecording2xx: 0,
@@ -395,6 +478,19 @@ async function runSession(browser, baseUrl, sessionIndex, config) {
         stats.posthogFlagPosts += 1
       } else if (pathname === '/e/' || pathname === '/i/v0/e/') {
         stats.posthogEventPosts += 1
+
+        const payloadBuffer = request.postDataBuffer?.() ?? Buffer.alloc(0)
+
+        if (config.debugEventWire && stats.posthogEventWireSamples.length < config.debugPayloadLimit) {
+          const headers = request.headers()
+          const contentType = headers['content-type'] ?? 'unknown'
+          const contentEncoding = headers['content-encoding'] ?? 'none'
+          const contentLength = headers['content-length'] ?? String(payloadBuffer.length)
+          const prefixHex = toHexPrefix(payloadBuffer, 16)
+          stats.posthogEventWireSamples.push(
+            `content-type=${contentType}; content-encoding=${contentEncoding}; content-length=${contentLength}; first16hex=${prefixHex}`,
+          )
+        }
       } else if (pathname === '/s/' || pathname === '/i/v0/s/') {
         stats.posthogRecordingPosts += 1
       }
@@ -500,7 +596,7 @@ async function runSession(browser, baseUrl, sessionIndex, config) {
       }
 
       const route = randomItem(ROUTES)
-      await page.goto(new URL(route, baseUrl).toString(), { waitUntil: 'domcontentloaded' })
+      await navigateToRoute(page, baseUrl, route)
       if (await dismissUnwantedFeedbackSurvey(page)) {
         stats.unwantedFeedbackDismissed += 1
       }
@@ -621,6 +717,11 @@ async function main() {
   const totalTrackedPageviews = results.reduce((sum, r) => sum + r.trackedPageviews, 0)
   const totalPosthogFlagPosts = results.reduce((sum, r) => sum + r.posthogFlagPosts, 0)
   const totalPosthogEventPosts = results.reduce((sum, r) => sum + r.posthogEventPosts, 0)
+  const observedPosthogEventWireSamples = []
+  for (const sample of results.flatMap((r) => r.posthogEventWireSamples ?? [])) {
+    observedPosthogEventWireSamples.push(sample)
+    if (observedPosthogEventWireSamples.length >= config.debugPayloadLimit) break
+  }
   const totalPosthogRecordingPosts = results.reduce((sum, r) => sum + r.posthogRecordingPosts, 0)
   const totalPosthogEvent2xx = results.reduce((sum, r) => sum + r.posthogEvent2xx, 0)
   const totalPosthogRecording2xx = results.reduce((sum, r) => sum + r.posthogRecording2xx, 0)
@@ -638,6 +739,16 @@ async function main() {
   console.log(`Tracked pageviews:   ${totalTrackedPageviews}`)
   console.log(`PostHog flags POSTs: ${totalPosthogFlagPosts}`)
   console.log(`PostHog event POSTs: ${totalPosthogEventPosts} (${totalPosthogEvent2xx} HTTP 2xx)`)
+  if (config.debugEventWire) {
+    if (observedPosthogEventWireSamples.length === 0) {
+      console.log('Wire samples:        none')
+    } else {
+      console.log('Wire samples:')
+      for (const [index, sample] of observedPosthogEventWireSamples.entries()) {
+        console.log(`  ${index + 1}. ${sample}`)
+      }
+    }
+  }
   console.log(`PostHog record POSTs:${totalPosthogRecordingPosts} (${totalPosthogRecording2xx} HTTP 2xx)`)
   console.log(`Surveys triggered:   ${surveysTriggered}`)
   console.log(`Feedback submitted:  ${totalFeedbackSubmissions}`)

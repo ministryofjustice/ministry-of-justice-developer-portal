@@ -22,18 +22,32 @@ export function PostHogPageview() {
     let retryTimer: ReturnType<typeof setTimeout> | null = null
     let cancelled = false
 
+    const currentUrl = () => {
+      let url = window.origin + pathname
+      if (searchParams.toString()) url += `?${searchParams.toString()}`
+      return url
+    }
+
     const capturePageview = () => {
       if (!pathname || !isCookieConsentAccepted()) return
 
       const win = window as any
       if (!win.__posthog_initialized) return
 
-      let url = window.origin + pathname
-      if (searchParams.toString()) url += `?${searchParams.toString()}`
+      const url = currentUrl()
       posthog.capture('$pageview', { $current_url: url })
 
       win.__posthog_pageview_count = (win.__posthog_pageview_count ?? 0) + 1
       win.__posthog_last_pageview = url
+    }
+
+    const capturePageleave = () => {
+      if (!pathname || !isCookieConsentAccepted()) return
+
+      const win = window as any
+      if (!win.__posthog_initialized) return
+
+      posthog.capture('$pageleave', { $current_url: currentUrl() })
     }
 
     let attempts = 0
@@ -61,6 +75,7 @@ export function PostHogPageview() {
     })
 
     return () => {
+      capturePageleave()
       cancelled = true
       if (retryTimer) clearTimeout(retryTimer)
       cleanupConsentListener()

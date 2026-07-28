@@ -94,6 +94,30 @@ describe('PostHogPageview', () => {
     })
   })
 
+  it('captures a pageleave when the route changes after consent and initialization', async () => {
+    document.cookie = 'moj_cookie_consent=accepted'
+    ;(window as any).__posthog_initialized = true
+
+    const { rerender } = render(<PostHogPageview />)
+
+    await waitFor(() => {
+      expect(mockedPosthog.capture).toHaveBeenCalledWith('$pageview', {
+        $current_url: 'http://localhost/test-page?utm_source=unit-test',
+      })
+    })
+
+    mockedPosthog.capture.mockClear()
+    mockUsePathname.mockReturnValue('/next-page')
+
+    rerender(<PostHogPageview />)
+
+    await waitFor(() => {
+      expect(mockedPosthog.capture).toHaveBeenCalledWith('$pageleave', {
+        $current_url: 'http://localhost/test-page?utm_source=unit-test',
+      })
+    })
+  })
+
   it('captures a pageview after refresh when consent is already accepted but PostHog initializes later', () => {
     vi.useFakeTimers()
     document.cookie = 'moj_cookie_consent=accepted'
