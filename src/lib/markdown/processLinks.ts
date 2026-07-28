@@ -6,7 +6,6 @@ import {
   withBasePath,
   stripBasePath,
   isBasePathPrefixed,
-  ensureDocsTrailingSlash,
   normalizeMalformedDocsHref,
   rewriteAbsoluteGithubPagesDocsHref,
 } from './paths';
@@ -44,9 +43,7 @@ function rewriteDocHref(href: string, ctx: DocsLinkContext): string {
     const withoutBase = stripBasePath(pathname);
 
     if (withoutBase.startsWith('/docs/')) {
-      return `${withBasePath(
-        ensureDocsTrailingSlash(normalizeMalformedDocsHref(withoutBase)),
-      )}${suffix}`;
+      return `${withBasePath(normalizeMalformedDocsHref(withoutBase))}${suffix}`;
     }
 
     if (withoutBase.startsWith('/assets/')) {
@@ -72,7 +69,7 @@ function rewriteDocHref(href: string, ctx: DocsLinkContext): string {
     ? `/docs/${ctx.sourceSlug}/${normalized}`
     : `/docs/${ctx.sourceSlug}`;
 
-  return `${withBasePath(ensureDocsTrailingSlash(rewritten))}${suffix}`;
+  return `${withBasePath(rewritten)}${suffix}`;
 }
 
 function rewriteAssetPath(pathname: string, suffix: string, ctx: DocsLinkContext): string | null {
