@@ -47,6 +47,39 @@ describe('rewriteDocAnchorLinks', () => {
 
     expect(result).toContain('/docs/test-source/page');
   });
+
+  it('does not add a trailing slash to rewritten /docs href values', () => {
+    const input = `<a href="/docs/test-source/some-page">link</a>`;
+
+    const result = rewriteDocAnchorLinks(input, ctx);
+
+    expect(result).toMatch(/href="\/docs\/test-source\/some-page"/);
+    expect(result).not.toMatch(/href="\/docs\/test-source\/some-page\/"/);
+  });
+
+  it('does not add a trailing slash to rewritten relative doc href values', () => {
+    const input = `<a href="other-page.md">link</a>`;
+
+    const result = rewriteDocAnchorLinks(input, ctx);
+
+    expect(result).not.toMatch(/href="[^"]+\/"/);
+  });
+
+  it('preserves query string on rewritten /docs href values', () => {
+    const input = `<a href="/docs/test-source/page?foo=bar">link</a>`;
+
+    const result = rewriteDocAnchorLinks(input, ctx);
+
+    expect(result).toContain('href="/docs/test-source/page?foo=bar"');
+  });
+
+  it('preserves hash on rewritten /docs href values', () => {
+    const input = `<a href="/docs/test-source/page#section">link</a>`;
+
+    const result = rewriteDocAnchorLinks(input, ctx);
+
+    expect(result).toContain('href="/docs/test-source/page#section"');
+  });
 });
 
 describe('rewriteDocAssetSources', () => {
@@ -90,6 +123,31 @@ describe('rewriteDocHref deeper cases', () => {
     const result = rewriteDocAnchorLinks(input, ctx);
 
     expect(result).toContain('/docs/');
+  });
+
+  it('rewrites absolute github.io doc URL to portal path without trailing slash', () => {
+    const input = `<a href="https://ministryofjustice.github.io/my-repo/docs/some-page">link</a>`;
+
+    const result = rewriteDocAnchorLinks(input, ctx);
+
+    expect(result).toContain('href="/docs/some-page"');
+    expect(result).not.toContain('href="/docs/some-page/"');
+  });
+
+  it('preserves query string on rewritten github.io doc URL', () => {
+    const input = `<a href="https://ministryofjustice.github.io/my-repo/docs/some-page?tab=1">link</a>`;
+
+    const result = rewriteDocAnchorLinks(input, ctx);
+
+    expect(result).toContain('href="/docs/some-page?tab=1"');
+  });
+
+  it('preserves hash on rewritten github.io doc URL', () => {
+    const input = `<a href="https://ministryofjustice.github.io/my-repo/docs/some-page#section">link</a>`;
+
+    const result = rewriteDocAnchorLinks(input, ctx);
+
+    expect(result).toContain('href="/docs/some-page#section"');
   });
 
   it('leaves /assets paths alone except basePath', () => {
