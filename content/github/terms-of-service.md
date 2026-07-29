@@ -30,7 +30,7 @@ This standard applies to **all staff and contributors** who can access or contri
 content** (including code, configuration, commits, pull requests, issues, comments, logs,
 attachments, and generated artefacts) are covered.
 
-Restrictions apply regardless of file format or how the data is stored - whether as structured files, plain text, compressed archives, or any other form.
+Restrictions apply regardless of file format or how the data is stored - including spreadsheets, CSV files, JSON files, database dumps, PDFs, archives, and other data files.
 
 ---
 
@@ -112,9 +112,12 @@ The only permitted data-like content is synthetic test data required for automat
 
 ### Synthetic identifier formats
 
-These patterns are illustrative only — not official matching rules. Real production patterns may vary.
+When testing
 
-When testing, use visibly fake values with repeated digits or simple sequences:
+- use visibly fake values with repeated digits or simple sequences  
+- avoid realistic random-looking identifiers even if they are synthetic
+
+These patterns are illustrative only — not official matching rules. Real production patterns may vary.
 
 | Identifier | Format | Example |
 | --- | --- | --- |
@@ -132,6 +135,7 @@ All teams and contributors **must**
 - store secrets using **approved secret management tools** — never in repository files
 - ensure **appropriate security and access controls** are configured for your repositories and in CI/CD pipelines
 - **review all code** entering repositories (e.g. from pull requests, third-party libraries) for accidental data or secrets exposure
+- **review and remediate** GitHub secret and code scanning alerts
 - treat AI-generated code and files as **untrusted** — review for data or secret leakage before committing
 
 In the event of a breach:
