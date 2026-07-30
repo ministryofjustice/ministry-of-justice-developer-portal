@@ -30,7 +30,7 @@ This standard applies to **all staff and contributors** who can access or contri
 content** (including code, configuration, commits, pull requests, issues, comments, logs,
 attachments, and generated artefacts) are covered.
 
-Restrictions apply regardless of file format or how the data is stored - including 
+Restrictions apply regardless of file format or how the data is stored - including
 spreadsheets, CSV files, JSON files, database dumps, PDFs, archives, and other data files.
 
 ---
