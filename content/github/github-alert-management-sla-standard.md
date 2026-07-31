@@ -30,12 +30,12 @@ It defines alert ownership, service level agreements (**SLAs**), escalation path
 
 The objectives are to
 
-- Reduce exposure to known vulnerabilities
-- Prevent exposure of credentials and sensitive information
-- Improve accountability and ownership
-- Support compliance with government cyber security standards
-- Maintain evidence required for audit and assurance activities
-- Improve visibility of organisational security posture
+- reduce exposure to known vulnerabilities
+- prevent exposure of credentials and sensitive information
+- improve accountability and ownership
+- support compliance with government cyber security standards
+- maintain evidence required for audit and assurance activities
+- improve visibility of organisational security posture
 
 ---
 
@@ -43,11 +43,11 @@ The objectives are to
 
 This standard aims to
 
-- Define mandatory alert-management practices
-- Establish risk-based remediation timelines
-- Introduce consistent governance across repositories
-- Reduce alert backlogs and unmanaged security debt
-- Provide measurable compliance standards
+- define mandatory alert-management practices
+- establish risk-based remediation timelines
+- introduce consistent governance across repositories
+- reduce alert backlogs and unmanaged security debt
+- provide measurable compliance standards
 
 ---
 
@@ -55,13 +55,13 @@ This standard aims to
 
 This standard applies to
 
-- All repositories within Ministry of Justice GitHub organisations
+- all repositories within Ministry of Justice GitHub organisations
 - GitHub Advanced Security findings
 - Dependabot alerts
 - Dependency Review findings
-- Secret Scanning alerts
+- secret scanning alerts
 - CodeQL alerts
-- Approved third-party scanning tools integrated with GitHub
+- approved third-party scanning tools integrated with GitHub
 
 This standard applies regardless of repository visibility.
 
@@ -71,17 +71,17 @@ This standard applies regardless of repository visibility.
 
 Every repository **must**
 
-- Have defined `CODEOWNERS`
-- Have an owning team assigned
-- Have a nominated service owner
+- have defined `CODEOWNERS`
+- have an owning team assigned
+- have a nominated service owner
 
 Repository owners are accountable for
 
-- Alert triage
-- Alert remediation
-- Alert dismissal justification
+- alert triage
+- alert remediation
+- alert dismissal justification
 - **SLA** compliance
-- Exception management
+- exception management
 
 Repositories without clear ownership **must** be treated as governance findings.
 
@@ -96,10 +96,10 @@ GitHub security findings shall be classified into the following categories:
 Includes:
 
 - API keys
-- Access tokens
-- Cloud credentials
-- Service account credentials
-- Private keys
+- access tokens
+- cloud credentials
+- service account credentials
+- private keys
 
 All Secret Scanning alerts **must** be treated as Critical severity.
 
@@ -107,9 +107,9 @@ All Secret Scanning alerts **must** be treated as Critical severity.
 
 Includes
 
-- Dependabot alerts
-- Dependency Review findings
-- Vulnerable packages and libraries
+- dependabot alerts
+- dependency Review findings
+- vulnerable packages and libraries
 
 Severity is determined using GitHub and advisory database classifications.
 
@@ -118,8 +118,8 @@ Severity is determined using GitHub and advisory database classifications.
 Includes
 
 - CodeQL alerts
-- Static analysis findings
-- Security rule violations
+- static analysis findings
+- security rule violations
 
 Severity is determined by the scanning engine.
 
@@ -127,8 +127,8 @@ Severity is determined by the scanning engine.
 
 Includes
 
-- Approved third-party **SAST** tools
-- Approved repository security tooling
+- approved third-party **SAST** tools
+- approved repository security tooling
 
 Severity shall be assessed using organisational vulnerability-management guidance.
 
@@ -149,8 +149,8 @@ The following **SLA**s are mandatory
 
 Where remediation cannot be completed within **SLA**, teams must either
 
-- Implement compensating controls
-- Submit a documented risk acceptance
+- implement compensating controls
+- submit a documented risk acceptance
 
 Failure to do so constitutes non-compliance.
 
@@ -190,22 +190,22 @@ The following escalation requirements apply
 
 ### Critical Alerts
 
-- Breach of **SLA** must be escalated to the owning service team immediately
-- Production secret exposure must follow incident-management processes
-- Credential rotation must occur before alert closure
+- breach of **SLA** must be escalated to the owning service team immediately
+- production secret exposure must follow incident-management processes
+- credential rotation must occur before alert closure
 
 ### High Severity Alerts
 
-- Breach of **SLA** must be reported to service ownership
-- Repeated non-compliance must be reviewed by engineering leadership
+- breach of **SLA** must be reported to service ownership
+- repeated non-compliance must be reviewed by engineering leadership
 
 ### Systemic Failure
 
 Where repositories repeatedly fail alert **SLAs**
 
-- A remediation plan must be created
-- Platform governance teams may introduce additional controls
-- Security teams may require corrective action
+- a remediation plan must be created
+- platform governance teams may introduce additional controls
+- security teams may require corrective action
 
 ---
 
@@ -232,15 +232,15 @@ Alerts should be routed into any of the below
 
 - Microsoft Teams
 - Slack
-- Central monitoring platforms
+- central monitoring platforms
 
 ### SLA Validation
 
 Automated workflows may
 
-- Warn when alerts approach **SLA** breach
-- Fail when alerts exceed **SLA**
-- Generate compliance reports
+- warn when alerts approach **SLA** breach
+- fail when alerts exceed **SLA**
+- generate compliance reports
 
 ---
 
@@ -250,28 +250,28 @@ Automated workflows may
 
 Teams should review
 
-- Open alerts
+- open alerts
 - **SLA** breaches
-- Vulnerability trends
-- Ageing findings
+- vulnerability trends
+- ageing findings
 
 ### Quarterly Reviews
 
 A quarterly review must assess
 
-- Compliance rates
-- Persistent findings
-- Common root causes
-- Exception trends
+- compliance rates
+- persistent findings
+- common root causes
+- exception trends
 
 ### Assurance Evidence
 
 Evidence retained for audit shall include
 
-- Alert history
-- Remediation records
-- Closure evidence
-- Risk acceptance decisions
+- alert history
+- remediation records
+- closure evidence
+- risk acceptance decisions
 
 ---
 
@@ -279,16 +279,16 @@ Evidence retained for audit shall include
 
 Exceptions may be granted where
 
-- No remediation exists
-- Vendor patches are unavailable
-- Operational constraints prevent immediate remediation
+- no remediation exists
+- vendor patches are unavailable
+- operational constraints prevent immediate remediation
 
 All exceptions must
 
-- Be documented
-- Have an accountable owner
-- Include a review date
-- Be reviewed at least annually
+- be documented
+- have an accountable owner
+- include a review date
+- be reviewed at least annually
 
 Exceptions must not become permanent without review.
 
@@ -298,10 +298,10 @@ Exceptions must not become permanent without review.
 
 Estate-wide security reviews should identify
 
-- Long-running findings
-- Repeated **SLA** failures
-- Unowned repositories
-- Opportunities for automation
+- long-running findings
+- repeated **SLA** failures
+- unowned repositories
+- opportunities for automation
 
 Analysis of organisational alert data indicates that remediation times significantly exceed recommended targets.
 Resolving, high-severity findings represent the largest ongoing backlog.
@@ -311,10 +311,10 @@ Teams should prioritise improving ownership, triage, and automated enforcement t
 
 ## References
 
-- [GitHub Advanced Security Documentation](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security)
+- [GitHub Advanced Security documentation](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security)
 - [NCSC Cyber Assessment Framework (CAF)](https://www.ncsc.gov.uk/collection/cyber-assessment-framework)
 - [Government Cyber Security Standard](https://www.security.gov.uk/policy-and-guidance/the-cyber-security-standard/)
 - [GovS 007 Security](https://www.gov.uk/government/publications/government-functional-standard-govs-007-security)
-- [GitHub Secret Scanning Documentation](https://docs.github.com/en/code-security/concepts/secret-security/secret-scanning)
-- [GitHub Dependabot Documentation](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart#about-dependabot)
-- [GitHub CodeQL Documentation](https://docs.github.com/en/code-security/concepts/code-scanning/codeql/codeql-code-scanning)
+- [GitHub Secret Scanning documentation](https://docs.github.com/en/code-security/concepts/secret-security/secret-scanning)
+- [GitHub Dependabot documentation](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart#about-dependabot)
+- [GitHub CodeQL documentation](https://docs.github.com/en/code-security/concepts/code-scanning/codeql/codeql-code-scanning)
