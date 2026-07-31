@@ -1,21 +1,21 @@
-# GitHub Large File Storage (LFS) Governance Standard
+# GitHub Large File Storage (LFS) governance standard
 
 - [Summary](#summary)
 - [Objectives](#objectives)
 - [Scope](#scope)
-- [1. Repository Size Management](#1-repository-size-management)
-- [2. Largefile-thresholds](#2-large-file-thresholds)
-- [3. Mandatory Requirements](#3-mandatory-requirements)
-- [4. Git LFS Usage](#4-git-lfs-usage)
-- [5. Monitoring and Enforcement](#5-monitoring-and-enforcement)
-- [7. Ownership and Accountability](#7-ownership-and-accountability)
+- [Repository size management](#repository-size-management)
+- [Large file thresholds](#large-file-thresholds)
+- [Mandatory requirements](#mandatory-requirements)
+- [Git LFS usage](#git-lfs-usage)
+- [Monitoring and enforcement](#monitoring-and-enforcement)
+- [Ownership and accountability](#ownership-and-accountability)
 - [References](#references)
 
 ## Summary
 
 Git repositories are designed for source code and text-based artefacts.
 
-The storage of large binary files directly within Git repositories can significantly impact:
+The storage of large binary files directly within Git repositories can significantly impact
 
 - Repository performance
 - Clone and fetch times
@@ -31,39 +31,39 @@ This standard defines repository file-size controls and Git LFS requirements for
 
 ## Objectives
 
-This standard aims to:
+This standard aims to
 
-- Maintain repository performance.
-- Reduce repository bloat.
-- Improve CI/CD efficiency.
-- Standardise Git LFS adoption.
-- Prevent GitHub push failures.
-- Improve estate-wide governance.
+- Maintain repository performance
+- Reduce repository bloat
+- Improve CI/CD efficiency
+- Standardise Git LFS adoption
+- Prevent GitHub push failures
+- Improve estate-wide governance
 
 ---
 
 ## Scope
 
-This standard applies to:
+This standard applies to
 
-- All repositories within Ministry of Justice GitHub organisations.
-- Source code repositories.
-- Infrastructure repositories.
-- Template repositories.
-- Internal and external repositories.
+- All repositories within Ministry of Justice GitHub organisations
+- Source code repositories
+- Infrastructure repositories
+- Template repositories
+- Internal and external repositories
 
 ---
 
-## 1. Repository Size Management
+## Repository size management
 
-Repositories SHOULD contain:
+Repositories **should** contain
 
 - Source code
 - Configuration
 - Documentation
 - Small static assets
 
-Repositories SHOULD NOT contain:
+Repositories **should** not contain
 
 - Large binary artefacts
 - Backups
@@ -73,60 +73,56 @@ Repositories SHOULD NOT contain:
 - Build artefacts
 - Generated content
 
-Alternative storage locations SHOULD be used where appropriate.
+Alternative storage locations **should** be used where appropriate.
 
 ---
 
-## 2. Large File Thresholds
+## Large file thresholds
 
-The following thresholds are mandatory.
+The following thresholds are mandatory
 
-### Soft Limit
+### Soft limit (50 MB)
 
-**50 MB:**
+Files at or above 50 MB **must** be reviewed.
 
-Files at or above 50 MB MUST be reviewed.
+Repository owners **must** determine whether:
 
-Repository owners MUST determine whether:
-
-- Git LFS should be used.
+- Git LFS **should** be used.
 - The file is necessary.
 - An alternative storage solution is appropriate.
 
-### Hard Limit
+### Hard limit (100 MB)
 
-**100 MB:**
-
-Files at or above 100 MB MUST NOT be committed to repositories.
+Files at or above 100 MB **must not** be committed to repositories.
 
 GitHub rejects files exceeding this threshold.
 
-Any attempt to commit such files MUST be treated as non-compliant.
+Any attempt to commit such files **must** be treated as non-compliant.
 
 ---
 
-## 3. Mandatory Requirements
+## Mandatory requirements
 
-Repository owners MUST:
+Repository owners **must**
 
-- Prevent unnecessary large files entering Git history.
-- Use Git LFS for approved large binary assets.
-- Maintain repository hygiene.
-- Remove obsolete assets whenever practical.
+- Prevent unnecessary large files entering Git history
+- Use Git LFS for approved large binary assets
+- Maintain repository hygiene
+- Remove obsolete assets whenever practical
 
-Repositories MUST NOT use Git as a file-storage platform.
+Repositories **must not** use Git as a file-storage platform.
 
 ---
 
-## 4. Git LFS Usage
+## Git LFS usage
 
-Git LFS MUST be used where:
+Git LFS **must** be used where
 
-- Binary assets exceed 50 MB.
-- Assets require versioning.
-- Assets are retained within repository workflows.
+- Binary assets exceed 50 MB
+- Assets require versioning
+- Assets are retained within repository workflows
 
-Common examples include:
+Common examples include
 
 - Media files
 - Machine-learning artefacts
@@ -134,128 +130,128 @@ Common examples include:
 - Large test datasets
 - Compiled package assets
 
-A repository using Git LFS MUST include:
+A repository using Git LFS **must** include
 
-- Appropriate `.gitattributes` configuration.
-- Contributor guidance.
-- Ownership responsibility for stored assets.
+- Appropriate `.gitattributes` configuration
+- Contributor guidance
+- Ownership responsibility for stored assets
 
 ---
 
-## 5. Monitoring and Enforcement
+## Monitoring and enforcement
 
-### Estate Scanning
+### Estate scanning
 
-An automated scan SHOULD be executed weekly to identify:
+An automated scan **should** be executed weekly to identify
 
-- Files above 50 MB.
-- Repository growth trends.
-- New policy violations.
+- Files above 50 MB
+- Repository growth trends
+- New policy violations
 
-Reporting SHOULD include:
+Reporting **should** include
 
 - Repository name
 - File path
 - File size
 - Recommended remediation
 
-### CI Controls
+### CI controls
 
-Repositories SHOULD implement automated validation to:
+Repositories **should** implement automated validation to
 
-- Warn when files exceed 50 MB.
-- Prevent introduction of non-compliant assets.
+- Warn when files exceed 50 MB
+- Prevent introduction of non-compliant assets
 
-### Pre-Push Enforcement
+### Pre-Push enforcement
 
-Local tooling SHOULD prevent committing files exceeding approved thresholds.
+Local tooling **should** prevent committing files exceeding approved thresholds.
 
 ---
 
-## 6. Remediation Requirements
+## Remediation requirements
 
-Where a file exceeds policy thresholds, teams MUST choose one of the following:
+Where a file exceeds policy thresholds, teams **must** choose one of the following
 
 ### Option 1: Migrate to Git LFS
 
 Move the asset into Git LFS management.
 
-### Option 2: Use Alternative Storage
+### Option 2: Use alternative storage
 
 Store the asset externally using an approved platform.
 
-### Option 3: Remove the Asset
+### Option 3: Remove the asset
 
 Delete unnecessary content.
 
-### Historical Repository Cleanup
+### Historical repository cleanup
 
-Where repository history already contains significant large files, teams SHOULD:
+Where repository history already contains significant large files, teams **should**
 
-- Assess impact.
-- Consider repository cleanup.
-- Use approved tooling such as git-filter-repo where appropriate.
+- Assess impact
+- Consider repository cleanup
+- Use approved tooling such as git-filter-repo where appropriate
 
-History rewrites MUST be managed carefully due to downstream impact.
-
----
-
-## 7. Ownership and Accountability
-
-Repository owners are accountable for:
-
-- Compliance with file-size policies.
-- Git LFS management.
-- Asset lifecycle management.
-- Remediation of policy breaches.
-
-Repositories without ownership MUST be investigated and assigned.
+History rewrites **must** be managed carefully due to downstream impact.
 
 ---
 
-## 8. Exceptions
+## Ownership and accountability
 
-Exceptions MAY be granted where:
+Repository owners are accountable for
 
-- Git LFS is technically unsuitable.
-- A platform dependency exists.
-- Business requirements prevent migration.
+- Compliance with file-size policies
+- Git LFS management
+- Asset lifecycle management
+- Remediation of policy breaches
 
-All exceptions MUST:
-
-- Be documented.
-- Include a justification.
-- Include an owner.
-- Include a review date.
-
-Exceptions MUST be reviewed annually.
+Repositories without ownership **must** be investigated and assigned.
 
 ---
 
-## 9. Governance and Reporting
+## Exceptions
 
-Repository file-size compliance SHOULD be reviewed regularly.
+Exceptions **may** be granted where
 
-Monitoring SHOULD focus on:
+- Git LFS is technically unsuitable
+- A platform dependency exists
+- Business requirements prevent migration
 
-- Large-file trends.
-- Repeat offenders.
-- Repository growth.
-- LFS adoption rates.
+All exceptions **must**
 
-Recent estate analysis of the most active repositories identified:
+- Be documented
+- Include a justification
+- Include an owner
+- Include a review date
 
-- Strong compliance with GitHub file-size limits.
-- Very low rates of large-file policy breaches.
-- No breaches of GitHub’s hard file-size limit.
+Exceptions **must** be reviewed annually.
 
-Ongoing monitoring should be maintained to preserve this compliance position and prevent repository degradation over time.
+---
+
+## Governance and reporting
+
+Repository file-size compliance **should** be reviewed regularly.
+
+Monitoring **should** focus on
+
+- Large-file trends
+- Repeat offenders
+- Repository growth
+- LFS adoption rates
+
+Recent estate analysis of the most active repositories identified
+
+- Strong compliance with GitHub file-size limits
+- Very low rates of large-file policy breaches
+- No breaches of GitHub’s hard file-size limit
+
+Ongoing monitoring **should** be maintained to preserve this compliance position and prevent repository degradation over time.
 
 ---
 
 ## References
 
-- [GitHub Repository Limits Guidance](https://docs.github.com/en/repositories/creating-and-managing-repositories/repository-limits)
-- [GitHub Large File Storage Documentation](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage)
-- [GitHub Repository Health Guidance](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file)
+- [GitHub repository limits guidance](https://docs.github.com/en/repositories/creating-and-managing-repositories/repository-limits)
+- [GitHub Large File Storage documentation](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage)
+- [GitHub repository health guidance](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file)
 - [NCSC Secure Development Guidance](https://www.ncsc.gov.uk/collection/developers-collection)

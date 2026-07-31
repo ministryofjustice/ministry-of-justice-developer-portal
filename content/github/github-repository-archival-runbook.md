@@ -9,18 +9,18 @@ Before archiving a repository, ensure that it is no longer actively maintained o
 
 ### Mandatory signals
 
-- Verify no deployments or active development are occurring in the repository
-- Verify in [cloud-platform](https://github.com/ministryofjustice/cloud-platform-environments/tree/main) the repository does not have any active resources
-- Verify no CI/CD pipelines or workflows are actively running from the repository
-- Verify that the repository is not a dependency for any other active projects or services
+1. Verify no deployments or active development are occurring in the repository
+2. Verify in [cloud-platform](https://github.com/ministryofjustice/cloud-platform-environments/tree/main) the repository does not have any active resources
+3. Verify no CI/CD pipelines or workflows are actively running from the repository
+4. Verify that the repository is not a dependency for any other active projects or services
 
 ### Supporting signals
 
-- Check if the repository has not had any commits to the main branch in the last 12 months
-- Check if the repository has not had any pull requests merged in the last 12 months
-- Check if the repository has any clear `CODEOWNERS` or maintainers listed, and if they are still active in the organization
-- Check if the repository has any open issues or pull requests that have been inactive for a long time
-- Check if the repository has any documentation or `README` files that indicate it is still in use or maintained
+1. Check if the repository has not had any commits to the main branch in the last 12 months
+2. Check if the repository has not had any pull requests merged in the last 12 months
+3. Check if the repository has any clear `CODEOWNERS` or maintainers listed, and if they are still active in the organization
+4. Check if the repository has any open issues or pull requests that have been inactive for a long time
+5. Check if the repository has any documentation or `README` files that indicate it is still in use or maintained
 
 ## 2. Pre-archival checklist
 
