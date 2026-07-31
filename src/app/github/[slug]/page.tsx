@@ -102,12 +102,7 @@ If you have questions, reach out to the ${guideline.owner} team.
         <div className="govuk-grid-column-two-thirds">
           {section && <TagRow categoryTag={section.title} />}
 
-          <PageIntro
-            title={guideline.title}
-            titleClassName="govuk-heading-xl govuk-!-margin-top-2 govuk-!-margin-bottom-2"
-          />
-
-          <div className="app-prose-scope" dangerouslySetInnerHTML={{ __html: content }} />
+          <div className="app-prose-scope app-github-content" dangerouslySetInnerHTML={{ __html: content }} />
 
           <MetaBar
             items={[
