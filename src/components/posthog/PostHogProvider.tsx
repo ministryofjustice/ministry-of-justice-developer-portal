@@ -31,6 +31,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
           person_profiles: 'identified_only',
           capture_pageview: false,
           capture_exceptions: false,
+          cross_subdomain_cookie: false,
         })
 
         const win = window as any
