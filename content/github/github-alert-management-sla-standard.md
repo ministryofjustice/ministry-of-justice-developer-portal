@@ -1,95 +1,95 @@
-# GitHub Security Alert Management SLA Standard
+# GitHub security alert management SLA standard
 
 - [Summary](#summary)
 - [Objectives](#objectives)
 - [Scope](#scope)
-- [1. Alert Ownership and Accountability](#1-alert-ownership-and-accountability)
-- [2. Alert Classification](#2-alert-classification)
-- [3. Security Alert Service Level Agreements](#3-security-alert-service-level-agreements)
-- [4. Alert Triage Requirements](#4-alert-triage-requirements)
-- [5. Escalation Requirements](#5-escalation-requirements)
-- [6. Enforcement Controls](#6-enforcement-controls)
-- [7. Governance and Reporting](#7-governance-and-reporting)
-- [8. Exceptionsand-risk-acceptance](#8-exceptions-and-risk-acceptance)
-- [9. Continuous Improvement](#9-continuous-improvement)
+- [Alert ownership and accountability](#alert-ownership-and-accountability)
+- [Alert classification](#alert-classification)
+- [Security alert service level agreements](#security-alert-service-level-agreements)
+- [Alert triage requirements](#alert-triage-requirements)
+- [Escalation requirements](#escalation-requirements)
+- [Enforcement controls](#enforcement-controls)
+- [Governance and reporting](#governance-and-reporting)
+- [Exceptions and risk acceptance](#exceptions-and-risk-acceptance)
+- [Continuous improvement](#continuous-improvement)
 
 ## Summary
 
-GitHub provides multiple security capabilities including:
+GitHub provides multiple security capabilities including
 
-- Dependabot Alerts
-- Dependency Review
-- Code Scanning (CodeQL)
-- Secret Scanning
-- Third-party SAST and security tooling
+- dependabot alerts
+- dependency review
+- code scanning (CodeQL)
+- secret scanning
+- third-party **SAST** and security tooling
 
 These controls are only effective when alerts are reviewed, triaged, and remediated within defined timeframes.
 
 This standard establishes the mandatory requirements for managing GitHub security alerts across Ministry of Justice GitHub organisations.
-It defines alert ownership, service level agreements (SLAs), escalation paths, governance controls, and reporting requirements.
+It defines alert ownership, service level agreements (**SLAs**), escalation paths, governance controls, and reporting requirements.
 
-The objectives are to:
+The objectives are to
 
-- Reduce exposure to known vulnerabilities.
-- Prevent exposure of credentials and sensitive information.
-- Improve accountability and ownership.
-- Support compliance with Government Cyber Security Standards.
-- Maintain evidence required for audit and assurance activities.
-- Improve visibility of organisational security posture.
+- Reduce exposure to known vulnerabilities
+- Prevent exposure of credentials and sensitive information
+- Improve accountability and ownership
+- Support compliance with government cyber security standards
+- Maintain evidence required for audit and assurance activities
+- Improve visibility of organisational security posture
 
 ---
 
 ## Objectives
 
-This standard aims to:
+This standard aims to
 
-- Define mandatory alert-management practices.
-- Establish risk-based remediation timelines.
-- Introduce consistent governance across repositories.
-- Reduce alert backlogs and unmanaged security debt.
-- Provide measurable compliance standards.
+- Define mandatory alert-management practices
+- Establish risk-based remediation timelines
+- Introduce consistent governance across repositories
+- Reduce alert backlogs and unmanaged security debt
+- Provide measurable compliance standards
 
 ---
 
 ## Scope
 
-This standard applies to:
+This standard applies to
 
-- All repositories within Ministry of Justice GitHub organisations.
-- GitHub Advanced Security findings.
-- Dependabot alerts.
-- Dependency Review findings.
-- Secret Scanning alerts.
-- CodeQL alerts.
-- Approved third-party scanning tools integrated with GitHub.
+- All repositories within Ministry of Justice GitHub organisations
+- GitHub Advanced Security findings
+- Dependabot alerts
+- Dependency Review findings
+- Secret Scanning alerts
+- CodeQL alerts
+- Approved third-party scanning tools integrated with GitHub
 
 This standard applies regardless of repository visibility.
 
 ---
 
-## 1. Alert Ownership and Accountability
+## Alert Ownership and Accountability
 
-Every repository MUST:
+Every repository **must**
 
-- Have defined CODEOWNERS.
-- Have an owning team assigned.
-- Have a nominated service owner.
+- Have defined `CODEOWNERS`
+- Have an owning team assigned
+- Have a nominated service owner
 
-Repository owners are accountable for:
+Repository owners are accountable for
 
-- Alert triage.
-- Alert remediation.
-- Alert dismissal justification.
-- SLA compliance.
-- Exception management.
+- Alert triage
+- Alert remediation
+- Alert dismissal justification
+- **SLA** compliance
+- Exception management
 
-Repositories without clear ownership MUST be treated as governance findings.
+Repositories without clear ownership **must** be treated as governance findings.
 
 ---
 
-## 2. Alert Classification
+## Alert Classification
 
-GitHub security findings SHALL be classified into the following categories:
+GitHub security findings shall be classified into the following categories:
 
 ### Secret Scanning
 
@@ -101,13 +101,13 @@ Includes:
 - Service account credentials
 - Private keys
 
-All Secret Scanning alerts MUST be treated as Critical severity.
+All Secret Scanning alerts **must** be treated as Critical severity.
 
 ### Dependency Vulnerabilities
 
-Includes:
+Includes
 
-- Dependabot Alerts
+- Dependabot alerts
 - Dependency Review findings
 - Vulnerable packages and libraries
 
@@ -115,7 +115,7 @@ Severity is determined using GitHub and advisory database classifications.
 
 ### Code Scanning Findings
 
-Includes:
+Includes
 
 - CodeQL alerts
 - Static analysis findings
@@ -125,18 +125,18 @@ Severity is determined by the scanning engine.
 
 ### Other Security Findings
 
-Includes:
+Includes
 
-- Approved third-party SAST tools
+- Approved third-party **SAST** tools
 - Approved repository security tooling
 
-Severity SHALL be assessed using organisational vulnerability-management guidance.
+Severity shall be assessed using organisational vulnerability-management guidance.
 
 ---
 
-## 3. Security Alert Service Level Agreements
+## Security Alert Service Level Agreements
 
-The following SLAs are mandatory.
+The following **SLA**s are mandatory
 
 | Alert Type                     | Severity | Acknowledgement | Remediation               |
 | ------------------------------ | -------- | --------------- | ------------------------- |
@@ -147,88 +147,88 @@ The following SLAs are mandatory.
 | Code Scanning                  | High     | 48 Hours        | 14 Days                   |
 | SAST / Other Security Findings | Medium   | 5 Days          | 30 Days                   |
 
-Where remediation cannot be completed within SLA, teams MUST either:
+Where remediation cannot be completed within **SLA**, teams must either
 
-- Implement compensating controls; or
-- Submit a documented risk acceptance.
+- Implement compensating controls
+- Submit a documented risk acceptance
 
 Failure to do so constitutes non-compliance.
 
 ---
 
-## 4. Alert Triage Requirements
+## Alert Triage Requirements
 
-All alerts MUST be triaged upon acknowledgement.
+All alerts must be triaged upon acknowledgement
 
-The outcome of triage MUST be one of:
+The outcome of triage must be one of
 
 ### Valid Finding
 
-The vulnerability exists and requires remediation.
+The vulnerability exists and requires remediation
 
 ### Accepted Risk
 
-The issue cannot currently be remediated and has documented approval.
+The issue cannot currently be remediated and has documented approval
 
 ### False Positive
 
-The finding has been investigated and dismissed with justification.
+The finding has been investigated and dismissed with justification
 
 ### Duplicate
 
-The issue is already tracked elsewhere.
+The issue is already tracked elsewhere
 
-All dismissals MUST include documented rationale.
+All dismissals must include documented rationale
 
-Alerts MUST NOT remain open indefinitely without action.
+Alerts must not remain open indefinitely without action
 
 ---
 
-## 5. Escalation Requirements
+## Escalation Requirements
 
-The following escalation requirements apply:
+The following escalation requirements apply
 
 ### Critical Alerts
 
-- Breach of SLA MUST be escalated to the owning service team immediately.
-- Production secret exposure MUST follow incident-management processes.
-- Credential rotation MUST occur before alert closure.
+- Breach of **SLA** must be escalated to the owning service team immediately
+- Production secret exposure must follow incident-management processes
+- Credential rotation must occur before alert closure
 
 ### High Severity Alerts
 
-- Breach of SLA MUST be reported to service ownership.
-- Repeated non-compliance MUST be reviewed by engineering leadership.
+- Breach of **SLA** must be reported to service ownership
+- Repeated non-compliance must be reviewed by engineering leadership
 
 ### Systemic Failure
 
-Where repositories repeatedly fail alert SLAs:
+Where repositories repeatedly fail alert **SLAs**
 
-- A remediation plan MUST be created.
-- Platform governance teams MAY introduce additional controls.
-- Security teams MAY require corrective action.
+- A remediation plan must be created
+- Platform governance teams may introduce additional controls
+- Security teams may require corrective action
 
 ---
 
-## 6. Enforcement Controls
+## Enforcement Controls
 
 ### Branch Protection
 
-Protected branches SHOULD prevent deployment of unresolved critical issues where technically feasible.
+Protected branches should prevent deployment of unresolved critical issues where technically feasible.
 
 ### Automated Monitoring
 
-Repositories MUST enable relevant GitHub security features where licensed and available.
+Repositories must enable relevant GitHub security features where licensed and available.
 
-This includes:
+This includes
 
 - Dependabot
 - Dependency Review
 - Secret Scanning
 - Code Scanning
 
-### Automated Notifications
+### Automated notifications
 
-Alerts SHOULD be routed into any of the below:
+Alerts should be routed into any of the below
 
 - Microsoft Teams
 - Slack
@@ -236,28 +236,28 @@ Alerts SHOULD be routed into any of the below:
 
 ### SLA Validation
 
-Automated workflows MAY:
+Automated workflows may
 
-- Warn when alerts approach SLA breach.
-- Fail when alerts exceed SLA.
-- Generate compliance reports.
+- Warn when alerts approach **SLA** breach
+- Fail when alerts exceed **SLA**
+- Generate compliance reports
 
 ---
 
-## 7. Governance and Reporting
+## Governance and Reporting
 
 ### Weekly Reporting
 
-Teams SHOULD review:
+Teams should review
 
 - Open alerts
-- SLA breaches
+- **SLA** breaches
 - Vulnerability trends
 - Ageing findings
 
 ### Quarterly Reviews
 
-A quarterly review MUST assess:
+A quarterly review must assess
 
 - Compliance rates
 - Persistent findings
@@ -266,7 +266,7 @@ A quarterly review MUST assess:
 
 ### Assurance Evidence
 
-Evidence retained for audit SHALL include:
+Evidence retained for audit shall include
 
 - Alert history
 - Remediation records
@@ -275,33 +275,33 @@ Evidence retained for audit SHALL include:
 
 ---
 
-## 8. Exceptions and Risk Acceptance
+## Exceptions and Risk Acceptance
 
-Exceptions MAY be granted where:
+Exceptions may be granted where
 
-- No remediation exists.
-- Vendor patches are unavailable.
-- Operational constraints prevent immediate remediation.
+- No remediation exists
+- Vendor patches are unavailable
+- Operational constraints prevent immediate remediation
 
-All exceptions MUST:
+All exceptions must
 
-- Be documented.
-- Have an accountable owner.
-- Include a review date.
-- Be reviewed at least annually.
+- Be documented
+- Have an accountable owner
+- Include a review date
+- Be reviewed at least annually
 
-Exceptions MUST NOT become permanent without review.
+Exceptions must not become permanent without review.
 
 ---
 
-## 9. Continuous Improvement
+## Continuous Improvement
 
-Estate-wide security reviews SHOULD identify:
+Estate-wide security reviews should identify
 
-- Long-running findings.
-- Repeated SLA failures.
-- Unowned repositories.
-- Opportunities for automation.
+- Long-running findings
+- Repeated **SLA** failures
+- Unowned repositories
+- Opportunities for automation
 
 Analysis of organisational alert data indicates that remediation times significantly exceed recommended targets.
 Resolving, high-severity findings represent the largest ongoing backlog.
