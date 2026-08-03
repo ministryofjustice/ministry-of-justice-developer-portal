@@ -85,11 +85,11 @@ The following thresholds are mandatory
 
 Files at or above 50 MB **must** be reviewed.
 
-Repository owners **must** determine whether:
+Repository owners **must** determine whether
 
-- Git LFS **should** be used.
-- the file is necessary.
-- an alternative storage solution is appropriate.
+- Git LFS **should** be used
+- the file is necessary
+- an alternative storage solution is appropriate
 
 ### Hard limit (100 MB)
 
