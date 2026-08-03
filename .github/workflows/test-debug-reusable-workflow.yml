@@ -21,7 +21,7 @@ jobs:
       contents: read
     uses: ministryofjustice/ministry-of-justice-engineering-platform/.github/workflows/reusable-add-issue-to-project.yml@fix/debug-script-location
     with:
-      issue-number: ${{ inputs.issue-number }}
+      issue-number: "396"
       project-title: "👩‍💻 Developer Experience Team"
       project-fields-json: '{"Status":"👇 To do","👏 Team":"👾 Engineering Portal","🤩 Refined?":"👎 Unrefined"}'
     secrets:
@@ -30,4 +30,3 @@ jobs:
       slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 
-      
