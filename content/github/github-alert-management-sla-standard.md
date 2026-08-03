@@ -89,7 +89,7 @@ Repositories without clear ownership **must** be treated as governance findings.
 
 ## Alert Classification
 
-GitHub security findings shall be classified into the following categories:
+GitHub security findings shall be classified into the following categories
 
 ### Secret Scanning
 
@@ -107,8 +107,8 @@ All Secret Scanning alerts **must** be treated as Critical severity.
 
 Includes
 
-- dependabot alerts
-- dependency Review findings
+- Dependabot alerts
+- Dependency Review findings
 - vulnerable packages and libraries
 
 Severity is determined using GitHub and advisory database classifications.
