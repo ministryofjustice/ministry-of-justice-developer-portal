@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.2.0](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/compare/v1.1.0...v1.2.0) (2026-08-03)
+
+
+### Features
+
+* add workflow to automatically add new issues to the project ([#385](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/issues/385)) ([f6ef250](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/commit/f6ef250e6fbce8b16141f611e2527ed9fdd186e4))
+
+
+### Bug Fixes
+
+* doc links returning homepage instead of correct page ([#400](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/issues/400)) ([275c94e](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/commit/275c94ee7686fefe349f1346704abfe503bb5caf))
+* Improve GitHub doc page styling ([#395](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/issues/395)) ([c53f9c6](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/commit/c53f9c66f8e9d7ecce3ecb79550f54c7d5b9d0b9))
+* update path to reusable workflow  ([#388](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/issues/388)) ([412ca04](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/commit/412ca0445e6411334fde4f7b588d6d1431ee924b))
+* update path to reusable workflow in issue project automation ([412ca04](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/commit/412ca0445e6411334fde4f7b588d6d1431ee924b))
+* update reusable workflow reference to use correct format ([#390](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/issues/390)) ([4ddb628](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/commit/4ddb62843a0b14e9c34063c470b417bf26fe981f))
+
 ## [1.1.0](https://github.com/ministryofjustice/ministry-of-justice-developer-portal/compare/v1.0.0...v1.1.0) (2026-07-24)
 
 ### Features
