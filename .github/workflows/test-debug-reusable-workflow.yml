@@ -1,0 +1,30 @@
+---
+name: 🧪 Test Debug Reusable Workflow
+
+on:
+  push:
+    branches:
+      - test/debug-reusable-workflow
+  workflow_dispatch:
+    inputs:
+      issue-number:
+        description: "Issue number to add to the project"
+        required: true
+        type: string
+        default: "396"
+
+permissions: {}
+
+jobs:
+  call-reusable-workflow:
+    permissions:
+      contents: read
+    uses: ministryofjustice/ministry-of-justice-engineering-platform/.github/workflows/reusable-add-issue-to-project.yml@fix/debug-script-location
+    with:
+      issue-number: ${{ inputs.issue-number }}
+      project-title: "👩‍💻 Developer Experience Team"
+      project-fields-json: '{"Status":"👇 To do","👏 Team":"👾 Engineering Portal","🤩 Refined?":"👎 Unrefined"}'
+    secrets:
+      app-client-id: ${{ secrets.ISSUE_ORCHESTRATOR_GH_APP_CLIENT_ID }}
+      app-private-key: ${{ secrets.ISSUE_ORCHESTRATOR_GH_APP_PRIVATE_KEY }}
+      slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
