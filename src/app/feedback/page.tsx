@@ -14,6 +14,7 @@ export default function FeedbackPage() {
     const [hasConsent, setHasConsent] = useState(false);
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [submitState, setSubmitState] = useState<'idle' | 'submitting'>('idle');
     const postHogConfigured = isPostHogConfigured();
 
     useEffect(() => {
@@ -27,11 +28,12 @@ export default function FeedbackPage() {
     }, []);
 
     const canSubmit = useMemo(() => {
-        return hasConsent && postHogConfigured && textAreaValue.trim().length > 0;
-    }, [hasConsent, textAreaValue, postHogConfigured]);
+        return hasConsent && postHogConfigured && textAreaValue.trim().length > 0 && submitState !== 'submitting';
+    }, [hasConsent, textAreaValue, postHogConfigured, submitState]);
 
     const handleTextAreaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setTextareaValue(event.target.value);
+        setSubmitState('idle');
         if (errorMessage) {
             setErrorMessage(null);
         }
@@ -42,39 +44,48 @@ export default function FeedbackPage() {
 
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (submitState === 'submitting') {
+            return;
+        }
 
         const feedback = textAreaValue.trim();
+        setSubmitState('submitting');
 
         if (!feedback) {
             setErrorMessage('Please enter feedback before submitting.');
+            setSubmitState('idle');
             return;
         }
 
         if (!hasConsent) {
             setErrorMessage('Please accept analytics cookies before submitting feedback.');
+            setSubmitState('idle');
             return;
         }
 
         if (!isPostHogConfigured()) {
-            setErrorMessage('Feedback is unavailable because PostHog is not configured in this environment.');
+            setErrorMessage('Feedback could not be submitted because PostHog is not configured in this environment.');
+            setSubmitState('idle');
             return;
         }
 
         const win = window as any;
         if (!win.__posthog_initialized) {
             setErrorMessage('Analytics is still starting. Please try again in a moment.');
+            setSubmitState('idle');
             return;
         }
 
         posthog.capture('survey sent', {
             $survey_id: SURVEY_ID,
-            $response_text: feedback,
+            $survey_response: feedback,
             $source: 'feedback-page',
         });
 
         setTextareaValue('');
         setErrorMessage(null);
-        setStatusMessage('Thanks for your feedback. It has been submitted.');
+        setStatusMessage('Thank you for your feedback. It has been submitted.');
+        setSubmitState('idle');
     };
 
     return (
@@ -104,7 +115,7 @@ export default function FeedbackPage() {
             )}
 
             <form onSubmit={submit}>
-                <div className="govuk-form-group">
+                <div className={`govuk-form-group ${errorMessage ? 'govuk-form-group--error' : ''}`}>
                     <label className="govuk-label govuk-label--m" htmlFor="feedback-textarea">
                         Share your feedback
                     </label>
@@ -116,7 +127,7 @@ export default function FeedbackPage() {
                         id="feedback-textarea"
                         name="feedback"
                         rows={5}
-                        aria-describedby="feedback-textarea-hint feedback-textarea-error"
+                        aria-describedby={`feedback-textarea-hint ${errorMessage ? 'feedback-textarea-error' : ''}`}
                         value={textAreaValue}
                         onChange={handleTextAreaChange}
                     ></textarea>
