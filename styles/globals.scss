@@ -57,7 +57,7 @@ html {
 
   &:hover {
     border-color: #1d70b8;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0%, 0%, 0%, 10%);
   }
 }
 
@@ -205,7 +205,7 @@ html {
   z-index: 1000;
   background: #ffffff;
   border-top: 4px solid #1d70b8;
-  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -4px 16px rgba(0%, 0%, 0%, 8%);
   padding: 20px 20px 18px;
   display: flex;
   flex-wrap: wrap;
@@ -302,7 +302,7 @@ html {
 .govuk-service-navigation__link:hover {
   text-decoration: none;
   color: #003078;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0%, 0%, 0%, 5%);
 }
 
 .govuk-service-navigation__link:focus {
@@ -335,7 +335,7 @@ html {
   color: white;
   border: none;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0%, 0%, 0%, 30%);
   font-size: 24px;
   display: flex;
   align-items: center;
@@ -355,7 +355,7 @@ html {
   max-height: 500px;
   background: white;
   border: 2px solid #b1b4b6;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 16px rgba(0%, 0%, 0%, 20%);
   z-index: 999;
   display: flex;
   flex-direction: column;
@@ -655,7 +655,7 @@ html {
   right: 0;
   background: white;
   border: 1px solid #b1b4b6;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0%, 0%, 0%, 15%);
   z-index: 100;
   max-height: 400px;
   overflow-y: auto;
