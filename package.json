@@ -41,7 +41,7 @@
   "homepage": "https://github.com/ministryofjustice/ministry-of-justice-developer-portal#readme",
   "dependencies": {
     "@ministryofjustice/frontend": "9.0.0",
-    "caniuse-lite": "1.0.30001806",
+    "caniuse-lite": "1.0.30001809",
     "govuk-frontend": "6.4.0",
     "gray-matter": "4.0.3",
     "moment": "2.30.1",
