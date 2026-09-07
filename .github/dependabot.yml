@@ -16,40 +16,45 @@ version: 2
 
 updates:
   - package-ecosystem: "npm"
+    commit-message:
+      include: "scope"
+      prefix: ":dependabot: npm"
     directory: "/"
     schedule:
-      # monthly is the coarsest built-in interval; keeps routine minor/patch
-      # noise down to roughly a quarterly cadence in practice
-      interval: "monthly"
+      interval: "daily"
     cooldown:
-      # don't merge a release until it's had time in the wild to surface issues
-      default-days: 14
-      semver-major-days: 14
-      semver-minor-days: 14
-      semver-patch-days: 14
+      # wait 7 days after release before proposing routine updates
+      default-days: 7
     groups:
       # bundle all non-major bumps into a single PR instead of one-per-package
       minor-and-patch:
         update-types: ["minor", "patch"]
   - package-ecosystem: "docker"
+    commit-message:
+      include: "scope"
+      prefix: ":dependabot: docker"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "daily"
     cooldown:
-      default-days: 14
-      semver-major-days: 14
-      semver-minor-days: 14
-      semver-patch-days: 14
+      # wait 7 days after release before proposing routine updates
+      default-days: 7
     groups:
+      # bundle all non-major bumps into a single PR instead of one-per-package
       minor-and-patch:
         update-types: ["minor", "patch"]
   - package-ecosystem: "github-actions"
+    commit-message:
+      include: "scope"
+      prefix: ":dependabot: github-actions"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "daily"
     cooldown:
-      default-days: 14
+      # wait 7 days after release before proposing routine updates
+      default-days: 7
     groups:
+      # bundle all non-major bumps into a single PR instead of one-per-package
       minor-and-patch:
         update-types: ["minor", "patch"]
 
