@@ -16,7 +16,7 @@ jobs:
     with:
       project-title: "👩‍💻 Developer Experience Team"
       project-fields-json: >-
-        {"Status":"👇 To do","👏 Team":"👾 Engineering Portal","🤩 Refined?":"👎 Unrefined"}
+        {"Status":"👇 To do","👏 Team":"💙 Blueprint","🤩 Refined?":"👎 Unrefined"}
     secrets:
       app-client-id: ${{ secrets.ISSUE_ORCHESTRATOR_GH_APP_CLIENT_ID }}
       app-private-key: ${{ secrets.ISSUE_ORCHESTRATOR_GH_APP_PRIVATE_KEY }}
