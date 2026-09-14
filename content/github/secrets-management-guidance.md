@@ -23,7 +23,8 @@ Its objectives are to
 This guidance applies to all
 
 - MOJ staff, contractors, and suppliers who can access or contribute to repositories used for MOJ work
-- all repository visibility levels (public, internal, and private) and all repository content (including code, configuration, commits, pull requests, issues, comments, logs, attachments, and generated artefacts)
+- all repository visibility levels (public, internal, and private) and all repository content (including code, configuration,
+  commits, pull requests, issues, comments, logs, attachments, and generated artefacts)
 - all environments (development, test, staging, production)
 
 ## Definition of a secret
@@ -44,7 +45,9 @@ Secrets fall into three kinds. Knowing which you have tells you who is responsib
 
 **User secrets** are owned by an individual (for example, your GitHub or AWS credentials). Keep these in a password manager. Do not share them or use them in applications.
 
-**System secrets** are used by system components such as CI pipelines. Use a [machine user](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#machine-users), not a personal account. The system owner is responsible for them.
+**System secrets** are used by system components such as CI pipelines.
+Use a [machine user](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#machine-users), not a personal account.
+The system owner is responsible for them.
 
 **Application secrets** are needed by an application at runtime (for example, third party API keys, database credentials, cookie encryption keys).
 
@@ -104,7 +107,8 @@ Secrets should be
 CI/CD pipelines should
 
 - use secure secret injection (for example, [GitHub Actions secrets](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets))
-- use [OpenID Connect (OIDC)](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect) rather than stored cloud credentials where possible
+- use [OpenID Connect (OIDC)](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect)
+  rather than stored cloud credentials where possible
 - set workflow permissions explicitly
 - never expose secrets in
   - logs
@@ -131,11 +135,14 @@ Where PATs are required, fine grained PATs should be used.
   - secret leaks in repositories
   - unusual access patterns
 
-MOJ has [secret scanning](https://docs.github.com/en/code-security/concepts/secret-security/secret-scanning) and push protection enabled across its GitHub organisations. Push protection should not be bypassed. Where a push is blocked, rotate the value and remove it from the commit.
+MOJ has [secret scanning](https://docs.github.com/en/code-security/concepts/secret-security/secret-scanning) and push protection
+enabled across its GitHub organisations. Push protection should not be bypassed. Where a push is blocked, rotate the value and
+remove it from the commit.
 
 ### Use of organisation level secrets
 
-Organisation level secrets present a heightened security risk due to their broad scope and potential impact if compromised. Their use should be minimised and only used where a secret must be shared across multiple repositories, applications, or services.
+Organisation level secrets present a heightened security risk due to their broad scope and potential impact if compromised.
+Their use should be minimised and only used where a secret must be shared across multiple repositories, applications, or services.
 
 - when used, access should be restricted to only the repositories, applications, or services that require the secret
 - organisation level secrets should be centrally managed to support governance and rotation
@@ -157,4 +164,5 @@ This guidance supports the MOJ Secrets Management policy, which sets out complia
 
 - MOJ may scan repositories for leaked secrets, audit access and usage logs, and require remediation
 - If you suspect a breach or security incident, [report it immediately](https://intranet.justice.gov.uk/guidance/security/report-a-security-incident/?agency=hq)
-- If you are unsure whether something complies, contact the Developer Experience team via [#ask-developer-experience-team](https://moj.enterprise.slack.com/archives/C0AJBK3P5A8) or email DeveloperExperienceTeam@justice.gov.uk
+- If you are unsure whether something complies, contact the Developer Experience team via
+  [#ask-developer-experience-team](https://moj.enterprise.slack.com/archives/C0AJBK3P5A8) or email <DeveloperExperienceTeam@justice.gov.uk>
