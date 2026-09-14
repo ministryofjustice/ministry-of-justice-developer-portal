@@ -83,6 +83,15 @@
       "reviewIn": "6 months"
     },
     {
+      "slug": "secrets-management-guidance",
+      "title": "Secrets Management Guidance",
+      "section": "governance",
+      "description": "Guidance on creating, storing, accessing, and protecting secrets in GitHub.",
+      "owner": "Developer Experience team",
+      "lastReviewedOn": "2026-09-14",
+      "reviewIn": "6 months"
+    },    
+    {
       "slug": "github-repository-archival-runbook",
       "title": "GitHub Repository Archival Runbook",
       "section": "runbooks",
