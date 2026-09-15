@@ -84,7 +84,7 @@
     },
     {
       "slug": "secrets-management-guidance",
-      "title": "Secrets Management Guidance",
+      "title": "GitHub Secrets Management Guidance",
       "section": "governance",
       "description": "Guidance on creating, storing, accessing, and protecting secrets in GitHub.",
       "owner": "Developer Experience team",

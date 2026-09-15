@@ -1,4 +1,4 @@
-# Secrets Management Guidance
+# GitHub Secrets Management Guidance
 
 - [Purpose](#purpose)
 - [Scope](#scope)
@@ -29,7 +29,7 @@ This guidance applies to all
 
 ## Definition of a secret
 
-A **secret** is any piece of information used to authenticate or secure systems, including
+A **secret** is any piece of information used to authenticate or secure systems, including but not limited to
 
 - passwords and passphrases
 - API keys and tokens (including GitHub PATs)
@@ -155,7 +155,8 @@ The following actions should be taken.
 
 1. Revoke or rotate the secret immediately.
 2. Remove the secret from the codebase (including commit history if required).
-3. Report the incident to [#ask-developer-experience-team](https://moj.enterprise.slack.com/archives/C0AJBK3P5A8).
+3. Report the incident using the [Technology Portal reporting form](https://mojprod.service-now.com/moj_sp?id=sc_cat_item&sys_id=a2548ca7472956106322862c736d43be).
+   For urgent or out-of-hours support, contact the Service Desk on 0800 917 5148 or via [live chat](https://mojprod.service-now.com/moj_sp?location_id=7586d3fe1b7f7050a1e2ddf0b24bcbac).
 4. Assess impact and take remediation actions.
 
 ## Compliance
@@ -163,6 +164,7 @@ The following actions should be taken.
 This guidance supports the MOJ Secrets Management policy, which sets out compliance and enforcement.
 
 - MOJ may scan repositories for leaked secrets, audit access and usage logs, and require remediation
-- If you suspect a breach or security incident, [report it immediately](https://intranet.justice.gov.uk/guidance/security/report-a-security-incident/?agency=hq)
+- If you suspect a breach or security incident, report it using the [Technology Portal reporting form](https://mojprod.service-now.com/moj_sp?id=sc_cat_item&sys_id=a2548ca7472956106322862c736d43be).
+  For urgent or out-of-hours support, contact the Service Desk on 0800 917 5148
 - If you are unsure whether something complies, contact the Developer Experience team via
   [#ask-developer-experience-team](https://moj.enterprise.slack.com/archives/C0AJBK3P5A8) or email <DeveloperExperienceTeam@justice.gov.uk>
