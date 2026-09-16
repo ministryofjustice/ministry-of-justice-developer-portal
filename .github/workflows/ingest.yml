@@ -75,7 +75,7 @@ jobs:
   slack-alert:
     needs: ingest
     if: ${{ always() }}
-    uses: ministryofjustice/ministry-of-justice-engineering-platform/.github/workflows/reusable-slack-alert.yml@fc1a5e98114c9feb4af005319c4343a51fdcfe2d
+    uses: ministryofjustice/ministry-of-justice-engineering-platform/.github/workflows/reusable-slack-alert.yml@96de26562471386ca5d20cc77e7dbaf7e7956311
     with:
       status: ${{ needs.ingest.result }}
       workflow-name: ${{ github.workflow }}
