@@ -77,7 +77,7 @@ jobs:
     if: ${{ always() }}
     uses: ministryofjustice/ministry-of-justice-engineering-platform/.github/workflows/reusable-slack-alert.yml@fc1a5e98114c9feb4af005319c4343a51fdcfe2d
     with:
-      status: ${{ case(needs.ingest.result == 'success', 'success', 'failure') }}
+      status: ${{ needs.ingest.result }}
       workflow-name: ${{ github.workflow }}
     secrets:
       slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
