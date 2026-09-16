@@ -140,3 +140,13 @@ jobs:
       run: |
         # scripts/smoke-test.sh uses curl --resolve when resolve_ip is provided.
         bash scripts/smoke-test.sh dev "${{ steps.smoke-target.outputs.health_url }}" "${{ steps.smoke-target.outputs.resolve_ip }}"
+
+  slack-alert:
+    needs: deploy-dev
+    if: ${{ always() }}
+    uses: ministryofjustice/ministry-of-justice-engineering-platform/.github/workflows/reusable-slack-alert.yml@fc1a5e98114c9feb4af005319c4343a51fdcfe2d
+    with:
+      status: ${{ case(needs.deploy-dev.result == 'success', 'success', 'failure') }}
+      workflow-name: ${{ github.workflow }}
+    secrets:
+      slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
