@@ -83,7 +83,7 @@
       "reviewIn": "6 months"
     },
     {
-      "slug": "secrets-management-guidance",
+      "slug": "github-secrets-management-guidance",
       "title": "GitHub Secrets Management Guidance",
       "section": "governance",
       "description": "Guidance on creating, storing, accessing, and protecting secrets in GitHub.",
