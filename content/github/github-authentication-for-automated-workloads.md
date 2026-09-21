@@ -17,7 +17,8 @@ Use the option that gives the workload only the permissions and repository acces
 
 ## Use `GITHUB_TOKEN` for the workflow repository
 
-Use the built-in [`GITHUB_TOKEN`](https://docs.github.com/en/actions/tutorials/authenticate-with-github_token) when a GitHub Actions workflow only needs to access the repository containing the workflow.
+Use the built-in [`GITHUB_TOKEN`](https://docs.github.com/en/actions/tutorials/authenticate-with-github_token)
+when a GitHub Actions workflow only needs to access the repository containing the workflow.
 
 Set only the permissions the workflow needs, for example:
 
@@ -32,7 +33,10 @@ The `GITHUB_TOKEN` is limited to the repository containing the workflow, so you 
 
 Use [Octo STS](https://github.com/octo-sts/app) when an automated workload needs authenticated access to GitHub and can use OpenID Connect (OIDC) to identify itself.
 
-For GitHub Actions, Octo STS should be the default option for cross-repository access when it supports the permissions the workflow needs. Check the [GitHub permissions available through Octo STS](https://github.com/octo-sts/app#octo-sts-github-permissions) before using it.
+For GitHub Actions, Octo STS should be the default option for cross-repository access when it supports
+the permissions the workflow needs. Check the
+[GitHub permissions available through Octo STS](https://github.com/octo-sts/app#octo-sts-github-permissions)
+before using it.
 
 You can use Octo STS with public, internal and private repositories.
 
@@ -44,7 +48,10 @@ For example, you can use it to:
 - create pull requests in another repository
 - make API requests for another repository
 
-Octo STS exchanges the workload identity for a short-lived GitHub App token. You can restrict access to specific workloads, repositories and GitHub permissions through an [Octo STS trust policy](https://github.com/octo-sts/app#the-trust-policy), without storing a PAT or GitHub App private key.
+Octo STS exchanges the workload identity for a short-lived GitHub App token. You can restrict access
+to specific workloads, repositories and GitHub permissions through an
+[Octo STS trust policy](https://github.com/octo-sts/app#the-trust-policy), without storing a PAT or
+GitHub App private key.
 
 You may not need authentication for read-only access to a public repository.
 
@@ -71,6 +78,8 @@ If you use a PAT, use a fine-grained PAT where possible. Give it only the reposi
 
 ## Requesting a GitHub App
 
-If, after reviewing this guidance, you need a GitHub App, raise an issue using this [template]().
+If, after reviewing this guidance, you need a GitHub App, raise an issue using this
+[template]().
 
-The template will collect the information the Developer Experience team needs to review your request and create the app.
+The template will collect the information the Developer Experience team needs to review your request
+and create the app.
