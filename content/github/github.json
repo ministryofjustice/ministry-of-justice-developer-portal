@@ -11,7 +11,7 @@
     {
       "key": "best-practices",
       "title": "Best Practices",
-      "description": "Recommended workflows, branching strategies, code review standards, and collaboration patterns.",
+      "description": "Recommended authentication methods, workflows, branching strategies, code review standards, and collaboration patterns.",
       "modifier": "development"
     },
     {
@@ -47,19 +47,10 @@
       "reviewIn": "6 months"
     },
     {
-      "slug": "branching-strategy",
-      "title": "Branching Strategy",
+      "slug": "github-authentication-for-automated-workloads",
+      "title": "GitHub Authentication for Automated Workloads",
       "section": "best-practices",
-      "description": "How we structure branches and manage feature development across MoJ projects.",
-      "owner": "Developer Experience team",
-      "lastReviewedOn": "2026-07-16",
-      "reviewIn": "6 months"
-    },
-    {
-      "slug": "code-review",
-      "title": "Code Review Standards",
-      "section": "best-practices",
-      "description": "Pull request process, review expectations, and approval workflows.",
+      "description": "Guidance on setting up and managing authentication for automated workloads in GitHub.",
       "owner": "Developer Experience team",
       "lastReviewedOn": "2026-07-16",
       "reviewIn": "6 months"
