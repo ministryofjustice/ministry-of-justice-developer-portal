@@ -79,7 +79,7 @@ If you use a PAT, use a fine-grained PAT where possible. Give it only the reposi
 ## Requesting a GitHub App
 
 If, after reviewing this guidance, you need a GitHub App, raise an issue using this
-[template]().
+[template](https://github.com/ministryofjustice/developer-experience-github-management/issues).
 
 The template will collect the information the Developer Experience team needs to review your request
 and create the app.
