@@ -58,8 +58,10 @@ You may not need authentication for read-only access to a public repository.
 ### Example usage
 
 1. Create an Octo STS definition in the repository you want to consume
-   
-    `.github/chainguard/${IDENTITY}.sts.yaml` where `${IDENTITY}` is a reference to your repository, e.g. `.github/chainguard/moj-analytical-services-airflow-create-a-pipeline.sts.yaml`, which is `${GITHUB_ORGANISATION}-${GITHUB_REPOSITORY}`
+
+    `.github/chainguard/${IDENTITY}.sts.yaml` where `${IDENTITY}` is a reference to your repository,
+    e.g. `.github/chainguard/moj-analytical-services-airflow-create-a-pipeline.sts.yaml`, which is
+    `${GITHUB_ORGANISATION}-${GITHUB_REPOSITORY}`
 
     This example gives all workflows on all branches the read permission.
 
