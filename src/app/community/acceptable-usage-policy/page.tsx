@@ -2,44 +2,8 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { PageIntro } from "@/components/templateRender/PageIntro";
 import { Section } from "@/components/templateRender/Section";
 import { Subsection } from "@/components/templateRender/Subsection";
-import policy from "../../../../content/community/acceptable-usage-policy.json";
-
-type ParagraphBlock = {
-    type: "paragraph";
-    text: InlinePart[];
-};
-
-type ListBlock = {
-    type: "list";
-    items: ListItem[];
-};
-
-type SubsectionBlock = {
-    type: "subsection";
-    heading: string;
-    content: Block[];
-};
-
-type Block = ParagraphBlock | ListBlock | SubsectionBlock;
-
-type InlinePart =
-  | string
-  | {
-      type: "link";
-      href: string;
-      label: string;
-    };
-
-type ListItem =
-  | string
-  | {
-      text: string;
-      link?: {
-        href: string;
-        label: string;
-      };
-      suffix?: string;
-    };
+import type { InlinePart, ListItem, ParagraphBlock, ListBlock, SubsectionBlock, Block, PolicyData } from "@/types/community";
+import policyJson from "../../../../content/community/acceptable-usage-policy.json";
 
 function renderInlineContent(parts: InlinePart[]) {
     return parts.map((part, index) => {
@@ -109,6 +73,8 @@ function renderBlockContent(block: Block, blockIndex: number) {
             return renderSubsection(block, blockIndex);
     }
 }
+
+const policy = policyJson as PolicyData;
 
 export default function AcceptableUsagePolicy() {
     return (
