@@ -76,6 +76,24 @@ export default function CommunityPage() {
         </Callout>
       </div>
 
+      <Section
+        key="Acceptable Usage Policy"
+        heading="Acceptable Usage Policy"
+        className="govuk-!-margin-top-6 govuk-!-margin-bottom-0"
+        contentClassName=""
+      >
+        <p className="govuk-body">
+          Find out what is considered acceptable usage of the Developer Portal by reading the
+        </p>
+        <p><a
+            href="/community/acceptable-usage-policy"
+            className="govuk-link"
+            rel="noopener noreferrer"
+          >
+            Acceptable Usage Policy
+          </a> (takes 1-2 minutes)</p>
+      </Section>
+
       <ChatBot />
     </div>
   );
