@@ -1,0 +1,399 @@
+{
+    "title": "Acceptable Usage Policy",
+    "sections": [
+        {
+            "id": "golden-rules-for-contributors",
+            "title": "Golden rules for contributors",
+            "blocks": [
+                {
+                    "type": "list",
+                    "items": [
+                        "do not publish personal information, secrets, credentials, tokens or sensitive data",
+                        "make sure content is accurate, relevant and kept up to date",
+                        "clearly identify the owning team and route for support or feedback",
+                        "follow MOJ acceptable use, information security and security guidance policies",
+                        {
+                            "text": "follow any applicable platform-specific terms and conditions, including the ",
+                            "link": {
+                                "href": "https://developer-portal.service.justice.gov.uk/github/terms-of-service",
+                                "label": "MOJ GitHub terms of service"
+                            },
+                            "suffix": " where content is maintained in GitHub repositories"
+                        },
+                        "if in doubt, do not publish - seek advice from the appropriate security, policy or platform owner first"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "purpose-and-scope",
+            "title": "Purpose and scope",
+            "blocks": [
+                {
+                    "type": "paragraph",
+                    "text": [
+                        "This document defines the terms of use for the Developer Portal for all users and contributors. It supports safe, secure and responsible use of the service, protects sensitive information, and helps ensure published guidance is trusted, accurate and maintained."
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "text": [
+                        "The developer portal aggregates and references content from a variety of platforms and services. Where content is managed, maintained or contributed through another platform, users must also comply with any applicable platform-specific policies, standards and terms of service. For content maintained in GitHub repositories, the ",
+                        {
+                            "type": "link",
+                            "href": "https://developer-portal.service.justice.gov.uk/github/terms-of-service",
+                            "label": "MOJ GitHub terms of service"
+                        },
+                        " applies in addition to the terms below."
+                    ]
+                },
+                {
+                    "type": "list",
+                    "items": [
+                        "applies to anyone accessing, using or contributing to the developer portal",
+                        "complements, but does not replace, MOJ acceptable use, information security and related policies",
+                        {
+                            "text": "must be read alongside any relevant platform-specific requirements, including the ",
+                            "link": {
+                                "href": "https://developer-portal.service.justice.gov.uk/github/terms-of-service",
+                                "label": "MOJ GitHub terms of service"
+                            },
+                            "suffix": " where applicable"
+                        },
+                        "requires users to follow the stricter requirement where policies or standards overlap"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "service-use-and-responsibilities",
+            "title": "Service use and responsibilities",
+            "blocks": [
+                {
+                    "type": "subsection",
+                    "heading": "Intended use",
+                    "content": [
+                        {
+                            "type": "paragraph",
+                            "text": [
+                                "The developer portal is a central place to publish and access discoverable, reusable technical guidance. It supports engineering best practice, developer experience, collaboration and reuse across MOJ digital teams. The developer portal does not own contributed content; ownership remains with the originating team or service, who should"
+                            ]
+                        },
+                        {
+                            "type": "list",
+                            "items": [
+                                "use the service for its intended purpose of sharing and consuming technical guidance",
+                                "respect other users and contributors",
+                                "follow published guidance in good faith and raise concerns where content appears inaccurate, unsafe or out of date"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "subsection",
+                    "heading": "User and contributor responsibilities",
+                    "content": [
+                        {
+                            "type": "list",
+                            "items": [
+                                {
+                                    "text": "follow MOJ security guidance, the ",
+                                    "link": {
+                                        "href": "https://security-guidance.service.justice.gov.uk/acceptable-use-policy/",
+                                        "label": "MOJ security acceptable use policy"
+                                    },
+                                    "suffix": " and relevant organisational requirements"
+                                },
+                                {
+                                    "text": "comply with applicable platform-specific terms of service and standards. Where content is maintained in GitHub repositories, contributors must comply with the ",
+                                    "link": {
+                                        "href": "https://developer-portal.service.justice.gov.uk/github/terms-of-service",
+                                        "label": "MOJ GitHub terms of service"
+                                    }
+                                },
+                                "only publish content that is suitable for the intended audience",
+                                "ensure content is accurate, current, relevant and reviewed regularly",
+                                "provide ownership and contact information so users know who maintains the content"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "content-standards",
+            "title": "Content standards",
+            "blocks": [
+                {
+                    "type": "subsection",
+                    "heading": "Ownership and maintenance",
+                    "content": [
+                        {
+                            "type": "list",
+                            "items": [
+                                "content remains owned by the originating team or service",
+                                "contributors are responsible for the accuracy, currency, relevance and ongoing maintenance of published content",
+                                "content should be reviewed regularly and updated or removed when it is no longer accurate or useful"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "subsection",
+                    "heading": "Publishing standards",
+                    "content": [
+                        {
+                            "type": "paragraph",
+                            "text": [
+                                "Published guidance must be"
+                            ]
+                        },
+                        {
+                            "type": "list",
+                            "items": [
+                                "clear, accurate, user-focused and written for the intended audience",
+                                "aligned with MOJ security guidance and relevant documentation standards, including GDS and MOJ patterns where applicable",
+                                "owned by a named team or service, with a clear support or contact route",
+                                "maintained regularly and updated when requirements or guidance change"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "subsection",
+                    "heading": "Content that must not be published",
+                    "content": [
+                        {
+                            "type": "paragraph",
+                            "text": [
+                                "Contributors must not publish content that includes, exposes or enables access to sensitive information. This includes, but is not limited to"
+                            ]
+                        },
+                        {
+                            "type": "list",
+                            "items": [
+                                "personal information, personally identifiable information or sensitive personal data",
+                                "classified, restricted or internal-only government information not approved for the intended audience",
+                                "security-sensitive information, including unapproved vulnerability information or internal architecture details",
+                                "credentials, passwords, API keys, tokens, cryptographic keys, private certificates, TLS certificates, IPsec credentials, connection strings or configuration containing sensitive values"
+                            ]
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": [
+                                "Where content is stored or maintained in GitHub repositories, contributors must also comply with the ",
+                                {
+                                    "type": "link",
+                                    "href": "https://developer-portal.service.justice.gov.uk/github/terms-of-service",
+                                    "label": "MOJ GitHub terms of service"
+                                },
+                                ", including restrictions relating to organisational data, personal information, regulated data and repository content."
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "security-data-handling-and-tooling",
+            "title": "Security, data handling and tooling",
+            "blocks": [
+                {
+                    "type": "paragraph",
+                    "text": [
+                        "Users and contributors must handle information responsibly and follow all relevant MOJ security, data classification and acceptable use requirements."
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "text": [
+                        "Only share information that is appropriate for the intended audience."
+                    ]
+                },
+                {
+                    "type":"paragraph",
+                    "text": [
+                        "Apply the principle of least privilege when referencing systems, access or permissions."
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "text": [
+                        "Use approved tooling, repositories and processes for creating, reviewing and publishing content."
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "text": [
+                        "Store secrets only in approved secure systems and never within developer portal content or documentation."
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "text": [
+                        "Follow platform-specific security requirements where applicable. GitHub users must comply with requirements relating to secrets management, code review, security scanning, repository controls and incident reporting."
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "text": [
+                        "Report any suspected data exposure, security concern or policy violation immediately through the appropriate MOJ reporting route."
+                    ]
+                },
+                {
+                    "type": "subsection",
+                    "heading": "Relevant Material",
+                    "content": [
+                        {
+                            "type": "list",
+                            "items": [
+                                {
+                                    "link": {
+                                        "href": "https://security-guidance.service.justice.gov.uk/acceptable-use-policy/",
+                                        "label": "MOJ security acceptable use policy"
+                                    }
+                                },
+                                {
+                                    "link": {
+                                        "href": "https://security-guidance.service.justice.gov.uk/",
+                                        "label": "MOJ security guidance"
+                                    }
+                                },
+                                {
+                                    "link": {
+                                        "href": "https://developer-portal.service.justice.gov.uk/github/terms-of-service",
+                                        "label": "MOJ GitHub terms of service"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "governance-compliance-and-reporting",
+            "title": "Governance, compliance and reporting",
+            "blocks": [
+                {
+                    "type": "subsection",
+                    "heading": "Document ownership",
+                    "content": [
+                        {
+                            "type": "paragraph",
+                            "text": [
+                                "These terms are owned and maintained by the Developer Portal/Developer Experience team. They should be reviewed regularly to ensure alignment with MOJ standards, security guidance and operating practices."
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "subsection",
+                    "heading": "Compliance and enforcement",
+                    "content": [
+                        {
+                            "type": "paragraph",
+                            "text": [
+                                "All users and contributors are expected to comply with these terms. Failure to comply may result in content being removed and, where appropriate, escalation to line management, security teams or organisational leadership."
+                            ]
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": [
+                                "Failure to comply with applicable platform-specific requirements, including the ",
+                                {
+                                    "type": "link",
+                                    "href": "https://developer-portal.service.justice.gov.uk/github/terms-of-service",
+                                    "label": "MOJ GitHub terms of service"
+                                },
+                                ", may also result in additional enforcement action under those terms."
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "subsection",
+                    "heading": "Reporting issues",
+                    "content": [
+                        {
+                            "type": "paragraph",
+                            "text": [
+                                "Users must report"
+                            ]
+                        },
+                        {
+                            "type": "list",
+                            "items": [
+                                "security concerns",
+                                "suspected data exposure",
+                                "policy violations",
+                                "inappropriate content",
+                                "unsafe or misleading guidance"
+                            ]
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": [
+                                "Reports should be raised through the appropriate MOJ security, incident management or service support process."
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "related-policies-and-standards",
+            "title": "Related policies and standards",
+            "blocks": [
+                {
+                    "type": "paragraph",
+                    "text": [
+                        "These terms should be read alongside, and do not replace, the following policies and guidance."
+                    ]
+                },
+                {
+                    "type": "list",
+                    "items": [
+                        {
+                            "link": {
+                                "href": "https://security-guidance.service.justice.gov.uk/acceptable-use-policy/",
+                                "label": "MOJ security acceptable usage policy"
+                            }
+                        },
+                        "MOJ information security policies",
+                        {
+                            "link": {
+                                "href": "https://security-guidance.service.justice.gov.uk/",
+                                "label": "MOJ security guidance"
+                            }
+                        },
+                        {
+                            "link": {
+                                "href": "https://developer-portal.service.justice.gov.uk/github/terms-of-service",
+                                "label": "MOJ GitHub terms of service"
+                            }
+                        },
+                        "Relevant HMPPS, LAA, agency-specific or platform-specific policies, standards and controls"
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "text": [
+                        "Users contributing to content sourced from, managed through or published via GitHub repositories must ensure compliance with the ",
+                        {
+                            "type": "link",
+                            "href": "https://developer-portal.service.justice.gov.uk/github/terms-of-service",
+                            "label": "MOJ GitHub terms of service"
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "text": [
+                        "Where requirements differ, the stricter requirement applies."
+                    ]
+                }
+            ]
+        }
+    ]
+}
