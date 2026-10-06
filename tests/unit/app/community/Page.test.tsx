@@ -120,4 +120,11 @@ describe('CommunityPage', () => {
     expect(screen.getByText('Acceptable usage policy')).toBeInTheDocument();
     expect(screen.getByText('Read the acceptable usage policy')).toBeInTheDocument();
   });
+
+  it('renders the link to the acceptable usage policy', () => {
+    render(<CommunityPage />);
+
+    const link = screen.getByRole('link', { name: 'Read the acceptable usage policy' });
+    expect(link).toHaveAttribute('href', '/community/acceptable-usage-policy');
+  });
 });
