@@ -90,7 +90,7 @@ export default function AcceptableUsagePolicy() {
                 <ul className="govuk-list">
                 {policy.sections.map((section) => (
                     <li key={section.id}>
-                    <a href={`#${section.id}`}>{section.title}</a>
+                    <a href={`#${section.id}`} className="govuk-link">{section.title}</a>
                     </li>
                 ))}
                 </ul>

@@ -85,7 +85,7 @@ export default function CommunityPage() {
         <p className="govuk-body">
           {community.acceptableUsagePolicy.body}
         </p>
-        <p><a
+        <p className="govuk-body"><a
             href={community.acceptableUsagePolicy.link.href}
             className="govuk-link"
             rel="noopener noreferrer"
