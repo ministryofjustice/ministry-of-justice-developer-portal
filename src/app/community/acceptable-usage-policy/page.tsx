@@ -56,7 +56,15 @@ function renderList(block: ListBlock, blockIndex: number) {
 function renderSubsection(block: SubsectionBlock, blockIndex: number) {
     return (
         <Subsection key={blockIndex} heading={block.heading}>
-            {block.content.map((subBlock, subIndex) => renderBlockContent(subBlock, subIndex))}
+            {block.content.map((subBlock, subIndex) => {
+                switch(subBlock.type) {
+                    case "paragraph":
+                        return renderParagraph(subBlock, subIndex);
+                    case "list":
+                        return renderList(subBlock, subIndex);
+                }
+                return null;
+            })}
         </Subsection>
     );
 }

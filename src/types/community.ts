@@ -11,7 +11,7 @@ export type ListBlock = {
 export type SubsectionBlock = {
     type: "subsection";
     heading: string;
-    content: Block[];
+    content: (ParagraphBlock | ListBlock)[];
 };
 
 export type Block = ParagraphBlock | ListBlock | SubsectionBlock;
