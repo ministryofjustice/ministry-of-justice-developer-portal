@@ -1,6 +1,6 @@
 import { SectionProps } from '@/types';
 
-export function Section({
+export function Subsection({
   heading,
   children,
   className = 'govuk-!-margin-bottom-6',
@@ -9,7 +9,7 @@ export function Section({
 }: SectionProps) {
   return (
     <section className={className} aria-label={heading} id={id}>
-      <h2 className="govuk-heading-m">{heading}</h2>
+      <h3 className="govuk-heading-s">{heading}</h3>
       <div className={contentClassName}>{children}</div>
     </section>
   );

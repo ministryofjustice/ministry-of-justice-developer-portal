@@ -36,6 +36,14 @@ vi.mock('@/../content/community/community.json', () => ({
       summary: 'Help us out',
       actions: ['Do this', 'Do that'],
     },
+    acceptableUsagePolicy: {
+      title: 'Acceptable usage policy',
+      body: 'Find out what is considered acceptable use of the developer portal',
+      link: {
+        label: 'Read the acceptable usage policy',
+        href: '/community/acceptable-usage-policy',
+      },
+    },
   },
 }));
 
@@ -104,5 +112,19 @@ describe('CommunityPage', () => {
     const link = screen.getByRole('link', { name: 'Item One' });
 
     expect(link).toHaveAttribute('href', '/community/item-1');
+  });
+
+  it('renders acceptable usage policy section', () => {
+    render(<CommunityPage />);
+
+    expect(screen.getByText('Acceptable usage policy')).toBeInTheDocument();
+    expect(screen.getByText('Read the acceptable usage policy')).toBeInTheDocument();
+  });
+
+  it('renders the link to the acceptable usage policy', () => {
+    render(<CommunityPage />);
+
+    const link = screen.getByRole('link', { name: 'Read the acceptable usage policy' });
+    expect(link).toHaveAttribute('href', '/community/acceptable-usage-policy');
   });
 });

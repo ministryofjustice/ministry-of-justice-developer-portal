@@ -15,6 +15,7 @@ Types are grouped by domain or purpose rather than being kept in one large file.
 | `products.ts`   | Types for product catalogue items and product cards.                   |
 | `search.ts`     | Types for search result data.                                          |
 | `contact.ts`    | Types for contact data.                                                |
+| `community.ts`  | Types for community data                                               |
 | `index.ts`      | Barrel file that re-exports the public types from this directory.      |
 
 ## Importing types

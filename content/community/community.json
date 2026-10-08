@@ -4,7 +4,7 @@
   "items": [
     {
       "slug": "developer-slack",
-      "title": "Developer Slack",
+      "title": "Developer slack",
       "category": "chat",
       "description": "Join the Ministry of Justice Digital & Technology Slack workspace and the main developer support channels.",
       "owner": "Developer Experience",
@@ -34,7 +34,7 @@
     },
     {
       "slug": "open-source",
-      "title": "Open Source",
+      "title": "Open source",
       "category": "code",
       "description": "Browse Ministry of Justice open source projects and contribute in the open where appropriate.",
       "owner": "Operations Engineering",
@@ -69,7 +69,7 @@
     },
     {
       "slug": "engineering-blog",
-      "title": "Engineering Blog",
+      "title": "Engineering blog",
       "category": "learn",
       "description": "Read about what teams are building, technical decisions, and lessons learned across the portal and related work.",
       "owner": "Developer Experience",
@@ -95,7 +95,7 @@
     },
     {
       "slug": "technology-radar",
-      "title": "Technology Radar",
+      "title": "Technology radar",
       "category": "learn",
       "description": "The Ministry of Justice Technology Radar is a guide to the technologies, tools, techniques, platforms, and frameworks that we recommend for building digital services at MoJ.",
       "owner": "Developer Experience",
@@ -122,7 +122,7 @@
     },
     {
       "slug": "events-and-meetups",
-      "title": "Events and Meetups",
+      "title": "Events and meetups",
       "category": "events",
       "description": "Regular tech talks, show-and-tells, and cross-government meetups for sharing practice.",
       "owner": "Developer Experience",
@@ -168,23 +168,23 @@
       "title": "Real resources",
       "links": [
         {
-          "label": "MoJ AI Governance Framework",
+          "label": "MOJ AI governance framework",
           "href": "https://technical-guidance.service.justice.gov.uk/documentation/governance/ai-governance-framework.html#introduction"
         },
         {
-          "label": "GOV.UK Service Manual",
+          "label": "GOV.UK service manual",
           "href": "https://www.gov.uk/service-manual"
         },
         {
-          "label": "GOV.UK Service Standard",
+          "label": "GOV.UK service standard",
           "href": "https://www.gov.uk/service-manual/service-standard"
         },
         {
-          "label": "GOV.UK Design System",
+          "label": "GOV.UK design system",
           "href": "https://design-system.service.gov.uk/"
         },
         {
-          "label": "Technology Code of Practice",
+          "label": "Technology code of practice",
           "href": "https://www.gov.uk/guidance/the-technology-code-of-practice"
         },
         {
@@ -197,35 +197,43 @@
       "title": "Tools used across government",
       "links": [
         {
-          "label": "GOV.UK Frontend",
+          "label": "GOV.UK frontend",
           "href": "https://frontend.design-system.service.gov.uk/"
         },
         {
-          "label": "GOV.UK Prototype Kit",
+          "label": "GOV.UK prototype kit",
           "href": "https://prototype-kit.service.gov.uk/docs/"
         },
         {
-          "label": "GOV.UK Pay",
+          "label": "GOV.UK pay",
           "href": "https://www.payments.service.gov.uk/"
         },
         {
-          "label": "GOV.UK Notify",
+          "label": "GOV.UK notify",
           "href": "https://www.notifications.service.gov.uk/"
         },
         {
-          "label": "GOV.UK Forms",
+          "label": "GOV.UK forms",
           "href": "https://www.forms.service.gov.uk/"
         }
       ]
     }
   ],
   "contribution": {
-    "title": "Contributing to the Developer Portal",
+    "title": "Contributing to the developer portal",
     "summary": "This portal is open source and accepts contributions. You can:",
     "actions": [
       "Add your team's documentation by creating a portal.yaml in your repo",
       "Suggest new products or guidelines via pull request",
       "Report issues or request features on GitHub"
     ]
+  },
+  "acceptableUsagePolicy": {
+    "title": "Acceptable usage policy",
+    "body": "Find out what is considered acceptable use of the developer portal",
+    "link": {
+      "label": "Read the acceptable usage policy",
+      "href": "/community/acceptable-usage-policy"
+    }
   }
 }

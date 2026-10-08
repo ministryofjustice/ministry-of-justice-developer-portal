@@ -76,4 +76,5 @@ export interface SectionProps {
   children: ReactNode;
   className?: string;
   contentClassName?: string;
+  id?: string;
 }

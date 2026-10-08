@@ -76,6 +76,24 @@ export default function CommunityPage() {
         </Callout>
       </div>
 
+      <Section
+        key={community.acceptableUsagePolicy.title}
+        heading={community.acceptableUsagePolicy.title}
+        className="govuk-!-margin-top-6 govuk-!-margin-bottom-0"
+        contentClassName=""
+      >
+        <p className="govuk-body">
+          {community.acceptableUsagePolicy.body}
+        </p>
+        <p className="govuk-body"><a
+            href={community.acceptableUsagePolicy.link.href}
+            className="govuk-link"
+            rel="noopener noreferrer"
+          >
+            {community.acceptableUsagePolicy.link.label}
+          </a></p>
+      </Section>
+
       <ChatBot />
     </div>
   );
