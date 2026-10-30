@@ -38,6 +38,18 @@ vi.mock('@/../content/products/products.json', () => ({
       externalUrl: 'https://example.com/service',
       tags: ['tooling'],
     },
+    {
+      slug: 'mvp-api',
+      name: 'MVP API',
+      category: 'apis',
+      description: 'A local mock API for the catalogue prototype.',
+      owner: 'Example team',
+      apiVersion: '1.0.0',
+      openApiSpecUrl: 'https://github.com/ministryofjustice/example-api/blob/main/openapi.yaml',
+      sourceRepositoryUrl: 'https://github.com/ministryofjustice/example-api',
+      status: 'alpha',
+      tags: ['api', 'prototype'],
+    },
   ],
 }));
 
@@ -79,6 +91,7 @@ describe('ProductDetailPage', () => {
       { slug: 'cloud-platform' },
       { slug: 'modernisation-platform' },
       { slug: 'disabled-docs-product' },
+      { slug: 'mvp-api' },
     ]);
   });
 
@@ -212,6 +225,27 @@ describe('ProductDetailPage', () => {
     const link = screen.getByRole('link', { name: 'Visit service' });
 
     expect(link).toHaveAttribute('href', '/products/modernisation-platform');
+  });
+
+  it('renders API links without a gateway path', async () => {
+    render(
+      await ProductDetailPage({
+        params: Promise.resolve({ slug: 'mvp-api' }),
+      }),
+    );
+
+    expect(screen.getByRole('link', { name: 'View OpenAPI specification' })).toHaveAttribute(
+      'href',
+      'https://github.com/ministryofjustice/example-api/blob/main/openapi.yaml',
+    );
+    expect(screen.getByRole('link', { name: 'View source repository' })).toHaveAttribute(
+      'href',
+      'https://github.com/ministryofjustice/example-api',
+    );
+    expect(screen.queryByRole('rowheader', { name: 'API version' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('rowheader', { name: 'Prototype Gateway path' }),
+    ).not.toBeInTheDocument();
   });
 
   it('renders the feedback widget and chat bot', async () => {

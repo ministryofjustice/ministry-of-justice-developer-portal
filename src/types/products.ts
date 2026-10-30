@@ -9,6 +9,9 @@ export interface Product {
   slackChannel?: string;
   docsUrl?: string;
   externalUrl?: string;
+  apiVersion?: string;
+  openApiSpecUrl?: string;
+  sourceRepositoryUrl?: string;
   status: StatusTagValue;
   tags: string[];
 }

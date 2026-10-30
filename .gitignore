@@ -59,3 +59,5 @@ node_modules
 /playwright/.cache/
 /playwright/.auth/
 
+# Local Kong MVP key material and rendered config
+/mvp/.local/

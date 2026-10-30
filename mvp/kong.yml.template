@@ -1,0 +1,55 @@
+_format_version: '3.0'
+_transform: true
+
+services:
+  - name: benefit-checker
+    url: http://mock-benefit-checker:8080
+    routes:
+      - name: benefit-checker-route
+        paths:
+          - /api/benefit-checker
+        strip_path: true
+
+  - name: file-transfer
+    url: http://mock-file-transfer:8080
+    routes:
+      - name: file-transfer-route
+        paths:
+          - /api/file-transfer
+        strip_path: true
+
+  - name: ualpa
+    url: http://mock-ualpa:8080
+    routes:
+      - name: ualpa-route
+        paths:
+          - /api/ualpa
+        strip_path: true
+
+  - name: manage-pom-cases
+    url: http://mock-pom-cases:8080
+    routes:
+      - name: manage-pom-cases-route
+        paths:
+          - /api/manage-pom-cases
+        strip_path: true
+
+plugins:
+  - name: jwt
+    config:
+      key_claim_name: iss
+      claims_to_verify:
+        - exp
+  - name: rate-limiting
+    config:
+      minute: 60
+      limit_by: consumer
+      policy: local
+
+consumers:
+  - username: mvp-consumer
+    jwt_secrets:
+      - key: mvp-local-issuer
+        algorithm: RS256
+        secret: not-used-for-rs256
+        rsa_public_key: __JWT_PUBLIC_KEY_JSON__

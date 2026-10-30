@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { StatusTag } from '@/components/templateRender/StatusTag';
 import { getProductCategoryLabel } from '@/lib/categoryLabels';
 import { ProductCardProps } from '@/types/products';
 
@@ -15,10 +16,8 @@ export function ProductCard({ slug, name, category, description, status, tags }:
         </Link>
       </h2>
       <p className="govuk-body app-card__description">{description}</p>
-      {status === 'beta' && (
-        <strong className="govuk-tag govuk-tag--blue" style={{ marginTop: 10 }}>
-          Beta
-        </strong>
+      {(status === 'beta' || status === 'alpha' || status === 'deprecated') && (
+        <StatusTag status={status} />
       )}
     </div>
   );

@@ -1,0 +1,74 @@
+name: integration-hub-api-gateway-mvp
+
+x-mock-service: &mock-service
+  build:
+    context: .
+  image: integration-hub-api-gateway-mvp-mock:local
+  expose:
+    - '8080'
+  read_only: true
+  tmpfs:
+    - /tmp
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  healthcheck:
+    test:
+      - CMD
+      - node
+      - -e
+      - >-
+        fetch("http://127.0.0.1:8080/_health").then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+    interval: 5s
+    timeout: 3s
+    retries: 10
+
+services:
+  kong:
+    image: kong:3.9.4
+    environment:
+      KONG_DATABASE: 'off'
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
+      KONG_PROXY_LISTEN: 0.0.0.0:8000
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_LOG_LEVEL: notice
+    ports:
+      - '127.0.0.1:8000:8000'
+      - '127.0.0.1:8001:8001'
+    volumes:
+      - ./.local/kong.yml:/etc/kong/kong.yml:ro
+    depends_on:
+      mock-benefit-checker:
+        condition: service_healthy
+      mock-file-transfer:
+        condition: service_healthy
+      mock-ualpa:
+        condition: service_healthy
+      mock-pom-cases:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'kong', 'health']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  mock-benefit-checker:
+    <<: *mock-service
+    environment:
+      MOCK_API_NAME: benefit-checker
+
+  mock-file-transfer:
+    <<: *mock-service
+    environment:
+      MOCK_API_NAME: file-transfer
+
+  mock-ualpa:
+    <<: *mock-service
+    environment:
+      MOCK_API_NAME: ualpa
+
+  mock-pom-cases:
+    <<: *mock-service
+    environment:
+      MOCK_API_NAME: manage-pom-cases

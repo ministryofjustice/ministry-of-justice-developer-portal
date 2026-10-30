@@ -47,6 +47,12 @@ describe('ProductCard', () => {
     expect(screen.getByText('Beta')).toBeInTheDocument();
   });
 
+  it('shows alpha tag when status is alpha', () => {
+    render(<ProductCard {...baseProps} status="alpha" />);
+
+    expect(screen.getByText('Alpha')).toBeInTheDocument();
+  });
+
   it('does not show beta tag for non-beta products', () => {
     render(<ProductCard {...baseProps} status="live" />);
 

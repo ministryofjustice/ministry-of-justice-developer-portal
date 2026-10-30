@@ -50,6 +50,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
     ...(product.docsUrl && hasValidDocsLink
       ? [{ label: 'View documentation', href: product.docsUrl, external: false }]
       : []),
+    ...(product.openApiSpecUrl
+      ? [{ label: 'View OpenAPI specification', href: product.openApiSpecUrl, external: true }]
+      : []),
+    ...(product.sourceRepositoryUrl
+      ? [{ label: 'View source repository', href: product.sourceRepositoryUrl, external: true }]
+      : []),
     ...(product.externalUrl
       ? [{ label: 'Visit service', href: product.externalUrl, external: !hasInternalServiceLink }]
       : []),
