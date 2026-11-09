@@ -14,14 +14,11 @@ export default function ForwardDeployedEngineersPlan() {
       <Breadcrumbs
         items={[
           { label: 'Products', href: '/products' },
-          {
-            label: 'Forward deployed engineers plan',
-            href: '/products/forward-deployed-engineers',
-          },
+          { label: 'Forward deployed engineers plan' },
         ]}
       />
 
-      <PageIntro title={content.title} titleClassName="govuk-!-margin-bottom-6" />
+      <PageIntro title={content.title} titleClassName="govuk-heading-xl govuk-!-margin-bottom-6" />
 
       {content.sections.map((section) => (
         <Section key={section.id} heading={section.title} id={section.id}>
