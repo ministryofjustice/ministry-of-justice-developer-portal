@@ -8,6 +8,10 @@ import { Content } from '@/types/content';
 
 const content = contentJson as Content;
 
+export const metadata = {
+  title: content.title,
+};
+
 export default function ForwardDeployedEngineersPlan() {
   return (
     <div className="govuk-width-container">
