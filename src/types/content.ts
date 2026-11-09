@@ -1,38 +1,31 @@
 export type ParagraphBlock = {
-    type: "paragraph";
-    text: InlinePart[];
+  type: 'paragraph';
+  text: InlinePart[];
 };
 
 export type ListBlock = {
-    type: "list";
-    items: ListItem[];
+  type: 'list';
+  items: ListItem[];
 };
 
 export type SubsectionBlock = {
-    type: "subsection";
-    heading: string;
-    content: (ParagraphBlock | ListBlock)[];
+  type: 'subsection';
+  heading: string;
+  content: (ParagraphBlock | ListBlock)[];
 };
 
 export type Block = ParagraphBlock | ListBlock | SubsectionBlock;
 
-export type PolicySection = {
-    id: string;
-    title: string;
-    blocks: Block[];
-};
-
-export type PolicyData = {
-    title: string;
-    sections: PolicySection[];
-};
-
 export type InlinePart =
   | string
   | {
-      type: "link";
+      type: 'link';
       href: string;
       label: string;
+    }
+  | {
+      type: 'bold';
+      text: string;
     };
 
 export type ListItem =
@@ -45,3 +38,14 @@ export type ListItem =
       };
       suffix?: string;
     };
+
+export type ContentSection = {
+  id: string;
+  title: string;
+  blocks: Block[];
+};
+
+export type Content = {
+  title: string;
+  sections: ContentSection[];
+};

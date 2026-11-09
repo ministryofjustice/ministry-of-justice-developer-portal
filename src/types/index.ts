@@ -5,4 +5,4 @@ export * from './navigation';
 export * from './products';
 export * from './search';
 export * from './contact';
-export * from './community';
+export * from './content';
