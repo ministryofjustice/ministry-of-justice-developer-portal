@@ -155,5 +155,14 @@
     "slackChannel": "#security-engineering",
     "status": "beta",
     "tags": ["security", "ci-cd", "scanning", "devsecops"]
+  },
+  {
+    "slug": "forward-deployed-engineers-plan",
+    "name": "Forward deployed engineers plan",
+    "category": "tools",
+    "description": "The Forward deployed engineers plan aims to accelerate digital delivery.",
+    "status": "live",
+    "tags": ["planning", "digital-delivery"],
+    "owner": "OCTO"
   }
 ]

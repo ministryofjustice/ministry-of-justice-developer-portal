@@ -1,0 +1,162 @@
+{
+  "title": "Forward deployed engineers plan",
+  "sections": [
+    {
+      "id": "overview",
+      "title": "Overview",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": [
+            "The Forward Deployed Engineers plan aims to accelerate digital delivery by providing short-term, on-demand, hands-on technical resources to digital teams, helping them solve complex problems which require extra skills or capacity."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": [
+            "It was created in response to support requests from digital teams and Deputy Directors, and is currently at the ",
+            {
+              "type": "bold",
+              "text": "Experiment"
+            },
+            " stage."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "use-cases",
+      "title": "Use cases",
+      "blocks": [
+        {
+          "type": "subsection",
+          "heading": "Skill gaps",
+          "content": [
+            {
+              "type": "paragraph",
+              "text": [
+                "Helping to solve short term problems/improve implementation where product teams don't have a short-term requirement for a particular skill-set (DevOps is a good example)."
+              ]
+            }
+          ]
+        },
+        {
+          "type": "subsection",
+          "heading": "Platform and capability adoption",
+          "content": [
+            {
+              "type": "paragraph",
+              "text": ["Helping teams consume internal capabilities effectively."]
+            },
+            {
+              "type": "list",
+              "items": [
+                "strategic hosting adoption",
+                "DevOps maturity improvements",
+                "observability implementation"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "subsection",
+          "heading": "Discovery and experimentation",
+          "content": [
+            {
+              "type": "paragraph",
+              "text": [
+                "Requirements for hands-on technical staff that aren't currently on the team."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": ["Examples include"]
+            },
+            {
+              "type": "list",
+              "items": [
+                "prototyping an idea before committing funding",
+                "technical feasibility assessment",
+                "Proof of Concept (PoC)",
+                "spikes to reduce uncertainty around a delivery approach",
+                "evaluating \"buy vs. build\" decisions"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "subsection",
+          "heading": "Critical problem resolution",
+          "content": [
+            {
+              "type": "list",
+              "items": [
+                "skilled engineers engaged to solve difficult problems",
+                "major production incidents",
+                "chronic service instability",
+                "system performance bottlenecks",
+                "scalability issues",
+                "technical debt blocking delivery",
+                "security vulnerabilities requiring rapid remediation"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "subsection",
+          "heading": "High-risk delivery support",
+          "content": [
+            {
+              "type": "paragraph",
+              "text": [
+                "When teams need extra capacity to hit a critical deadline (e.g. regulatory/compliance deadlines government commitments). The maximum project time should be 6 months."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": [
+                {
+                  "type": "bold",
+                  "text": "Important:"
+                },
+                " This approach is not to be used for filling general resource gaps in teams."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "initial-resource-profile",
+      "title": "Initial resourcing profile",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": [
+            "All engineers will be hands on technical engineers who will write code and support teams, not management engineers."
+          ]
+        },
+        {
+          "type": "subsection",
+          "heading": "Software engineering",
+          "content": [
+            {
+              "type": "list",
+              "items": ["Principal Developer", "Senior Developer"]
+            }
+          ]
+        },
+        {
+          "type": "subsection",
+          "heading": "DevOps engineering",
+          "content": [
+            {
+              "type": "list",
+              "items": ["Principal DevOps", "Senior DevOps"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
